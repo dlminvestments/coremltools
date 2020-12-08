@@ -56,7 +56,8 @@ def broadcast_shapes(shape_x, shape_y):
         elif x_unknown or y_unknown:
             ret_shapes.append(get_new_symbol())
         else:
-            assert shape_x[i] == shape_y[i]
+            if shape_x[i] != shape_y[i]:
+                raise AssertionError
             ret_shapes.append(shape_x[i])
 
     return tuple(ret_shapes)

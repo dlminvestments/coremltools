@@ -47,13 +47,16 @@ def dict(keytype, valuetype):
 
         @annotate(T[1], key=T[0])
         def __getitem__(self, key):
-            assert isinstance(key, self.T[0])
+            if not isinstance(key, self.T[0]):
+                raise AssertionError
             return self.val[key]
 
         @annotate(void, key=T[0], newval=T[1])
         def __setitem__(self, key, newval):
-            assert isinstance(key, self.T[0])
-            assert isinstance(newval, self.T[1])
+            if not isinstance(key, self.T[0]):
+                raise AssertionError
+            if not isinstance(newval, self.T[1]):
+                raise AssertionError
             self.val[key] = newval
 
         @annotate(type_int.int)

@@ -118,22 +118,28 @@ class TestCustomMatMul:
                 backend=backend,
             )
             layers = mlmodel.get_spec().neuralNetwork.layers
-            assert layers[-1].custom is not None, "Expecting a custom layer"
-            assert (
-                "SparseMatMul" == layers[-1].custom.className
-            ), "Custom Layer class name mis-match"
-            assert (
-                transpose_a == layers[-1].custom.parameters["transpose_x"].boolValue
-            ), "Incorrect parameter value k"
-            assert (
-                transpose_b == layers[-1].custom.parameters["transpose_y"].boolValue
-            ), "Incorrect parameter value k"
-            assert (
-                a_is_sparse == layers[-1].custom.parameters["x_is_sparse"].boolValue
-            ), "Incorrect parameter value k"
-            assert (
-                b_is_sparse == layers[-1].custom.parameters["y_is_sparse"].boolValue
-            ), "Incorrect parameter value k"
+            if layers[-1].custom is None:
+                raise AssertionError("Expecting a custom layer")
+            if (
+                "SparseMatMul" != layers[-1].custom.className
+            ):
+                raise AssertionError("Custom Layer class name mis-match")
+            if (
+                transpose_a != layers[-1].custom.parameters["transpose_x"].boolValue
+            ):
+                raise AssertionError("Incorrect parameter value k")
+            if (
+                transpose_b != layers[-1].custom.parameters["transpose_y"].boolValue
+            ):
+                raise AssertionError("Incorrect parameter value k")
+            if (
+                a_is_sparse != layers[-1].custom.parameters["x_is_sparse"].boolValue
+            ):
+                raise AssertionError("Incorrect parameter value k")
+            if (
+                b_is_sparse != layers[-1].custom.parameters["y_is_sparse"].boolValue
+            ):
+                raise AssertionError("Incorrect parameter value k")
 
 
 class TestCustomTopK:
@@ -212,14 +218,18 @@ class TestCustomTopK:
                 backend=backend,
             )
             layers = mlmodel.get_spec().neuralNetwork.layers
-            assert layers[-1].custom is not None, "Expecting a custom layer"
-            assert (
-                "TopK" == layers[-1].custom.className
-            ), "Custom Layer class name mis-match"
-            assert (
-                k == layers[-1].custom.parameters["k"].intValue
-            ), "Incorrect parameter value k"
-            assert (
-                True == layers[-1].custom.parameters["sorted"].boolValue
-            ), "Incorrect parameter value for Sorted"
+            if layers[-1].custom is None:
+                raise AssertionError("Expecting a custom layer")
+            if (
+                "TopK" != layers[-1].custom.className
+            ):
+                raise AssertionError("Custom Layer class name mis-match")
+            if (
+                k != layers[-1].custom.parameters["k"].intValue
+            ):
+                raise AssertionError("Incorrect parameter value k")
+            if (
+                True != layers[-1].custom.parameters["sorted"].boolValue
+            ):
+                raise AssertionError("Incorrect parameter value for Sorted")
 

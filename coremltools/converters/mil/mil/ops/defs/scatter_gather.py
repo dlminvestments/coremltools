@@ -272,7 +272,8 @@ class gather_along_axis(Operation):
 
         for i in range(self.x.rank):
             if i != axis:
-                assert self.x.shape[i] == self.indices.shape[i]
+                if self.x.shape[i] != self.indices.shape[i]:
+                    raise AssertionError
 
         return types.tensor(self.x.dtype, self.indices.shape)
 
@@ -377,11 +378,14 @@ class scatter_along_axis(Operation):
         axis = self.axis.val
         axis = axis if axis >= 0 else axis + self.data.rank
 
-        assert self.indices.shape == self.updates.shape
-        assert self.data.rank == self.indices.rank
+        if self.indices.shape != self.updates.shape:
+            raise AssertionError
+        if self.data.rank != self.indices.rank:
+            raise AssertionError
         for i in range(self.data.rank):
             if i != axis:
-                assert self.data.shape[i] == self.indices.shape[i]
+                if self.data.shape[i] != self.indices.shape[i]:
+                    raise AssertionError
 
         return self.data.sym_type
 
@@ -425,7 +429,8 @@ class gather_nd(Operation):
         super(gather_nd, self).__init__(**kwargs)
 
     def type_inference(self):
-        assert self.indices.shape[-1] <= self.x.rank
+        if self.indices.shape[-1] > self.x.rank:
+            raise AssertionError
         out_type = self.x.dtype
         out_shape = self.indices.shape[:-1] + self.x.shape[self.indices.shape[-1] :]
         return types.tensor(out_type, out_shape)
@@ -483,11 +488,13 @@ class scatter_nd(Operation):
         super(scatter_nd, self).__init__(**kwargs)
 
     def type_inference(self):
-        assert self.indices.shape[-1] <= self.data.rank
+        if self.indices.shape[-1] > self.data.rank:
+            raise AssertionError
         expected_updates_shape = (
             self.indices.shape[:-1] + self.data.shape[self.indices.shape[-1] :]
         )
-        assert is_compatible_symbolic_vector(
+        if not is_compatible_symbolic_vector(
             self.updates.shape, tuple(expected_updates_shape)
-        )
+        ):
+            raise AssertionError
         return self.data.sym_type

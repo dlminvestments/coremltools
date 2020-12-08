@@ -178,19 +178,23 @@ class TestRandomCategorical:
             pred0 = np.bincount(np.array(pred0).astype(np.int), minlength=n_class)
             pred1 = np.bincount(np.array(pred1).astype(np.int), minlength=n_class)
 
-            assert np.allclose(np.true_divide(pred0, n_sample), probs[0], atol=1e-2)
-            assert np.allclose(
+            if not np.allclose(np.true_divide(pred0, n_sample), probs[0], atol=1e-2):
+                raise AssertionError
+            if not np.allclose(
                 np.true_divide(pred0, n_sample),
                 np.true_divide(ref0, n_sample),
                 atol=1e-2,
-            )
+            ):
+                raise AssertionError
 
-            assert np.allclose(np.true_divide(pred1, n_sample), probs[1], atol=1e-2)
-            assert np.allclose(
+            if not np.allclose(np.true_divide(pred1, n_sample), probs[1], atol=1e-2):
+                raise AssertionError
+            if not np.allclose(
                 np.true_divide(pred1, n_sample),
                 np.true_divide(ref1, n_sample),
                 atol=1e-2,
-            )
+            ):
+                raise AssertionError
 
         # Test probs input
         input_placeholders = {"x": mb.placeholder(shape=(2, n_class))}
@@ -215,19 +219,23 @@ class TestRandomCategorical:
             pred0 = np.bincount(np.array(pred0).astype(np.int), minlength=n_class)
             pred1 = np.bincount(np.array(pred1).astype(np.int), minlength=n_class)
 
-            assert np.allclose(np.true_divide(pred0, n_sample), probs[0], atol=1e-2)
-            assert np.allclose(
+            if not np.allclose(np.true_divide(pred0, n_sample), probs[0], atol=1e-2):
+                raise AssertionError
+            if not np.allclose(
                 np.true_divide(pred0, n_sample),
                 np.true_divide(ref0, n_sample),
                 atol=1e-2,
-            )
+            ):
+                raise AssertionError
 
-            assert np.allclose(np.true_divide(pred1, n_sample), probs[1], atol=1e-2)
-            assert np.allclose(
+            if not np.allclose(np.true_divide(pred1, n_sample), probs[1], atol=1e-2):
+                raise AssertionError
+            if not np.allclose(
                 np.true_divide(pred1, n_sample),
                 np.true_divide(ref1, n_sample),
                 atol=1e-2,
-            )
+            ):
+                raise AssertionError
 
 
 class TestRandomNormal:

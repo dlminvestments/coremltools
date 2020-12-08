@@ -26,7 +26,8 @@ def _all_assert_leaves(gdict, nodename, memo):
     """
     work = [nodename]
     while True:
-        assert len(work) <= len(gdict)  # If true, this algorithm is broken
+        if len(work) > len(gdict):
+            raise AssertionError
         node = gdict[work.pop()]
 
         # Entries in memo have one of the following values for a given node:

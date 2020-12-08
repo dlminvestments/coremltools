@@ -333,8 +333,10 @@ class TestGeluTanhApproximation:
             frontend_only=False,
             backend=backend,
         )
-        assert len(spec.neuralNetwork.layers) == 1
-        assert spec.neuralNetwork.layers[0].WhichOneof("layer") == "gelu"
+        if len(spec.neuralNetwork.layers) != 1:
+            raise AssertionError
+        if spec.neuralNetwork.layers[0].WhichOneof("layer") != "gelu":
+            raise AssertionError
 
 
 class TestActivationSigmoid:
@@ -1226,7 +1228,8 @@ class TestDepthwiseConv:
         N, C_in, C_out = batch_size, 2, 6
         input_shape = (N, H, W, C_in)
         data_format = "NHWC"
-        assert C_out % C_in == 0
+        if C_out % C_in != 0:
+            raise AssertionError
         multiplier = int(C_out / C_in)
         W_shape = (kH, kW, C_in, multiplier)
 
@@ -1259,7 +1262,8 @@ class TestDepthwiseConv:
             )
 
             if backend == 'nnv1_proto':
-                assert layer_counts(proto, "reorganizeData") == 0
+                if layer_counts(proto, "reorganizeData") != 0:
+                    raise AssertionError
 
         def test_dynamic_W():
             @make_tf_graph([input_shape, W_shape])
@@ -1334,7 +1338,8 @@ class TestSeparableConv:
         N, C_in, C_out = batch_size, 2, 6
         input_shape = (N, H, depthwise_filter, C_in)
         data_format = "NHWC"
-        assert C_out % C_in == 0
+        if C_out % C_in != 0:
+            raise AssertionError
         multiplier = int(C_out / C_in)
         depthwise_filter_shape = (kH, kW, C_in, multiplier)
         pointwise_filter_shape = [1, 1, multiplier * C_in, C_out]
@@ -2231,9 +2236,11 @@ class TestLinear:
             if layer.WhichOneof("layer") == "batchedMatmul":
                 wp = layer.batchedMatmul.weights
                 if use_constant:
-                    assert len(wp.floatValue) != 0
+                    if len(wp.floatValue) == 0:
+                        raise AssertionError
                 else:
-                    assert len(wp.floatValue) == 0
+                    if len(wp.floatValue) != 0:
+                        raise AssertionError
 
 
 class TestBatchNormalization:

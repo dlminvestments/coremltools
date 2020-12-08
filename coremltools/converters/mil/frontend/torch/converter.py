@@ -131,7 +131,8 @@ class TorchConverter:
     def __init__(
         self, torchscript, inputs, outputs=None, cut_at_symbols=None,
     ):
-        assert isinstance(torchscript, _torch.jit.ScriptModule)
+        if not isinstance(torchscript, _torch.jit.ScriptModule):
+            raise AssertionError
         self.inputs = inputs
         for idx, inp in enumerate(self.inputs):
             if isinstance(inp, ImageType) and self.inputs[idx].channel_first is None:

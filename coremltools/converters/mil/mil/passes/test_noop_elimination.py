@@ -52,8 +52,10 @@ def test_elementwise_elimination(op_type, pos, val):
         if pos == 'y' and (val == 0 or val == [0, 0, 0, 0]):
             new_program = ["relu"]
             
-    assert get_op_types_in_program(prev_prog) == original_program
-    assert get_op_types_in_program(prog) == new_program
+    if get_op_types_in_program(prev_prog) != original_program:
+        raise AssertionError
+    if get_op_types_in_program(prog) != new_program:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -72,8 +74,10 @@ def test_elementwise_broadcast():
     )
     original_program = ["add", "relu"]
 
-    assert get_op_types_in_program(prev_prog) == original_program
-    assert get_op_types_in_program(prog) == original_program
+    if get_op_types_in_program(prev_prog) != original_program:
+        raise AssertionError
+    if get_op_types_in_program(prog) != original_program:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": [4]},
@@ -90,8 +94,10 @@ def test_reshape_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["reshape", "reshape", "relu"]
-    assert get_op_types_in_program(prog) == ["reshape", "relu"]
+    if get_op_types_in_program(prev_prog) != ["reshape", "reshape", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["reshape", "relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -108,8 +114,10 @@ def test_oneway_split_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["split", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["split", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -126,8 +134,10 @@ def test_full_split_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["split", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["split", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -144,8 +154,10 @@ def test_slicebysize_full_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["slice_by_size", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["slice_by_size", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -162,8 +174,10 @@ def test_slicebysize_to_end_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["slice_by_size", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["slice_by_size", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -180,8 +194,10 @@ def test_slicebyindex_full_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["slice_by_index", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["slice_by_index", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -208,8 +224,10 @@ def test_slicebyindex_mask_elimination(begin_mask, end_mask):
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["slice_by_index", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["slice_by_index", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (4, 4)},
@@ -226,8 +244,10 @@ def test_pad_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["pad", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["pad", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -244,8 +264,10 @@ def test_keep_pad():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["pad", "relu"]
-    assert get_op_types_in_program(prog) == ["pad", "relu"]
+    if get_op_types_in_program(prev_prog) != ["pad", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["pad", "relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -262,8 +284,10 @@ def test_tile_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["tile", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["tile", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -280,8 +304,10 @@ def test_keep_tile():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["tile", "relu"]
-    assert get_op_types_in_program(prog) == ["tile", "relu"]
+    if get_op_types_in_program(prev_prog) != ["tile", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["tile", "relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},
@@ -298,8 +324,10 @@ def test_upsample_nearest_neighbor_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["upsample_nearest_neighbor", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["upsample_nearest_neighbor", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (3, 2, 4)},
@@ -316,8 +344,10 @@ def test_upsample_bilinear_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["upsample_bilinear", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["upsample_bilinear", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (3, 2, 4)},
@@ -334,8 +364,10 @@ def test_resize_bilinear_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["resize_bilinear", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["resize_bilinear", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (3, 2, 4)},
@@ -352,8 +384,10 @@ def test_crop_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["crop", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["crop", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (3, 2, 4)},
@@ -370,8 +404,10 @@ def test_linear_elimination():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::noop_elimination"
     )
-    assert get_op_types_in_program(prev_prog) == ["linear_activation", "relu"]
-    assert get_op_types_in_program(prog) == ["relu"]
+    if get_op_types_in_program(prev_prog) != ["linear_activation", "relu"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["relu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (2, 4)},

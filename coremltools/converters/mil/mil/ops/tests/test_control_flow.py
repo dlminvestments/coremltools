@@ -86,7 +86,8 @@ class TestSelect:
         a = random_gen(shape=(6, 1, 7), rand_min=-1962.0, rand_max=0.0)
         b = random_gen(shape=(6, 1, 7), rand_min=0.0, rand_max=1964.0)
         res = mb.select(cond=cond, a=a, b=b)
-        assert is_close(np.where(cond, a, b), res.val)
+        if not is_close(np.where(cond, a, b), res.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -95,7 +96,8 @@ class TestSelect:
         a = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
         b = np.array([[7, 8], [9, 10], [11, 12]], dtype=np.float32)
         res = mb.select(cond=cond, a=a, b=b)
-        assert is_close(np.array([[1, 2], [9, 10], [5, 6]], dtype=np.float32), res.val)
+        if not is_close(np.array([[1, 2], [9, 10], [5, 6]], dtype=np.float32), res.val):
+            raise AssertionError
 
 
 class TestCond:

@@ -131,17 +131,21 @@ class TestExpandDims:
     def test_builder_eval():
         x_val = np.random.rand(1, 6)
         v1 = mb.expand_dims(x=x_val, axes=[2])
-        assert is_close(np.expand_dims(x_val, 2), v1.val)
+        if not is_close(np.expand_dims(x_val, 2), v1.val):
+            raise AssertionError
 
         v2 = mb.expand_dims(x=x_val, axes=[-1])
-        assert is_close(np.expand_dims(x_val, -1), v2.val)
+        if not is_close(np.expand_dims(x_val, -1), v2.val):
+            raise AssertionError
 
         v3 = mb.expand_dims(x=x_val, axes=[-1, -2])
         ref = np.expand_dims(np.expand_dims(x_val, -1), -1)
-        assert is_close(ref, v3.val)
+        if not is_close(ref, v3.val):
+            raise AssertionError
 
         v4 = mb.expand_dims(x=x_val, axes=[0, -1, -2])
-        assert is_close(np.reshape(x_val, (1, 1, 6, 1, 1)), v4.val)
+        if not is_close(np.reshape(x_val, (1, 1, 6, 1, 1)), v4.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, rank_and_axis",
@@ -277,10 +281,12 @@ class TestReshape:
         t = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         r = mb.reshape(x=t, shape=[3, 2])
         expected_r = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
-        assert is_close(expected_r, r.val)
+        if not is_close(expected_r, r.val):
+            raise AssertionError
         r2 = mb.reshape(x=t, shape=[2, -1])
         expected_r2 = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
-        assert is_close(expected_r2, r2.val)
+        if not is_close(expected_r2, r2.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends,)
@@ -382,7 +388,8 @@ class TestReverse:
     def test_builder_eval():
         val = np.array([[-1.0, 7.0, -3.0], [4.0, -5.0, 8.0]], dtype=np.float32)
         res = mb.reverse(x=val, axes=[0])
-        assert is_close(np.flip(val, axis=0), res.val)
+        if not is_close(np.flip(val, axis=0), res.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends,)
@@ -575,9 +582,12 @@ class TestSliceBySize:
         v_1 = mb.slice_by_size(x=x, begin=(0, 1, 0), size=(-1, -1, -1))
         v_2 = mb.slice_by_size(x=x, begin=(0, 1, 0), size=(-1, -1, 3))
         v_3 = mb.slice_by_size(x=x, begin=(0, -2, 0), size=(-1, -1, 3))
-        assert is_close(x[:, 1:, :], v_1.val)
-        assert is_close(x[:, 1:, :3], v_2.val)
-        assert is_close(x[:, -2:, :3], v_3.val)
+        if not is_close(x[:, 1:, :], v_1.val):
+            raise AssertionError
+        if not is_close(x[:, 1:, :3], v_2.val):
+            raise AssertionError
+        if not is_close(x[:, -2:, :3], v_3.val):
+            raise AssertionError
 
 
 class TestSpaceToDepth:
@@ -657,7 +667,8 @@ class TestSqueeze:
     def test_builder_eval():
         x = np.array([[[[1], [2], [3]], [[4], [5], [6]]]], dtype=np.float32)
         v = mb.squeeze(x=x, axes=(-4, 3))
-        assert is_close(np.squeeze(x, axis=(-4, 3)), v.val)
+        if not is_close(np.squeeze(x, axis=(-4, 3)), v.val):
+            raise AssertionError
 
 
 class TestTranspose:
@@ -711,7 +722,8 @@ class TestTranspose:
     def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.transpose(x=x, perm=(1, 0))
-        assert is_close(x.T, v.val)
+        if not is_close(x.T, v.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends,)
@@ -1066,7 +1078,8 @@ class TestConcat:
             np.random.rand(1, 1, 3, 2),
         ]
         v = mb.concat(values=values, axis=2)
-        assert is_close(np.concatenate(values, 2), v.val)
+        if not is_close(np.concatenate(values, 2), v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -1127,7 +1140,8 @@ class TestSplit:
         vs = mb.split(x=t, num_splits=3, axis=0)
         es = np.split(t, [1, 2, 3], axis=0)
         for v, e in zip(vs, es):
-            assert is_close(e, v.val)
+            if not is_close(e, v.val):
+                raise AssertionError
 
 
 class TestStack:
@@ -1175,4 +1189,5 @@ class TestStack:
             np.random.rand(1, 1, 3, 2).astype(np.float32),
         ]
         v = mb.stack(values=values, axis=2)
-        assert is_close(np.stack(values, 2), v.val)
+        if not is_close(np.stack(values, 2), v.val):
+            raise AssertionError

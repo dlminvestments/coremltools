@@ -755,11 +755,12 @@ class TransposeOptimization(object):
 
         input_vars = _get_input_vars(op)
         for var in input_vars:
-            assert (
-                var in self.var_to_hypothetical_value
-            ), "transpose optimization pass: hypothetical value for var '{}', not found".format(
-                var.name
-            )
+            if (
+                var not in self.var_to_hypothetical_value
+            ):
+                raise AssertionError("transpose optimization pass: hypothetical value for var '{}', not found".format(
+                    var.name
+                ))
 
         if op in self.output_sink_ops:
             self._visit_materialize_op(op)
@@ -796,11 +797,12 @@ class TransposeOptimization(object):
                 )
 
         for op in transpose_cancel_ops_to_starting_transpose_set:
-            assert (
-                op not in self.transpose_op_to_cancel_ops
-            ), "transpose reduction optimization: transpose op '{}' cannot be both a starting and cancel op".format(
-                op.name
-            )
+            if (
+                op in self.transpose_op_to_cancel_ops
+            ):
+                raise AssertionError("transpose reduction optimization: transpose op '{}' cannot be both a starting and cancel op".format(
+                    op.name
+                ))
 
         # invert "transpose_op_to_materialize_ops"
         materizalize_ops_to_starting_transpose_set = defaultdict(lambda: set())

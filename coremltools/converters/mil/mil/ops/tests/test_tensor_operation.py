@@ -127,7 +127,8 @@ class TestCumSum:
     def test_builder_eval():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         v = mb.cumsum(x=x_val)
-        assert is_close(np.cumsum(x_val, axis=0), v.val)
+        if not is_close(np.cumsum(x_val, axis=0), v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -239,7 +240,8 @@ class TestFill:
     def test_builder_eval():
         shape = np.random.randint(low=1, high=3, size=5).astype(np.int32)
         res = mb.fill(shape=shape, value=1991.0).val
-        assert is_close(np.full(shape, fill_value=1991.0), res)
+        if not is_close(np.full(shape, fill_value=1991.0), res):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, rank, value",
@@ -635,7 +637,8 @@ class TestNonZero:
     def test_builder_eval():
         x_val = np.random.randint(low=-1, high=2, size=(6, 1, 7))
         res = mb.non_zero(x=x_val)
-        assert is_close(np.transpose(np.nonzero(x_val)), res.val)
+        if not is_close(np.transpose(np.nonzero(x_val)), res.val):
+            raise AssertionError
 
 
 class TestOneHot:
@@ -871,7 +874,8 @@ class TestPad:
                 ],
                 dtype=np.float32,
             )
-            assert is_close(expected_outputs, v.val)
+            if not is_close(expected_outputs, v.val):
+                raise AssertionError
 
         def test_reflect_mode():
             x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
@@ -887,7 +891,8 @@ class TestPad:
                 ],
                 dtype=np.float32,
             )
-            assert is_close(expected_outputs, v.val)
+            if not is_close(expected_outputs, v.val):
+                raise AssertionError
 
         def test_replicate_mode():
             x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
@@ -903,14 +908,16 @@ class TestPad:
                 ],
                 dtype=np.float32,
             )
-            assert is_close(expected_outputs, v.val)
+            if not is_close(expected_outputs, v.val):
+                raise AssertionError
 
         def test_constant_general():
             x_val = np.arange(12, dtype=np.float32).reshape([2, 2, 3])
             pad = np.array([[1, 1], [2, 2], [1, 1]], dtype=np.int32)
             v = mb.pad(x=x_val, pad=pad.reshape(-1), mode="constant", constant_val=0.0)
             expected_outputs = np.pad(x_val, pad, mode="constant")
-            assert is_close(expected_outputs, v.val)
+            if not is_close(expected_outputs, v.val):
+                raise AssertionError
 
         # Test different modes
         test_constant_mode()
@@ -979,7 +986,8 @@ class TestRange1d:
     @staticmethod
     def test_builder_eval():
         v = mb.range_1d(start=5, end=15, step=2)
-        assert is_close(np.arange(5, 15, 2), v.val)
+        if not is_close(np.arange(5, 15, 2), v.val):
+            raise AssertionError
 
 
 class TestTile:
@@ -1027,7 +1035,8 @@ class TestTile:
     def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.tile(x=x, reps=(2,))
-        assert is_close(np.tile(x, reps=(2,)), v.val)
+        if not is_close(np.tile(x, reps=(2,)), v.val):
+            raise AssertionError
 
 @pytest.mark.skip(reason="rdar://65198011 (Re-enable Conv3dTranspose and DynamicTile unit tests)")
 class TestDynamicTile:
@@ -1134,12 +1143,16 @@ class TestTopK:
         val = np.array([[-1.0, 7.0, -3.0], [4.0, -5.0, 8.0]], dtype=np.float32)
         res_values, res_indices = mb.topk(x=val, k=1, axis=0)
         ref_values, ref_indices = np_topk(x=val, k=1, axis=0)
-        assert is_close(ref_values, res_values.val)
-        assert is_close(ref_indices, res_indices.val)
+        if not is_close(ref_values, res_values.val):
+            raise AssertionError
+        if not is_close(ref_indices, res_indices.val):
+            raise AssertionError
         res_values, res_indices = mb.topk(x=val, k=2, axis=-1, ascending=True)
         ref_values, ref_indices = np_topk(x=val, k=2, axis=-1, ascending=True)
-        assert is_close(ref_values, res_values.val)
-        assert is_close(ref_indices, res_indices.val)
+        if not is_close(ref_values, res_values.val):
+            raise AssertionError
+        if not is_close(ref_indices, res_indices.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends,)
@@ -1254,7 +1267,8 @@ class TestFlatten2d:
         t = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         f = mb.flatten2d(x=t)
         expected_f = np.array([[1, 2, 3, 4, 5, 6]], dtype=np.float32)
-        assert is_close(expected_f, f.val)
+        if not is_close(expected_f, f.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends,)
@@ -1326,7 +1340,8 @@ class TestShape:
         t = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         f = mb.shape(x=t)
         expected_f = np.array([1, 2, 3], dtype=np.float32)
-        assert is_close(expected_f, f.val)
+        if not is_close(expected_f, f.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, input_type", itertools.product([True, False], backends, ["int32", "float32"])
@@ -1401,7 +1416,8 @@ class TestIdentity:
         t = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         f = mb.identity(x=t)
         expected_f = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
-        assert is_close(expected_f, f.val)
+        if not is_close(expected_f, f.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends,)
@@ -1469,4 +1485,5 @@ class TestArgSort:
     def test_builder_eval():
         x_val = random_gen(shape=(1, 3, 2, 2), rand_min=-100, rand_max=100)
         res = mb.argsort(x=x_val, axis=-3)
-        assert is_close(np.argsort(x_val, axis=-3), res.val)
+        if not is_close(np.argsort(x_val, axis=-3), res.val):
+            raise AssertionError

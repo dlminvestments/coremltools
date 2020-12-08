@@ -127,15 +127,20 @@ class TestElementwiseOptimizationPasses:
         prev_prog, prev_block, block = apply_pass_and_basic_check(
             prog, "common::fuse_bias_conv"
         )
-        assert get_op_types_in_program(prev_prog) == [conv_op, element_op, "relu"]
-        assert get_op_types_in_program(prog) == [conv_op, "relu"]
+        if get_op_types_in_program(prev_prog) != [conv_op, element_op, "relu"]:
+            raise AssertionError
+        if get_op_types_in_program(prog) != [conv_op, "relu"]:
+            raise AssertionError
 
         old_bias = prev_block.find_ops(op_type=conv_op)[0].inputs.get("bias", None)
         old_bias_val = 0 if old_bias is None else old_bias.val
-        assert old_bias_val is not None
-        assert block.find_ops(op_type=conv_op)[0].inputs["bias"] is not None
+        if old_bias_val is None:
+            raise AssertionError
+        if block.find_ops(op_type=conv_op)[0].inputs["bias"] is None:
+            raise AssertionError
         new_bias_val = block.find_ops(op_type=conv_op)[0].inputs["bias"].val
-        assert new_bias_val is not None
+        if new_bias_val is None:
+            raise AssertionError
         if use_sub_instead:
             np.testing.assert_almost_equal(
                 old_bias_val - np.squeeze(const), new_bias_val
@@ -193,8 +198,10 @@ class TestElementwiseOptimizationPasses:
         prev_prog, prev_block, block = apply_pass_and_basic_check(
             prog, "common::fuse_elementwise_to_batchnorm"
         )
-        assert get_op_types_in_program(prev_prog) == ["transpose", "mul", "add"]
-        assert get_op_types_in_program(prog) == ["transpose", "batch_norm"]
+        if get_op_types_in_program(prev_prog) != ["transpose", "mul", "add"]:
+            raise AssertionError
+        if get_op_types_in_program(prog) != ["transpose", "batch_norm"]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (1, 10, 10, C)},

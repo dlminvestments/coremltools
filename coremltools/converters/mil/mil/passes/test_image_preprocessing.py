@@ -66,5 +66,7 @@ class ImagePreprocessingPass(unittest.TestCase):
             inputs=[ImageType(name="x", shape=(10, 20, 30, 3),
               channel_first=False)],
             source="mil", convert_to="nn_proto")
-        assert mlmodel is not None
-        assert len(mlmodel.get_spec().neuralNetwork.layers) == 3
+        if mlmodel is None:
+            raise AssertionError
+        if len(mlmodel.get_spec().neuralNetwork.layers) != 3:
+            raise AssertionError

@@ -172,7 +172,8 @@ class TestScatterAlongAxis:
         v = mb.scatter_along_axis(
             data=x, indices=indices, updates=updates, axis=0, mode="update"
         )
-        assert is_close(np.array([[1, 6, 10], [8, 9, 7]], dtype=np.float32), v.val)
+        if not is_close(np.array([[1, 6, 10], [8, 9, 7]], dtype=np.float32), v.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, rank_axis",
@@ -434,7 +435,8 @@ class TestGather:
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         indices = np.array([1, 0], dtype=np.int32)
         v = mb.gather(x=x, indices=indices, axis=-1)
-        assert is_close(np.array([[2, 1], [5, 4]], dtype=np.float32), v.val)
+        if not is_close(np.array([[2, 1], [5, 4]], dtype=np.float32), v.val):
+            raise AssertionError
 
 
 class TestGatherAlongAxis:
@@ -493,7 +495,8 @@ class TestGatherAlongAxis:
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         indices = np.array([[1, 0, 1], [0, 0, 1]], dtype=np.int32)
         v = mb.gather_along_axis(x=x, indices=indices, axis=0)
-        assert is_close(np.array([[4, 2, 6], [1, 2, 6]], dtype=np.float32), v.val)
+        if not is_close(np.array([[4, 2, 6], [1, 2, 6]], dtype=np.float32), v.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, rank_axis",

@@ -206,4 +206,5 @@ class TestSliceByIndex:
             x_val[..., ::-1],
         ]
         for idx in range(len(v)):
-            assert is_close(ans[idx], v[idx].val)
+            if not is_close(ans[idx], v[idx].val):
+                raise AssertionError

@@ -519,7 +519,8 @@ class TestNormalizationLayerNorm:
         with Function({}) as ssa_func:
             res = mb.layer_norm(x=x_val, axes=axes, epsilon=epsilon, gamma=gamma_val, beta=beta_val)
             ref = TestNormalizationLayerNorm._np_layer_norm(x=x_val, axes=axes, epsilon=epsilon, gamma=gamma_val, beta=beta_val)
-            assert is_close(ref, res.val)
+            if not is_close(ref, res.val):
+                raise AssertionError
 
 
 class TestNormalizationLocalResponseNorm:

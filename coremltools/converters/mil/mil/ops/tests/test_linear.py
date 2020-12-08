@@ -49,7 +49,8 @@ class TestLinear:
         weight_val = random_gen(shape=(2, 2), rand_min=-91, rand_max=84)
         bias_val = random_gen(shape=(2,), rand_min=0.0, rand_max=9.0)
         v = mb.linear(x=x_val, weight=weight_val, bias=bias_val)
-        assert is_close(np.matmul(x_val, weight_val.T) + bias_val, v.val)
+        if not is_close(np.matmul(x_val, weight_val.T) + bias_val, v.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, dim",
@@ -146,7 +147,8 @@ class TestMatMul:
         x_val = random_gen(shape=(2, 2, 4), rand_min=-37, rand_max=64)
         y_val = random_gen(shape=(2, 4, 2), rand_min=-91, rand_max=84)
         v = mb.matmul(x=x_val, y=y_val)
-        assert is_close(np.matmul(x_val, y_val), v.val)
+        if not is_close(np.matmul(x_val, y_val), v.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, shapes",

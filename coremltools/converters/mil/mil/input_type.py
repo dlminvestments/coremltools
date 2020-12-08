@@ -105,7 +105,8 @@ class InputSpec(object):
                         continue
                     raise ValueError("Input {} is required".format(name))
                 else:
-                    assert input_type.default is None
+                    if input_type.default is not None:
+                        raise AssertionError
                     ret.append((name, None))
         return ret
 

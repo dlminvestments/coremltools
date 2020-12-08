@@ -67,7 +67,8 @@ class ParsedTFNode(ParsedNode):
                 self.datatype = self.attr["dtype"]
         elif "shape" in self.attr:
             shape = self.attr["shape"]
-            assert "dtype" in self.attr
+            if "dtype" not in self.attr:
+                raise AssertionError
             if len(shape) == 0:
                 self.datatype = self.attr["dtype"]
             else:

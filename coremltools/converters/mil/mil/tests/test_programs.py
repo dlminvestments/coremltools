@@ -49,11 +49,13 @@ def test_single_layer_example():
         "x": np.random.rand(batch_size, input_dim).astype(np.float32),
     }
     model = models.MLModel(proto)
-    assert model is not None
+    if model is None:
+        raise AssertionError
 
     if ct.utils._is_macos():
         prediction = model.predict(feed_dict)
-        assert len(prediction) == 1
+        if len(prediction) != 1:
+            raise AssertionError
 
 
 def test_conv_example():
@@ -113,11 +115,13 @@ def test_conv_example():
         "seq": np.random.rand(*seq_shape).astype(np.float32),
     }
     model = models.MLModel(proto)
-    assert model is not None
+    if model is None:
+        raise AssertionError
 
     if ct.utils._is_macos():
         prediction = model.predict(feed_dict)
-        assert len(prediction) == 6
+        if len(prediction) != 6:
+            raise AssertionError
 
 
 def test_while_example():
@@ -144,8 +148,10 @@ def test_while_example():
         "b": np.random.rand(1, 2).astype(np.float32),
     }
     model = models.MLModel(proto)
-    assert model is not None
+    if model is None:
+        raise AssertionError
 
     if ct.utils._is_macos():
         prediction = model.predict(feed_dict)
-        assert len(prediction) == 2
+        if len(prediction) != 2:
+            raise AssertionError
