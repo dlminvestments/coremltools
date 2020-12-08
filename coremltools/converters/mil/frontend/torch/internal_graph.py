@@ -276,7 +276,8 @@ class InternalTorchIRGraph:
         graph_str += "return ({})".format(", ".join(_ssa_name_list(self.outputs)))
         return graph_str
 
-    def _format_inputs(self, inputs, unpack=False):
+    @staticmethod
+    def _format_inputs(inputs, unpack=False):
         def tensor_str(x):
             return "Tensor{}".format(
                 tuple(list(x.shape.shape if unpack else x.shape) + [str(x.dtype)])

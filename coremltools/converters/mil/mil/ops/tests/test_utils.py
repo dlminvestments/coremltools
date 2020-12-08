@@ -13,7 +13,8 @@ from coremltools.converters.mil.mil.ops.defs._utils import (
 
 
 class TestDilation:
-    def test_kernel_and_dilations_not_same_size(self):
+    @staticmethod
+    def test_kernel_and_dilations_not_same_size():
         np.testing.assert_raises_regex(
             ValueError,
             "kernel_shape.*dilations.*length",
@@ -22,19 +23,22 @@ class TestDilation:
             dilations=(1, 2),
         )
 
-    def test_effective_kernel_dilation_1(self):
+    @staticmethod
+    def test_effective_kernel_dilation_1():
         actual = effective_kernel(kernel_shape=(1, 2, 3), dilations=(1, 1, 1))
 
         expected = [1, 2, 3]
         np.testing.assert_equal(actual, expected)
 
-    def test_effective_kernel_dilation_2(self):
+    @staticmethod
+    def test_effective_kernel_dilation_2():
         actual = effective_kernel(kernel_shape=(1, 2, 3), dilations=(2, 2, 2))
 
         expected = [1, 3, 5]
         np.testing.assert_equal(actual, expected)
 
-    def test_effective_kernel_dilation_3(self):
+    @staticmethod
+    def test_effective_kernel_dilation_3():
         actual = effective_kernel(kernel_shape=(1, 2, 3), dilations=(3, 3, 3))
 
         expected = [1, 4, 7]
@@ -42,7 +46,8 @@ class TestDilation:
 
 
 class TestAggregatePadding:
-    def test_invalid_pad_type(self):
+    @staticmethod
+    def test_invalid_pad_type():
         np.testing.assert_raises_regex(
             ValueError,
             "Invalid padding pad_type",
@@ -51,7 +56,8 @@ class TestAggregatePadding:
             kernel_shape=(1, 2, 3),
         )
 
-    def test_dilations_rank_different_from_input_rank(self):
+    @staticmethod
+    def test_dilations_rank_different_from_input_rank():
         np.testing.assert_raises_regex(
             ValueError,
             "dilations must have same length as kernel_shape",
@@ -61,7 +67,8 @@ class TestAggregatePadding:
             dilations=(4, 5),
         )
 
-    def test_custom_pad(self):
+    @staticmethod
+    def test_custom_pad():
         actual = aggregated_pad(
             pad_type="custom", kernel_shape=(1, 2, 3), custom_pad=(7, 8, 9, 10, 11, 12)
         )
@@ -69,7 +76,8 @@ class TestAggregatePadding:
         expected = [7 + 8, 9 + 10, 11 + 12]
         np.testing.assert_equal(actual, expected)
 
-    def test_custom_pad_none(self):
+    @staticmethod
+    def test_custom_pad_none():
         np.testing.assert_raises_regex(
             ValueError,
             "Invalid custom_pad",
@@ -79,7 +87,8 @@ class TestAggregatePadding:
             custom_pad=None,
         )
 
-    def test_custom_pad_invalid(self):
+    @staticmethod
+    def test_custom_pad_invalid():
         np.testing.assert_raises_regex(
             ValueError,
             "Invalid custom_pad",
@@ -89,31 +98,36 @@ class TestAggregatePadding:
             custom_pad=(7, 8, 9, 10),  # too few elements
         )
 
-    def test_valid_pad(self):
+    @staticmethod
+    def test_valid_pad():
         actual = aggregated_pad(pad_type="valid", kernel_shape=(1, 2, 3),)
 
         expected = [0, 0, 0]
         np.testing.assert_equal(actual, expected)
 
-    def test_valid_pad_4d(self):
+    @staticmethod
+    def test_valid_pad_4d():
         actual = aggregated_pad(pad_type="valid", kernel_shape=(1, 2, 3, 4),)
 
         expected = [0, 0, 0, 0]
         np.testing.assert_equal(actual, expected)
 
-    def test_valid_pad_2d(self):
+    @staticmethod
+    def test_valid_pad_2d():
         actual = aggregated_pad(pad_type="valid", kernel_shape=(1, 2),)
 
         expected = [0, 0]
         np.testing.assert_equal(actual, expected)
 
-    def test_valid_pad_1d(self):
+    @staticmethod
+    def test_valid_pad_1d():
         actual = aggregated_pad(pad_type="valid", kernel_shape=[4])
 
         expected = [0]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_no_dilation(self):
+    @staticmethod
+    def test_same_padding_no_dilation():
         actual = aggregated_pad(
             pad_type="same",
             input_shape=(5, 6, 7),
@@ -124,7 +138,8 @@ class TestAggregatePadding:
         expected = [1, 0, 1]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_dilation_with_dilation(self):
+    @staticmethod
+    def test_same_padding_dilation_with_dilation():
         actual = aggregated_pad(
             pad_type="same",
             input_shape=(19, 20, 21),
@@ -136,7 +151,8 @@ class TestAggregatePadding:
         expected = [5, 5, 7]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_stride_same_as_input(self):
+    @staticmethod
+    def test_same_padding_stride_same_as_input():
         actual = aggregated_pad(
             pad_type="same", input_shape=(5, 5), kernel_shape=(3, 3), strides=(5, 5),
         )
@@ -144,7 +160,8 @@ class TestAggregatePadding:
         expected = [0, 0]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_stride_larger_than_kernel_but_less_than_input(self):
+    @staticmethod
+    def test_same_padding_stride_larger_than_kernel_but_less_than_input():
         actual = aggregated_pad(
             pad_type="same", input_shape=(5, 5), kernel_shape=(3, 3), strides=(4, 4),
         )
@@ -152,7 +169,8 @@ class TestAggregatePadding:
         expected = [2, 2]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_none_input_shape(self):
+    @staticmethod
+    def test_same_padding_none_input_shape():
         np.testing.assert_raises_regex(
             ValueError,
             "input_shape.*None",
@@ -162,7 +180,8 @@ class TestAggregatePadding:
             strides=(1, 2, 3),
         )
 
-    def test_same_padding_input_shape_wrong_size(self):
+    @staticmethod
+    def test_same_padding_input_shape_wrong_size():
         np.testing.assert_raises_regex(
             ValueError,
             "input_shape.*same length",
@@ -173,7 +192,8 @@ class TestAggregatePadding:
             strides=(1, 2, 3),
         )
 
-    def test_same_padding_none_strides(self):
+    @staticmethod
+    def test_same_padding_none_strides():
         np.testing.assert_raises_regex(
             ValueError,
             "strides.*None",
@@ -183,7 +203,8 @@ class TestAggregatePadding:
             input_shape=(1, 2, 3),
         )
 
-    def test_same_padding_strides_wrong_size(self):
+    @staticmethod
+    def test_same_padding_strides_wrong_size():
         np.testing.assert_raises_regex(
             ValueError,
             "strides.*same length",
@@ -196,7 +217,8 @@ class TestAggregatePadding:
 
 
 class TestOutputShape:
-    def test_custom_padding_shape(self):
+    @staticmethod
+    def test_custom_padding_shape():
         actual = spatial_dimensions_out_shape(
             pad_type="custom",
             input_shape=(3, 3, 3),
@@ -208,7 +230,8 @@ class TestOutputShape:
         expected = [2, 3, 4]
         np.testing.assert_equal(actual, expected)
 
-    def test_valid_padding_shape(self):
+    @staticmethod
+    def test_valid_padding_shape():
         actual = spatial_dimensions_out_shape(
             pad_type="valid", input_shape=(7, 7), kernel_shape=(3, 3), strides=(1, 1)
         )
@@ -216,7 +239,8 @@ class TestOutputShape:
         expected = [5, 5]
         np.testing.assert_equal(actual, expected)
 
-    def test_valid_padding_shape_dilation_2(self):
+    @staticmethod
+    def test_valid_padding_shape_dilation_2():
         actual = spatial_dimensions_out_shape(
             pad_type="valid",
             input_shape=(7, 7),
@@ -228,7 +252,8 @@ class TestOutputShape:
         expected = [3, 3]
         np.testing.assert_equal(actual, expected)
 
-    def test_valid_padding_shape_with_stride_2(self):
+    @staticmethod
+    def test_valid_padding_shape_with_stride_2():
         actual = spatial_dimensions_out_shape(
             pad_type="valid", input_shape=(7, 7), kernel_shape=(3, 3), strides=(2, 2)
         )
@@ -236,7 +261,8 @@ class TestOutputShape:
         expected = [3, 3]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_shape(self):
+    @staticmethod
+    def test_same_padding_shape():
         actual = spatial_dimensions_out_shape(
             pad_type="same", input_shape=(6, 6), kernel_shape=(2, 2), strides=(2, 2)
         )
@@ -244,7 +270,8 @@ class TestOutputShape:
         expected = [3, 3]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_shape_stride_2_input_not_multiple_of_kernel(self):
+    @staticmethod
+    def test_same_padding_shape_stride_2_input_not_multiple_of_kernel():
         actual = spatial_dimensions_out_shape(
             pad_type="same", input_shape=(5, 5), kernel_shape=(2, 2), strides=(2, 2)
         )
@@ -252,7 +279,8 @@ class TestOutputShape:
         expected = [3, 3]
         np.testing.assert_equal(actual, expected)
 
-    def test_same_padding_shape_dilation_2(self):
+    @staticmethod
+    def test_same_padding_shape_dilation_2():
         actual = spatial_dimensions_out_shape(
             pad_type="same",
             input_shape=(5, 5),

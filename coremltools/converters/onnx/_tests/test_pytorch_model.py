@@ -92,12 +92,14 @@ def _test_torch_model_single_io(
 
 @unittest.skipUnless(_HAS_ONNX, MSG_ONNX_NOT_FOUND)
 class OnnxModelTest(unittest.TestCase):
-    def test_functional_average_pool(self, minimum_ios_deployment_target="12"):
+    @staticmethod
+    def test_functional_average_pool(minimum_ios_deployment_target="12"):
         class Net(nn.Module):
             def __init__(self):
                 super(Net, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 y = F.avg_pool2d(x, [15, 18], [15, 18])
                 return y
 
@@ -196,12 +198,14 @@ class OnnxModelTest(unittest.TestCase):
         torch_model.train(False)
         _test_torch_model_single_io(torch_model, (1, 3), (3,))  # type: ignore
 
-    def test_const_initializer2(self):  # type: () -> None
+    @staticmethod
+    def test_const_initializer2():  # type: () -> None
         class Net(nn.Module):
             def __init__(self):
                 super(Net, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 y = x + torch.nn.Parameter(torch.ones(2, 3), requires_grad=False)
                 return y
 
@@ -273,12 +277,14 @@ class OnnxModelTest(unittest.TestCase):
         torch_model.train(False)
         _test_torch_model_single_io(torch_model, (1, 1, 3, 3), (1, 3, 3))  # type: ignore
 
-    def test_pow(self):  # type: () -> None
+    @staticmethod
+    def test_pow():  # type: () -> None
         class Net(nn.Module):
             def __init__(self):
                 super(Net, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 y = x.pow(3)
                 return y
 
@@ -601,7 +607,8 @@ class OnnxModelTest(unittest.TestCase):
             def __init__(self):
                 super(Net, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 x = x[:, :5] + x[:, 5:]
                 return x
 
@@ -764,7 +771,8 @@ class UnaryOperationTests(unittest.TestCase):
     )
     def test_sqrt_tensor(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.sqrt(x)
 
         torch_model = Net()  # type: ignore
@@ -784,7 +792,8 @@ class OperatorTests(unittest.TestCase):
     )
     def test_repeat(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return x.repeat([2, 3, 1])
 
         torch_model = Net()
@@ -805,7 +814,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_add_same_shape(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.add(x, y)
 
         y = torch.rand((18, 4, 5))
@@ -819,7 +829,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_add_same_shape_multiple(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return x + y + y1 + y2 + y3
 
         y = torch.rand((18, 4, 5))
@@ -837,7 +848,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_add_tensor_scalar(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.add(x, y)
 
         y = 5
@@ -851,7 +863,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_add_diff_shape(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.add(x, y)
 
         y = torch.rand((4, 5))
@@ -866,7 +879,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_sub_same_shape(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.sub(x, y)
 
         y = torch.rand((18, 4, 5))
@@ -880,7 +894,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_sub_same_shape_multiple(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return x - y - y1 - y2 - y3
 
         y = torch.rand((18, 4, 5))
@@ -898,7 +913,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_sub_tensor_scalar(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.sub(x, y)
 
         y = 5
@@ -912,7 +928,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_sub_diff_shape(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.sub(x, y)
 
         y = torch.rand((4, 5))
@@ -926,7 +943,8 @@ class BinaryOperationTests(unittest.TestCase):
     )
     def test_bianry_ops_mix_test(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return ((x * g + a) - d * (c + b) + (a * e - g) / e) / f
 
         a = torch.rand((18, 4, 5))
@@ -955,7 +973,8 @@ class ReduceOperationTests(unittest.TestCase):
     )
     def test_reducesum(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return x.sum(dim=0)
 
         torch_model = Net()  # type: ignore
@@ -973,7 +992,8 @@ class ReduceOperationTests(unittest.TestCase):
     )
     def test_reducemean(self, minimum_ios_deployment_target="13"):
         class Net(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return x.mean(dim=1)
 
         torch_model = Net()  # type: ignore

@@ -70,11 +70,13 @@ class TestTorchPasses:
     """
 
     @pytest.fixture
-    def set_random_seeds(self):
+    @staticmethod
+    def set_random_seeds():
         torch.manual_seed(1)
         np.random.seed(1)
 
-    def test_flatten_input_values(self):
+    @staticmethod
+    def test_flatten_input_values():
         graph = _build_flattening_test_graph()
 
         flatten_graph_input_values(graph)
@@ -95,7 +97,8 @@ class TestTorchPasses:
         # next op.
         np.testing.assert_equal(graph.nodes[1].outputs[0], graph.nodes[2].inputs[0])
 
-    def test_flatten_output_values(self):
+    @staticmethod
+    def test_flatten_output_values():
         graph = _build_flattening_test_graph()
 
         flatten_graph_output_values(graph)
@@ -107,7 +110,8 @@ class TestTorchPasses:
         np.testing.assert_equal(graph.outputs[1], graph.nodes[1].outputs[0])
         np.testing.assert_equal(graph.outputs[2], graph.nodes[1].outputs[1])
 
-    def test_transform_inplace_ops_graph(self):
+    @staticmethod
+    def test_transform_inplace_ops_graph():
         # The test graph is:
         #    graph(
         #        %x : Tensor[1],
@@ -160,7 +164,8 @@ class TestTorchPasses:
         np.testing.assert_equal(graph.outputs[0], graph.nodes[-1].outputs[0])
 
 
-    def test_transform_inplace_ops_loop(self):
+    @staticmethod
+    def test_transform_inplace_ops_loop():
         # The test graph is:
         #    graph(
         #        %x : Tensor[1],
@@ -255,7 +260,8 @@ class TestTorchPasses:
 
 
     @pytest.mark.xfail(reason="rdar://64235006")
-    def test_transform_inplace_ops_if(self):
+    @staticmethod
+    def test_transform_inplace_ops_if():
         # The test graph is:
         #    graph(
         #        %x : Tensor[1],

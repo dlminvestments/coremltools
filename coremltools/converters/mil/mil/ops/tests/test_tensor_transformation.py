@@ -127,7 +127,8 @@ class TestExpandDims:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.random.rand(1, 6)
         v1 = mb.expand_dims(x=x_val, axes=[2])
         assert is_close(np.expand_dims(x_val, 2), v1.val)
@@ -271,7 +272,8 @@ class TestReshape:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         t = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         r = mb.reshape(x=t, shape=[3, 2])
         expected_r = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
@@ -376,7 +378,8 @@ class TestReverse:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         val = np.array([[-1.0, 7.0, -3.0], [4.0, -5.0, 8.0]], dtype=np.float32)
         res = mb.reverse(x=val, axes=[0])
         assert is_close(np.flip(val, axis=0), res.val)
@@ -566,7 +569,8 @@ class TestSliceBySize:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array(list(range(24))).reshape(2, 3, 4)
         v_1 = mb.slice_by_size(x=x, begin=(0, 1, 0), size=(-1, -1, -1))
         v_2 = mb.slice_by_size(x=x, begin=(0, 1, 0), size=(-1, -1, 3))
@@ -649,7 +653,8 @@ class TestSqueeze:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array([[[[1], [2], [3]], [[4], [5], [6]]]], dtype=np.float32)
         v = mb.squeeze(x=x, axes=(-4, 3))
         assert is_close(np.squeeze(x, axis=(-4, 3)), v.val)
@@ -702,7 +707,8 @@ class TestTranspose:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.transpose(x=x, perm=(1, 0))
         assert is_close(x.T, v.val)
@@ -1053,7 +1059,8 @@ class TestConcat:
             )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         values = [
             np.random.rand(1, 1, 6, 2),
             np.random.rand(1, 1, 3, 2),
@@ -1062,7 +1069,8 @@ class TestConcat:
         assert is_close(np.concatenate(values, 2), v.val)
 
     @ssa_fn
-    def test_builder_eval_failure(self):
+    @staticmethod
+    def test_builder_eval_failure():
         values = [
             np.random.rand(1, 1, 6, 2),
             np.random.rand(1, 1, 3, 1),
@@ -1113,7 +1121,8 @@ class TestSplit:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         t = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
         vs = mb.split(x=t, num_splits=3, axis=0)
         es = np.split(t, [1, 2, 3], axis=0)
@@ -1159,7 +1168,8 @@ class TestStack:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         values = [
             np.random.rand(1, 1, 3, 2).astype(np.float32),
             np.random.rand(1, 1, 3, 2).astype(np.float32),

@@ -53,7 +53,8 @@ class elementwise_binary(Operation):
         """
         raise NotImplementedError()
 
-    def get_dtype(self, promoted_dtype):
+    @staticmethod
+    def get_dtype(promoted_dtype):
         """
         Override if output primitive type is different from input types
         (e.g., less, greater)

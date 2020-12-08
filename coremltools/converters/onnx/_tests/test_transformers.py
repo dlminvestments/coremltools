@@ -234,7 +234,8 @@ class NodeRemoverTests(unittest.TestCase):
 
 @unittest.skipUnless(_HAS_ONNX, MSG_ONNX_NOT_FOUND)
 class PixelShuffleFuserTest(unittest.TestCase):
-    def test_pixel_shuffle(self):  # type: () -> None
+    @staticmethod
+    def test_pixel_shuffle():  # type: () -> None
         scale_factor = 2
         input_shape = (1, 8, 2, 2)
         output_shape = (

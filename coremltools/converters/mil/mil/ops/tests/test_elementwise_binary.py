@@ -110,7 +110,8 @@ class TestElementwiseBinary:
         )
 
     @ssa_fn
-    def test_builder_add(self):
+    @staticmethod
+    def test_builder_add():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[0, 4, 0], [8, 0, 12]], dtype=np.float32)
@@ -118,7 +119,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_floor_div(self):
+    @staticmethod
+    def test_builder_floor_div():
         x = np.array([[10, 20, 30], [40, 50, 60]], dtype=np.float32)
         y = np.array([[11, 12, 13], [14, 15, 16]], dtype=np.float32)
         expected_outputs = np.array([[0, 1, 2], [2, 3, 3]], dtype=np.float32)
@@ -126,7 +128,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_maximum(self):
+    @staticmethod
+    def test_builder_maximum():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
@@ -134,7 +137,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_minimum(self):
+    @staticmethod
+    def test_builder_minimum():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
@@ -142,7 +146,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_mod(self):
+    @staticmethod
+    def test_builder_mod():
         x = np.array([[10, 20, 30], [40, 50, 60]], dtype=np.float32)
         y = np.array([[11, 12, 13], [14, 15, 16]], dtype=np.float32)
         expected_outputs = np.array([[10, 8, 4], [12, 5, 12]], dtype=np.float32)
@@ -150,7 +155,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_mul(self):
+    @staticmethod
+    def test_builder_mul():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[-1, 4, -9], [16, -25, 36]], dtype=np.float32)
@@ -158,7 +164,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_pow(self):
+    @staticmethod
+    def test_builder_pow():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array(
@@ -168,7 +175,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_real_div(self):
+    @staticmethod
+    def test_builder_real_div():
         x = np.array([[10, 20, 30], [40, 50, 60]], dtype=np.float32)
         y = np.array([[11, 12, 13], [14, 15, 16]], dtype=np.float32)
         expected_outputs = np.array(
@@ -179,7 +187,8 @@ class TestElementwiseBinary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_real_div_both_ints(self):
+    @staticmethod
+    def test_builder_real_div_both_ints():
         x = np.array([5], dtype=np.int32)
         y = np.array([2], dtype=np.int32)
         expected_outputs = np.array([2.5], dtype=np.float32)
@@ -193,7 +202,8 @@ class TestElementwiseBinary:
         assert v._sym_type.get_primitive() == v._sym_val.get_primitive()
 
     @ssa_fn
-    def test_builder_sub(self):
+    @staticmethod
+    def test_builder_sub():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[2, 0, 6], [0, 10, 0]], dtype=np.float32)
@@ -238,7 +248,8 @@ class TestEqual:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[0, 1, 0], [1, 0, 1]], dtype=np.bool)
@@ -283,7 +294,8 @@ class TestGreater:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[1, 0, 1], [0, 1, 0]], dtype=np.bool)
@@ -328,7 +340,8 @@ class TestGreaterEqual:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[1, 1, 1], [1, 1, 1]], dtype=np.bool)
@@ -420,7 +433,8 @@ class TestLess:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[0, 0, 0], [0, 0, 0]], dtype=np.bool)
@@ -459,7 +473,8 @@ class TestLessEqual:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[0, 1, 0], [1, 0, 1]], dtype=np.bool)
@@ -498,7 +513,8 @@ class TestNotEqual:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         y_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         expected_outputs = np.array([[1, 0, 1], [0, 1, 0]], dtype=np.bool)

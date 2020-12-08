@@ -30,7 +30,8 @@ class bool:
         return bool(self.val != other.val)
 
     @annotate(delay_type.bool)
-    def __not__(self, other):
+    @staticmethod
+    def __not__(other):
         return bool(not other.val)
 
     @annotate(delay_type.bool)

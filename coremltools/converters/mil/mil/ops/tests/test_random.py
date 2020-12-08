@@ -107,7 +107,8 @@ class TestRandomBernoulli:
 
 
 class TestRandomCategorical:
-    def softmax(self, data):
+    @staticmethod
+    def softmax(data):
         e_data = np.exp(data - np.max(data))
         return e_data / e_data.sum()
 

@@ -16,7 +16,8 @@ def _check_visible_modules(actual, expected):
 class TestApiVisibilities:
     """Test public coremltools API visibilities."""
 
-    def test_top_level(self):
+    @staticmethod
+    def test_top_level():
         expected = [
             "ClassifierConfig",
             "EnumeratedShapes",
@@ -39,7 +40,8 @@ class TestApiVisibilities:
              expected.remove("libcoremlpython")
         _check_visible_modules(_get_visible_items(ct), expected)
 
-    def test_utils(self):
+    @staticmethod
+    def test_utils():
         expected = [
             "convert_double_to_float_multiarray_type",
             "convert_neural_network_spec_weights_to_fp16",
@@ -54,7 +56,8 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.utils), expected)
 
-    def test_models(self):
+    @staticmethod
+    def test_models():
         expected = [
             "MLModel",
             "datatypes",
@@ -68,7 +71,8 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.models), expected)
 
-    def test_models_mlmodel(self):
+    @staticmethod
+    def test_models_mlmodel():
         expected = [
             "author",
             "get_spec",
@@ -83,7 +87,8 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.models.MLModel), expected)
 
-    def test_models_neural_network(self):
+    @staticmethod
+    def test_models_neural_network():
         expected = [
             "AdamParams",
             "NeuralNetworkBuilder",
@@ -102,13 +107,15 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.models.neural_network), expected)
 
-    def test_models_neural_network_utils(self):
+    @staticmethod
+    def test_models_neural_network_utils():
         expected = ["NeuralNetworkBuilder", "make_image_input", "make_nn_classifier"]
         _check_visible_modules(
             _get_visible_items(ct.models.neural_network.utils), expected
         )
 
-    def test_models_tree_ensemble(self):
+    @staticmethod
+    def test_models_tree_ensemble():
         expected = [
             "TreeEnsembleBase",
             "TreeEnsembleClassifier",
@@ -118,7 +125,8 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.models.tree_ensemble), expected)
 
-    def test_models_pipeline(self):
+    @staticmethod
+    def test_models_pipeline():
         expected = [
             "Pipeline",
             "PipelineClassifier",
@@ -130,7 +138,8 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.models.pipeline), expected)
 
-    def test_converters(self):
+    @staticmethod
+    def test_converters():
         expected = [
             "ClassifierConfig",
             "EnumeratedShapes",
@@ -149,7 +158,8 @@ class TestApiVisibilities:
         ]
         _check_visible_modules(_get_visible_items(ct.converters), expected)
 
-    def test_converters_caffe(self):
+    @staticmethod
+    def test_converters_caffe():
         _check_visible_modules(_get_visible_items(ct.converters.caffe), ["convert"])
 
     @pytest.mark.skipif(
@@ -164,7 +174,8 @@ class TestApiVisibilities:
     def test_converters_keras(self):
         _check_visible_modules(_get_visible_items(ct.converters.keras), ["convert"])
 
-    def test_converters_libsvm(self):
+    @staticmethod
+    def test_converters_libsvm():
         _check_visible_modules(_get_visible_items(ct.converters.libsvm), ["convert"])
 
     @pytest.mark.skipif(
@@ -174,16 +185,19 @@ class TestApiVisibilities:
     def test_converters_onnx(self):
         _check_visible_modules(_get_visible_items(ct.converters.onnx), ["convert"])
 
-    def test_converters_sklearn(self):
+    @staticmethod
+    def test_converters_sklearn():
         _check_visible_modules(_get_visible_items(ct.converters.sklearn), ["convert"])
 
-    def test_converters_xgboost(self):
+    @staticmethod
+    def test_converters_xgboost():
         _check_visible_modules(_get_visible_items(ct.converters.xgboost), ["convert"])
 
     def test_converters_mil(self):
         pass  # TODO: [Create API visibility tests for MIL](rdar://64413959)
 
-    def test_models_neural_network_quantization_utils(self):
+    @staticmethod
+    def test_models_neural_network_quantization_utils():
         expected = [
             "AdvancedQuantizedLayerSelector",
             "MatrixMultiplyLayerSelector",
@@ -200,7 +214,8 @@ class TestApiVisibilities:
             _get_visible_items(ct.models.neural_network.quantization_utils), expected
         )
 
-    def test_models_neural_network_flexible_shape_utils(self):
+    @staticmethod
+    def test_models_neural_network_flexible_shape_utils():
         expected = [
             "NeuralNetworkImageSize",
             "NeuralNetworkImageSizeRange",
@@ -220,14 +235,16 @@ class TestApiVisibilities:
             _get_visible_items(ct.models.neural_network.flexible_shape_utils), expected
         )
 
-    def test_models_neural_network_update_optimizer_utils(self):
+    @staticmethod
+    def test_models_neural_network_update_optimizer_utils():
         expected = ["AdamParams", "Batch", "RangeParam", "SgdParams"]
         _check_visible_modules(
             _get_visible_items(ct.models.neural_network.update_optimizer_utils),
             expected,
         )
 
-    def test_models_neural_network_optimization_utils(self):
+    @staticmethod
+    def test_models_neural_network_optimization_utils():
         _check_visible_modules(
             _get_visible_items(ct.models.neural_network.optimization_utils), [],
         )

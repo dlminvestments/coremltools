@@ -51,7 +51,8 @@ class TestTf2ModelFormats:
         if os.path.exists(self.saved_model_dir):
             shutil.rmtree(self.saved_model_dir)
 
-    def test_keras_model(self):
+    @staticmethod
+    def test_keras_model():
         keras_model = tf.keras.Sequential(
             [tf.keras.layers.ReLU(input_shape=(4, 5), batch_size=3)]
         )
@@ -125,7 +126,8 @@ class TestTf2ModelFormats:
         )
         assert mlmodel is not None
 
-    def test_concrete_function_list_from_tf_function(self):
+    @staticmethod
+    def test_concrete_function_list_from_tf_function():
         class build_model(tf.Module):
             @tf.function(
                 input_signature=[tf.TensorSpec(shape=[3, 4, 5], dtype=tf.float32)]
@@ -140,7 +142,8 @@ class TestTf2ModelFormats:
         )
         assert mlmodel is not None
 
-    def test_model_metadata(self):
+    @staticmethod
+    def test_model_metadata():
         keras_model = tf.keras.Sequential(
             [tf.keras.layers.ReLU(input_shape=(4, 5), batch_size=3)]
         )
@@ -156,7 +159,8 @@ class TestTf2ModelFormats:
         assert "com.github.apple.coremltools.source" in metadata_keys
         assert "tensorflow==2." in metadata_keys["com.github.apple.coremltools.source"]
 
-    def test_invalid_format_none(self):
+    @staticmethod
+    def test_invalid_format_none():
         with pytest.raises(NotImplementedError) as e:
             converter.convert(None, source=frontend)
         e.match(r"Expected model format: .* .h5")
@@ -169,7 +173,8 @@ class TestTf2ModelFormats:
             converter.convert(invalid_filename, source=frontend)
         e.match(r"Expected model format: .* .h5")
 
-    def test_invalid_format_multiple_concrete_functions(self):
+    @staticmethod
+    def test_invalid_format_multiple_concrete_functions():
         class build_model(tf.Module):
             @tf.function(
                 input_signature=[tf.TensorSpec(shape=[3, 4, 5], dtype=tf.float32)]
@@ -183,7 +188,8 @@ class TestTf2ModelFormats:
             converter.convert([cf, cf, cf], source=frontend)
         e.match(r"Only a single concrete function is supported")
 
-    def test_invalid_converter_type(self):
+    @staticmethod
+    def test_invalid_converter_type():
         keras_model = tf.keras.Sequential(
             [tf.keras.layers.ReLU(input_shape=(4, 5), batch_size=3)]
         )

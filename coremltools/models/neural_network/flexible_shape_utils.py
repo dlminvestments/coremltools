@@ -178,7 +178,8 @@ class NeuralNetworkMultiArrayShapeRange:
                     self.arrayShapeRange[key] = self._create_shape_range(value)
             self.validate_array_shape_range()
 
-    def _create_shape_range(self, r):
+    @staticmethod
+    def _create_shape_range(r):
         if not isinstance(r, tuple):
             raise Exception("Range should be a ShapeRange or a tuple object")
         elif len(r) != 2:

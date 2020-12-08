@@ -744,7 +744,8 @@ class TestWhileLoop:
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend", itertools.product([True, False], backends))
-    def test_while_loop_with_changing_shape(self, use_cpu_only, backend):
+    @staticmethod
+    def test_while_loop_with_changing_shape(use_cpu_only, backend):
         @make_tf_graph([(2,1),(2,1)])
         def build_model(x,y):
             c = lambda i,j: tf.less(tf.shape(j)[1], 5)
@@ -4570,7 +4571,8 @@ class TestMatrixDiag:
                                  backends,
                                  [length for length in range(1, 5)],
                                  [True, False]))
-    def test(self, use_cpu_only, backend, length, dynamic):
+    @staticmethod
+    def test(use_cpu_only, backend, length, dynamic):
 
         if dynamic:
             return  # FIXME: "rdar://65198011 (Re-enable Conv3dTranspose and DynamicTile unit tests)"

@@ -26,7 +26,8 @@ from coremltools.converters.mil.mil import Builder as mb
 
 class TestCompositeOp:
     @pytest.fixture(scope="class")
-    def create_custom_selu(self):
+    @staticmethod
+    def create_custom_selu():
         default_selu = _TF_OPS_REGISTRY.get("Selu", None)
 
         @register_tf_op(tf_alias=[], override=True)

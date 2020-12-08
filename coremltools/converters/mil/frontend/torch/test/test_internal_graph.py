@@ -36,11 +36,13 @@ class TestTorchOps:
     """
 
     @pytest.fixture
-    def context(self):
+    @staticmethod
+    def context():
         return TranscriptionContext()
 
     @pytest.fixture
-    def set_random_seeds(self):
+    @staticmethod
+    def set_random_seeds():
         torch.manual_seed(1)
         np.random.seed(1)
 
@@ -979,7 +981,8 @@ class TestTorchOps:
         assert ssa.shape == tuple(test_input.shape)
 
     @pytest.mark.parametrize("axis", [1, 2, 3])
-    def test_cat(self, context, axis):
+    @staticmethod
+    def test_cat(context, axis):
         input_shape = (1, 3, 240, 320)
 
         test_input1 = torch.rand(input_shape)
@@ -1021,7 +1024,8 @@ class TestTorchOps:
         assert np.allclose(expected_result.shape, ssa.shape)
 
     @pytest.mark.parametrize("axis", [0, 1, 2, 3, 4])
-    def test_stack(self, context, axis):
+    @staticmethod
+    def test_stack(context, axis):
         input_shape = (1, 3, 240, 320)
 
         test_input1 = torch.rand(input_shape)

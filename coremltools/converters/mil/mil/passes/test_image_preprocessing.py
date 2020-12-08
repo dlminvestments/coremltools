@@ -52,7 +52,8 @@ class ImagePreprocessingPass(unittest.TestCase):
         self.assertEqual(get_op_types_in_program(prev_prog), ["transpose", "relu", "transpose", "add", "relu"])
         self.assertEqual(get_op_types_in_program(prog), ["transpose", "transpose", "relu", "transpose", "add", "relu"])
 
-    def test_fusion_with_image_full(self):
+    @staticmethod
+    def test_fusion_with_image_full():
         @mb.program(input_specs=[mb.TensorSpec(shape=(10, 20, 30, 3))])
         def prog(x):
             x1 = mb.transpose(x=x, perm=[0, 3, 1, 2])

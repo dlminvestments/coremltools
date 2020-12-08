@@ -88,8 +88,8 @@ class ErrorHandling(object):
             )
         )
 
+    @staticmethod
     def unsupported_feature_warning(
-        self,
         node,  # type: Node
         warn_message,  # type: Text
     ):

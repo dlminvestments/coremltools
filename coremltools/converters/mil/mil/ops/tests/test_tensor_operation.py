@@ -123,73 +123,85 @@ class TestCumSum:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         v = mb.cumsum(x=x_val)
         assert is_close(np.cumsum(x_val, axis=0), v.val)
 
     @ssa_fn
-    def test_invalid_axis1(self):
+    @staticmethod
+    def test_invalid_axis1():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(ValueError):
             mb.cumsum(x=x_val, axis=-2)
 
     @ssa_fn
-    def test_invalid_axis2(self):
+    @staticmethod
+    def test_invalid_axis2():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(ValueError):
             mb.cumsum(x=x_val, axis=len(x_val.shape))
 
     @ssa_fn
-    def test_invalid_axis3(self):
+    @staticmethod
+    def test_invalid_axis3():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             mb.cumsum(x=x_val, axis="")
 
     @ssa_fn
-    def test_invalid_reverse1(self):
+    @staticmethod
+    def test_invalid_reverse1():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             mb.cumsum(x=x_val, reverse="")
 
     @ssa_fn
-    def test_invalid_reverse2(self):
+    @staticmethod
+    def test_invalid_reverse2():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val, reverse=0)
 
     @ssa_fn
-    def test_invalid_reverse3(self):
+    @staticmethod
+    def test_invalid_reverse3():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val, reverse=1)
 
     @ssa_fn
-    def test_invalid_exclusive1(self):
+    @staticmethod
+    def test_invalid_exclusive1():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val, exclusive="")
 
     @ssa_fn
-    def test_invalid_exclusive2(self):
+    @staticmethod
+    def test_invalid_exclusive2():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val, exclusive=0)
 
     @ssa_fn
-    def test_invalid_exclusive3(self):
+    @staticmethod
+    def test_invalid_exclusive3():
         x_val = random_gen(shape=(1, 2, 3, 4, 5), rand_min=-100, rand_max=100)
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val, exclusive=1)
 
     @ssa_fn
-    def test_invalid_input1(self):
+    @staticmethod
+    def test_invalid_input1():
         x_val = 1
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val)
 
     @ssa_fn
-    def test_invalid_input2(self):
+    @staticmethod
+    def test_invalid_input2():
         x_val = ["1"]
         with pytest.raises(InputTypeError):
             pred = mb.cumsum(x=x_val)
@@ -223,7 +235,8 @@ class TestFill:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         shape = np.random.randint(low=1, high=3, size=5).astype(np.int32)
         res = mb.fill(shape=shape, value=1991.0).val
         assert is_close(np.full(shape, fill_value=1991.0), res)
@@ -618,7 +631,8 @@ class TestNonZero:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.random.randint(low=-1, high=2, size=(6, 1, 7))
         res = mb.non_zero(x=x_val)
         assert is_close(np.transpose(np.nonzero(x_val)), res.val)
@@ -838,7 +852,8 @@ class TestPad:
         test_constant_general()
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         def test_constant_mode():
             x_val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
             v = mb.pad(
@@ -961,7 +976,8 @@ class TestRange1d:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         v = mb.range_1d(start=5, end=15, step=2)
         assert is_close(np.arange(5, 15, 2), v.val)
 
@@ -1007,7 +1023,8 @@ class TestTile:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.tile(x=x, reps=(2,))
         assert is_close(np.tile(x, reps=(2,)), v.val)
@@ -1102,7 +1119,8 @@ class TestTopK:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         def np_topk(x, k, axis, ascending=False):
             indices = np.argsort(x, axis=axis)
             if not ascending:
@@ -1231,7 +1249,8 @@ class TestFlatten2d:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         t = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         f = mb.flatten2d(x=t)
         expected_f = np.array([[1, 2, 3, 4, 5, 6]], dtype=np.float32)
@@ -1302,7 +1321,8 @@ class TestShape:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         t = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         f = mb.shape(x=t)
         expected_f = np.array([1, 2, 3], dtype=np.float32)
@@ -1376,7 +1396,8 @@ class TestIdentity:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         t = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
         f = mb.identity(x=t)
         expected_f = np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.float32)
@@ -1444,7 +1465,8 @@ class TestArgSort:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = random_gen(shape=(1, 3, 2, 2), rand_min=-100, rand_max=100)
         res = mb.argsort(x=x_val, axis=-3)
         assert is_close(np.argsort(x_val, axis=-3), res.val)

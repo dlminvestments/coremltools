@@ -80,7 +80,8 @@ class TestSelect:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         cond = np.random.randint(low=0, high=2, size=(6, 1, 7))
         a = random_gen(shape=(6, 1, 7), rand_min=-1962.0, rand_max=0.0)
         b = random_gen(shape=(6, 1, 7), rand_min=0.0, rand_max=1964.0)
@@ -88,7 +89,8 @@ class TestSelect:
         assert is_close(np.where(cond, a, b), res.val)
 
     @ssa_fn
-    def test_builder_eval_broadcast(self):
+    @staticmethod
+    def test_builder_eval_broadcast():
         cond = np.array([[1], [0], [1]])
         a = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
         b = np.array([[7, 8], [9, 10], [11, 12]], dtype=np.float32)

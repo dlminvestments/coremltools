@@ -164,7 +164,8 @@ class TestScatterAlongAxis:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         indices = np.array([[1, 0, 1], [1, 1, 0]], dtype=np.int32)
         updates = np.array([[5, 6, 7], [8, 9, 10]], dtype=np.float32)
@@ -428,7 +429,8 @@ class TestGather:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         indices = np.array([1, 0], dtype=np.int32)
         v = mb.gather(x=x, indices=indices, axis=-1)
@@ -486,7 +488,8 @@ class TestGatherAlongAxis:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         indices = np.array([[1, 0, 1], [0, 0, 1]], dtype=np.int32)
         v = mb.gather_along_axis(x=x, indices=indices, axis=0)
