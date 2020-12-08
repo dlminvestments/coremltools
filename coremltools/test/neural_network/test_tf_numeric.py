@@ -17,7 +17,8 @@ np.set_printoptions(precision=4, suppress=True)
 
 @unittest.skipIf(not _HAS_TF, MSG_TF1_NOT_FOUND)
 class CorrectnessTest(unittest.TestCase):
-    def _compare_shapes(self, ref_preds, coreml_preds):
+    @staticmethod
+    def _compare_shapes(ref_preds, coreml_preds):
         if np.squeeze(ref_preds).shape != np.squeeze(coreml_preds).shape:
             return False
         else:

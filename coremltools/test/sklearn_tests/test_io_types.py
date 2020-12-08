@@ -59,7 +59,8 @@ class TestIODataTypes(unittest.TestCase):
     def scikit_data(self):
         return load_boston()
 
-    def _feature_data_type(self, dtype):
+    @staticmethod
+    def _feature_data_type(dtype):
         feature_dict = {np.int32: "INT32", np.float32: "FLOAT32", np.float64: "DOUBLE"}
         return feature_dict[dtype]
 
@@ -76,7 +77,8 @@ class TestIODataTypes(unittest.TestCase):
             double=np.double,
         )
 
-    def _sklearn_setup(self, model, dtype, data, target):
+    @staticmethod
+    def _sklearn_setup(model, dtype, data, target):
         model.fit(data, target)
         spec = coremltools.converters.sklearn.convert(
             model, "data", "target"

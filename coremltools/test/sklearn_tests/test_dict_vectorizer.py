@@ -22,7 +22,8 @@ class DictVectorizerScikitTest(unittest.TestCase):
     Unit test class for testing scikit-learn converter.
     """
 
-    def _test_conversion(self, data, trained_dict_vectorizer):
+    @staticmethod
+    def _test_conversion(data, trained_dict_vectorizer):
 
         X = trained_dict_vectorizer.transform(data)
 

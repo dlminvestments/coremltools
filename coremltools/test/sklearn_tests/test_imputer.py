@@ -23,7 +23,8 @@ class NumericalImputerTestCase(unittest.TestCase):
     Unit test class for testing scikit-learn converter.
     """
 
-    def test_conversion_boston(self):
+    @staticmethod
+    def test_conversion_boston():
 
         from sklearn.datasets import load_boston
 

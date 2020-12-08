@@ -774,7 +774,8 @@ class DefaultPoolTest(unittest.TestCase):
         pool.FindOneofByName('protobuf_unittest.TestAllTypes.oneof_field'),
         unittest_pb2.TestAllTypes.DESCRIPTOR.oneofs_by_name['oneof_field'])
 
-  def testAddFileDescriptor(self):
+  @staticmethod
+  def testAddFileDescriptor():
     # pylint: disable=g-import-not-at-top
     from google.protobuf.pyext import _message
     pool = _message.default_pool

@@ -23,7 +23,8 @@ class StandardScalerTestCase(unittest.TestCase):
     Unit test class for testing scikit-learn converter.
     """
 
-    def test_random(self):
+    @staticmethod
+    def test_random():
         # Generate some random data
         X = _np.random.random(size=(50, 3))
 
@@ -41,7 +42,8 @@ class StandardScalerTestCase(unittest.TestCase):
 
         assert metrics["num_errors"] == 0
 
-    def test_boston(self):
+    @staticmethod
+    def test_boston():
         from sklearn.datasets import load_boston
 
         scikit_data = load_boston()

@@ -45,7 +45,8 @@ from google.protobuf import unittest_mset_pb2
 
 
 class TextFormatTest(unittest.TestCase):
-  def ReadGolden(self, golden_filename):
+  @staticmethod
+  def ReadGolden(golden_filename):
     f = test_util.GoldenFile(golden_filename)
     golden_lines = f.readlines()
     f.close()
@@ -241,7 +242,8 @@ class TextFormatTest(unittest.TestCase):
     message.c = 123
     self.assertEqual('c: 123\n', str(message))
 
-  def RemoveRedundantZeros(self, text):
+  @staticmethod
+  def RemoveRedundantZeros(text):
     # Some platforms print 1e+5 as 1e+005.  This is fine, but we need to remove
     # these zeros in order to match the golden file.
     text = text.replace('e+0','e+').replace('e+0','e+') \

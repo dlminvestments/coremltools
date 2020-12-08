@@ -26,7 +26,8 @@ if _HAS_SKLEARN:
 
 @unittest.skipIf(not _HAS_SKLEARN, "Missing sklearn. Skipping tests.")
 class GradientBoostingRegressorBostonHousingScikitNumericTest(unittest.TestCase):
-    def test_boston_OHE_plus_normalizer(self):
+    @staticmethod
+    def test_boston_OHE_plus_normalizer():
 
         data = load_boston()
 
@@ -49,7 +50,8 @@ class GradientBoostingRegressorBostonHousingScikitNumericTest(unittest.TestCase)
             result = evaluate_transformer(spec, input_data, output_data)
             assert result["num_errors"] == 0
 
-    def test_boston_OHE_plus_trees(self):
+    @staticmethod
+    def test_boston_OHE_plus_trees():
 
         data = load_boston()
 
