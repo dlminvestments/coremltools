@@ -27,16 +27,20 @@ def test_commingle_loop_vars():
         return mb.while_loop(_cond=cond, _body=body, loop_vars=(a, b))
 
     while_op = prog.find_ops(op_type="while_loop", exactly_one=True)[0]
-    assert while_op.blocks[0].inputs[0].name == "a.x"
-    assert while_op.blocks[0].inputs[1].name == "b.x"
+    if while_op.blocks[0].inputs[0].name != "a.x":
+        raise AssertionError
+    if while_op.blocks[0].inputs[1].name != "b.x":
+        raise AssertionError
 
     prev_prog = copy.deepcopy(prog)
     PASS_REGISTRY["nn_backend::commingle_loop_vars"](prog)
     assert_same_output_names(prev_prog, prog)
 
     while_op = prog.find_ops(op_type="while_loop", exactly_one=True)[0]
-    assert while_op.blocks[0].inputs[0].name == while_op.outputs[0].name
-    assert while_op.blocks[0].inputs[1].name == while_op.outputs[1].name
+    if while_op.blocks[0].inputs[0].name != while_op.outputs[0].name:
+        raise AssertionError
+    if while_op.blocks[0].inputs[1].name != while_op.outputs[1].name:
+        raise AssertionError
 
     prog.validate()
 
@@ -51,14 +55,17 @@ def test_handle_return_return_inputs_as_outputs():
         return mb.mul(x=a, y=2), b
 
     prev_main_output_names = [o.name for o in prog["main"].outputs]
-    assert prog["main"].outputs[1].op is None  # output comes from input
+    if prog["main"].outputs[1].op is not None:
+        raise AssertionError
 
     prev_prog = copy.deepcopy(prog)
     PASS_REGISTRY["nn_backend::handle_return_inputs_as_outputs"](prog)
     assert_same_output_names(prev_prog, prog)
 
-    assert prog["main"].outputs[1].op is not None  # output comes from an op
-    assert prog["main"].outputs[1].op.op_type == "identity"
+    if prog["main"].outputs[1].op is None:
+        raise AssertionError
+    if prog["main"].outputs[1].op.op_type != "identity":
+        raise AssertionError
 
     assert_model_is_valid(prog, {"a": (1, 2), "b": (1, 2)})
 
@@ -76,6 +83,7 @@ def test_handle_unused_inputs():
 
     id_op = prog.find_ops(op_type="identity", exactly_one=True)[0]
     # Assert that input var is consumed by an identity op.
-    assert id_op in prog["main"].inputs["unused_input"].child_ops
+    if id_op not in prog["main"].inputs["unused_input"].child_ops:
+        raise AssertionError
 
     assert_model_is_valid(prog, {"unused_input": (1, 2)})

@@ -131,7 +131,8 @@ class DotVisitor(object):
             input_name = i
             if input_name[0] == "^":
                 input_name = input_name[1:]
-            assert input_name in graph
+            if input_name not in graph:
+                raise AssertionError
             self.visit(graph, graph[input_name], nodename_prefix)
         return self
 

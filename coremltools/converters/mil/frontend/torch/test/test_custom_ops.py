@@ -136,19 +136,25 @@ class TestCustomOp:
         mlmodel = convert_to_mlmodel(torch_model, input_data)
 
         layers = mlmodel.get_spec().neuralNetwork.layers
-        assert layers[-1].custom is not None, "Expecting a custom layer"
-        assert (
-            "SparseMatMul" == layers[-1].custom.className
-        ), "Custom Layer class name mis-match"
-        assert (
-            False == layers[-1].custom.parameters["transpose_x"].boolValue
-        ), "Incorrect parameter value k"
-        assert (
-            False == layers[-1].custom.parameters["transpose_y"].boolValue
-        ), "Incorrect parameter value k"
-        assert (
-            True == layers[-1].custom.parameters["x_is_sparse"].boolValue
-        ), "Incorrect parameter value k"
-        assert (
-            True == layers[-1].custom.parameters["y_is_sparse"].boolValue
-        ), "Incorrect parameter value k"
+        if layers[-1].custom is None:
+            raise AssertionError("Expecting a custom layer")
+        if (
+            "SparseMatMul" != layers[-1].custom.className
+        ):
+            raise AssertionError("Custom Layer class name mis-match")
+        if (
+            False != layers[-1].custom.parameters["transpose_x"].boolValue
+        ):
+            raise AssertionError("Incorrect parameter value k")
+        if (
+            False != layers[-1].custom.parameters["transpose_y"].boolValue
+        ):
+            raise AssertionError("Incorrect parameter value k")
+        if (
+            True != layers[-1].custom.parameters["x_is_sparse"].boolValue
+        ):
+            raise AssertionError("Incorrect parameter value k")
+        if (
+            True != layers[-1].custom.parameters["y_is_sparse"].boolValue
+        ):
+            raise AssertionError("Incorrect parameter value k")

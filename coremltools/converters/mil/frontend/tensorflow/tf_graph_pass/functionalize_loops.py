@@ -59,7 +59,8 @@ class FunctionalizeLoops(object):
             node = g[node]
 
         # we look for NextIteration nodes
-        assert node.op == "Enter"
+        if node.op != "Enter":
+            raise AssertionError
 
         frame_name = node.attr["frame_name"]
         logging.debug("Fixing frame name: %s", frame_name)
@@ -132,15 +133,20 @@ class FunctionalizeLoops(object):
         check(self.subgraph)
         check(self.cond)
         check(self.loopcond)
-        assert len(self.loopcond) == 1
+        if len(self.loopcond) != 1:
+            raise AssertionError
         # maintain the invariant of a unique Enter node per argument
         # functionalize_control_flow.cc:FunctionalizeLoop (295)
         for i in copy.copy(self.enters):
             node = g[i]
-            assert len(node.outputs) > 0
-            assert len(node.inputs) == 1
-            assert len(node.control_inputs) == 0
-            assert len(node.control_outputs) == 0
+            if len(node.outputs) <= 0:
+                raise AssertionError
+            if len(node.inputs) != 1:
+                raise AssertionError
+            if len(node.control_inputs) != 0:
+                raise AssertionError
+            if len(node.control_outputs) != 0:
+                raise AssertionError
             if len(node.outputs) == 1:
                 continue
             node_output_copy = copy.copy(node.outputs)
@@ -350,7 +356,8 @@ class FunctionalizeLoops(object):
             connect_edge(g, body.name, get_tuple.name)
             connect_edge(g, get_tuple.name, make_outputs.name)
 
-        assert len(g[make_outputs.name].inputs) == len(g[make_inputs.name].inputs)
+        if len(g[make_outputs.name].inputs) != len(g[make_inputs.name].inputs):
+            raise AssertionError
 
         output_return = ParsedTFNode()
         output_return.op = "return"

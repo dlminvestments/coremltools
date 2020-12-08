@@ -63,7 +63,8 @@ class TestTf2ModelFormats:
             outputs=["Identity"],
             source=frontend,
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_keras_saved_model_file(self):
         keras_model = tf.keras.Sequential(
@@ -76,7 +77,8 @@ class TestTf2ModelFormats:
         mlmodel = converter.convert(
             self.saved_model_dir, outputs="Identity", source=frontend
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_keras_h5_file(self):
         keras_model = tf.keras.Sequential(
@@ -90,7 +92,8 @@ class TestTf2ModelFormats:
             outputs=["Identity"],
             source=frontend,
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_concrete_function_list_from_tf_low_level_api(self):
         root = tf.train.Checkpoint()
@@ -109,7 +112,8 @@ class TestTf2ModelFormats:
         mlmodel = converter.convert(
             [concrete_func], outputs="Identity", source=frontend
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_saved_model_list_from_tf_function(self):
         class build_model(tf.Module):
@@ -124,7 +128,8 @@ class TestTf2ModelFormats:
         mlmodel = converter.convert(
             self.saved_model_dir, outputs=["Identity"], source=frontend
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_concrete_function_list_from_tf_function():
@@ -140,7 +145,8 @@ class TestTf2ModelFormats:
         mlmodel = converter.convert(
             [concrete_func], outputs=["Identity"], source=frontend
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_model_metadata():
@@ -155,9 +161,12 @@ class TestTf2ModelFormats:
             source=frontend,
         )
         metadata_keys = mlmodel.get_spec().description.metadata.userDefined
-        assert "com.github.apple.coremltools.version" in metadata_keys
-        assert "com.github.apple.coremltools.source" in metadata_keys
-        assert "tensorflow==2." in metadata_keys["com.github.apple.coremltools.source"]
+        if "com.github.apple.coremltools.version" not in metadata_keys:
+            raise AssertionError
+        if "com.github.apple.coremltools.source" not in metadata_keys:
+            raise AssertionError
+        if "tensorflow==2." not in metadata_keys["com.github.apple.coremltools.source"]:
+            raise AssertionError
 
     @staticmethod
     def test_invalid_format_none():

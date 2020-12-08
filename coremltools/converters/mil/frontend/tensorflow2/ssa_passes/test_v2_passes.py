@@ -38,19 +38,25 @@ def test_remove_vacuous_cond():
 
     cond_op = prog.find_ops(op_type="cond", exactly_one=True)[0]
     original_cond_op_name = cond_op.name
-    assert len(cond_op.blocks[0].operations) == 1
-    assert len(cond_op.blocks[1].operations) == 1
-    assert cond_op.blocks[0].operations[0].op_type == "identity"
-    assert cond_op.blocks[1].operations[0].op_type == "identity"
+    if len(cond_op.blocks[0].operations) != 1:
+        raise AssertionError
+    if len(cond_op.blocks[1].operations) != 1:
+        raise AssertionError
+    if cond_op.blocks[0].operations[0].op_type != "identity":
+        raise AssertionError
+    if cond_op.blocks[1].operations[0].op_type != "identity":
+        raise AssertionError
 
     prev_prog = copy.deepcopy(prog)
     PASS_REGISTRY["tensorflow2::remove_vacuous_cond"](prog)
     assert_same_output_names(prev_prog, prog)
 
     cond_op = prog.find_ops(op_type="cond")
-    assert len(cond_op) == 0
+    if len(cond_op) != 0:
+        raise AssertionError
     identity_op = prog.find_ops(prefix=original_cond_op_name, exactly_one=True)[0]
-    assert identity_op.op_type == "identity"
+    if identity_op.op_type != "identity":
+        raise AssertionError
 
     if validate_model:
         assert_model_is_valid(prog, {"a": (1,), "b": (2, 3)})

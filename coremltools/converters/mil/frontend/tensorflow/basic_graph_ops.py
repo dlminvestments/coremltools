@@ -228,26 +228,32 @@ def check_connections(gd):
     for k, v in gd.items():
         for i in v.inputs:
             if isinstance(i, six.string_types):
-                assert k in gd[i].outputs
+                if k not in gd[i].outputs:
+                    raise AssertionError
             else:
-                assert k in gd[i.name].outputs
+                if k not in gd[i.name].outputs:
+                    raise AssertionError
         for i in v.outputs:
             inputs = [
                 inp if isinstance(inp, six.string_types) else inp.name
                 for inp in gd[i].inputs
             ]
-            assert k in inputs
+            if k not in inputs:
+                raise AssertionError
         for i in v.control_inputs:
             if isinstance(i, six.string_types):
-                assert k in gd[i].control_outputs
+                if k not in gd[i].control_outputs:
+                    raise AssertionError
             else:
-                assert k in gd[i.name].control_outputs
+                if k not in gd[i.name].control_outputs:
+                    raise AssertionError
         for i in v.control_outputs:
             control_inputs = [
                 inp if isinstance(inp, six.string_types) else inp.name
                 for inp in gd[i].control_inputs
             ]
-            assert k in control_inputs
+            if k not in control_inputs:
+                raise AssertionError
 
 
 def const_determined_nodes(gd, assume_variable_nodes=None):

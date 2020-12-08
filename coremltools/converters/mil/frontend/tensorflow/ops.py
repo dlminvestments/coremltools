@@ -70,7 +70,8 @@ def _value_at(x, idx):
     input x: 1D tensor (vector).
     return value at index idx. x[idx].
     """
-    assert x.rank == 1
+    if x.rank != 1:
+        raise AssertionError
     return mb.slice_by_index(x=x, begin=[idx], end=[0], squeeze_mask=[True])
 
 
@@ -820,7 +821,8 @@ def Conv2D(context, node):
     pad_type = node.attr.get("padding")
     pad_type = pad_type.lower()
     pad_type = "custom" if pad_type == "explicit" else pad_type
-    assert pad_type in {"same", "valid", "custom"}
+    if pad_type not in {"same", "valid", "custom"}:
+        raise AssertionError
     x = context[node.inputs[0]]
     if data_format == "NHWC":
         x = _transpose_NHWC_to_NCHW(x)

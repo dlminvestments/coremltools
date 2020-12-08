@@ -56,7 +56,8 @@ class TestTf1ModelInputsOutputs:
             j if isinstance(j, six.string_types) else j.op.name for j in outputs
         ]
         mlmodel = converter.convert(model, outputs=output_names)
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
         input_values = [random_gen(x_shape, -10.0, 10.0)]
         input_dict = dict(zip(inputs, input_values))
@@ -75,7 +76,8 @@ class TestTf1ModelInputsOutputs:
             inputs[0] if isinstance(inputs[0], six.string_types) else inputs[0].op.name
         )
         mlmodel = converter.convert(model, inputs=[TensorType(input_name, (3, 4, 5))])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
         input_values = [random_gen(x_shape, -10.0, 10.0)]
         input_dict = dict(zip(inputs, input_values))
@@ -91,7 +93,8 @@ class TestTf1ModelInputsOutputs:
 
         model, inputs, outputs = build_model
         mlmodel = converter.convert(model)
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
         input_values = [random_gen(x_shape, -10.0, 10.0)]
         input_dict = dict(zip(inputs, input_values))
@@ -112,7 +115,8 @@ class TestTf1ModelInputsOutputs:
         else:
             first_output_name = outputs[0].name.split(":")[0]
         mlmodel = converter.convert(model, outputs=[first_output_name])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_auto_image_nhwc_input_names():
@@ -125,7 +129,8 @@ class TestTf1ModelInputsOutputs:
         model, inputs, outputs = build_model
 
         mlmodel = converter.convert(model, inputs=[ImageType()])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_auto_image_nchw_input_names():
@@ -138,7 +143,8 @@ class TestTf1ModelInputsOutputs:
         model, inputs, outputs = build_model
 
         mlmodel = converter.convert(model, inputs=[ImageType(channel_first=True)])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "target",
@@ -204,7 +210,8 @@ class TestTf1ModelInputsOutputs:
 
         # Test must pass if a user provides shape during conversion,
         mlmodel = converter.convert(model, source=frontend, inputs=[ct.TensorType(shape=())])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_scalar_placeholder_shape():
@@ -216,7 +223,8 @@ class TestTf1ModelInputsOutputs:
 
         model, inputs, outputs = build_model
         mlmodel = converter.convert(model, source=frontend)
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
         input_values = [random_gen(x_shape, -10.0, 10.0)]
         input_dict = dict(zip(inputs, input_values))
@@ -239,7 +247,8 @@ class TestTf1ModelInputsOutputs:
                 TensorType(name=input_name)],
                 outputs=[output_name]
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
         input_values = [random_gen((3, 4, 5), -10.0, 10.0)]
         input_dict = {input_name: input_values[0]}
         if _IS_MACOS:
@@ -251,7 +260,8 @@ class TestTf1ModelInputsOutputs:
             TensorType(input_name, EnumeratedShapes(shapes=[(3, 4, 5), (4, 4, 5)]))
         ]
         mlmodel = converter.convert(model, inputs=inputs_shape, outputs=[output_name])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
         input_values = [random_gen((3, 4, 5), -10.0, 10.0)]
         input_dict = {input_name: input_values[0]}
         if _IS_MACOS:
@@ -273,7 +283,8 @@ class TestTf1ModelInputsOutputs:
         # Ranged shape
         inputs_shape = [TensorType(input_name, [RangeDim(3, 5), 4, 5])]
         mlmodel = converter.convert(model, inputs=inputs_shape, outputs=[output_name])
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
         input_values = [random_gen((3, 4, 5), -10.0, 10.0)]
         input_dict = {input_name: input_values[0]}
         if _IS_MACOS:
@@ -300,14 +311,17 @@ class TestTf1ModelInputsOutputs:
 
         model, inputs, outputs = build_model
         mlmodel = converter.convert(model)
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
         spec = mlmodel.get_spec()
 
         # Defaults should be FLOAT32 instead of DOUBLE
         it = spec.description.input[0].type.multiArrayType.dataType
-        assert it == ft.ArrayFeatureType.ArrayDataType.Value("FLOAT32")
+        if it != ft.ArrayFeatureType.ArrayDataType.Value("FLOAT32"):
+            raise AssertionError
         ot = spec.description.output[0].type.multiArrayType.dataType
-        assert ot == ft.ArrayFeatureType.ArrayDataType.Value("FLOAT32")
+        if ot != ft.ArrayFeatureType.ArrayDataType.Value("FLOAT32"):
+            raise AssertionError
 
 
 class TestTf1ModelFormats:
@@ -332,7 +346,8 @@ class TestTf1ModelFormats:
         mlmodel = converter.convert(
             graph, inputs=[TensorType(x.op.name, (3, 4, 5))], outputs=[out.op.name]
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_graph_def_file(self):
         with tf.Graph().as_default() as graph:
@@ -346,7 +361,8 @@ class TestTf1ModelFormats:
             inputs=[TensorType(x.op.name, (3, 4, 5))],
             outputs=[out.op.name],
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_saved_model_from_simple_save(self):
         with tf.compat.v1.Session() as sess:
@@ -358,7 +374,8 @@ class TestTf1ModelFormats:
                 sess, self.saved_model_dir, inputs, outputs
             )
         mlmodel = converter.convert(self.saved_model_dir)
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_tf_keras():
@@ -372,7 +389,8 @@ class TestTf1ModelFormats:
             outputs=["Identity"],
             source=frontend,
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     def test_tf_keras_hdf5_file(self):
         keras_model = tf.keras.Sequential(
@@ -386,7 +404,8 @@ class TestTf1ModelFormats:
             outputs=["Identity"],
             source=frontend,
         )
-        assert mlmodel is not None
+        if mlmodel is None:
+            raise AssertionError
 
     @staticmethod
     def test_model_metadata():
@@ -397,9 +416,12 @@ class TestTf1ModelFormats:
             graph, inputs=[TensorType(x.op.name, (3, 4, 5))], outputs=[out.op.name]
         )
         metadata_keys = mlmodel.get_spec().description.metadata.userDefined
-        assert "com.github.apple.coremltools.version" in metadata_keys
-        assert "com.github.apple.coremltools.source" in metadata_keys
-        assert "tensorflow==1." in metadata_keys["com.github.apple.coremltools.source"]
+        if "com.github.apple.coremltools.version" not in metadata_keys:
+            raise AssertionError
+        if "com.github.apple.coremltools.source" not in metadata_keys:
+            raise AssertionError
+        if "tensorflow==1." not in metadata_keys["com.github.apple.coremltools.source"]:
+            raise AssertionError
 
     @staticmethod
     def test_invalid_format_none():

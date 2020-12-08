@@ -164,74 +164,86 @@ class TestReduction:
         def test_reduce_argmax():
             res = mb.reduce_argmax(x=x_val, axis=axis, keep_dims=keep_dims).val
             ref = np.argmax(x_val, axis=axis)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_argmin():
             res = mb.reduce_argmin(x=x_val, axis=axis, keep_dims=keep_dims).val
             ref = np.argmin(x_val, axis=axis)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_l1_norm():
             res = mb.reduce_l1_norm(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.sum(np.abs(x_val), axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_l2_norm():
             res = mb.reduce_l2_norm(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.sqrt(np.sum(np.square(x_val), axis=axis, keepdims=keep_dims))
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_log_sum():
             x_val = random_gen(shape=(1, 3, 4, 4), rand_min=0.0, rand_max=100.0)
             res = mb.reduce_log_sum(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.log(np.sum(x_val, axis=axis, keepdims=keep_dims))
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_log_sum_exp():
             res = mb.reduce_log_sum_exp(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = scipy.special.logsumexp(x_val, axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_max():
             res = mb.reduce_max(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.max(x_val, axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_mean():
             res = mb.reduce_mean(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.mean(x_val, axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_min():
             res = mb.reduce_min(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.min(x_val, axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_prod():
             res = mb.reduce_prod(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.prod(x_val, axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_sum():
             res = mb.reduce_sum(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.sum(x_val, axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         @ssa_fn
         def test_reduce_sum_square():
             res = mb.reduce_sum_square(x=x_val, axes=[axis], keep_dims=keep_dims).val
             ref = np.sum(np.square(x_val), axis=axis, keepdims=keep_dims)
-            assert is_close(ref, res)
+            if not is_close(ref, res):
+                raise AssertionError
 
         test_reduce_argmax()
         test_reduce_argmin()

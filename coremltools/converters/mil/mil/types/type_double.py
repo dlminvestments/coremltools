@@ -76,27 +76,32 @@ def make_float(width):
 
         @annotate(delay_type_float, other=delay_type_float)
         def __add__(self, other):
-            assert isinstance(other, double)
+            if not isinstance(other, double):
+                raise AssertionError
             return double(self.val + other.val)
 
         @annotate(delay_type_float, other=delay_type_float)
         def __sub__(self, other):
-            assert isinstance(other, double)
+            if not isinstance(other, double):
+                raise AssertionError
             return double(self.val - other.val)
 
         @annotate(delay_type_float, other=delay_type_float)
         def __mul__(self, other):
-            assert isinstance(other, double)
+            if not isinstance(other, double):
+                raise AssertionError
             return double(self.val * other.val)
 
         @annotate(delay_type_float, other=delay_type_float)
         def __div__(self, other):
-            assert isinstance(other, double)
+            if not isinstance(other, double):
+                raise AssertionError
             return double(self.val / other.val)
 
         @annotate(delay_type_float, other=delay_type_float)
         def __mod__(self, other):
-            assert isinstance(other, double)
+            if not isinstance(other, double):
+                raise AssertionError
             return double(self.val % other.val)
 
         @annotate(delay_type.bool, other=delay_type_float)

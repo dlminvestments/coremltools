@@ -148,14 +148,17 @@ def test_remove_symbolic_reshape():
     )[0]
     shape_var = reshape_op.shape
     reshaped_var = reshape_op.outputs[0]
-    assert np.all(shape_var.sym_val == original_shape)
-    assert np.all(reshaped_var.shape == (sym_b, 2, 2))
+    if not np.all(shape_var.sym_val == original_shape):
+        raise AssertionError
+    if not np.all(reshaped_var.shape == (sym_b, 2, 2)):
+        raise AssertionError
 
     # Note: we cannot deepcopy prog with symbol.
     prev_outputs = [o.name for o in prog["main"].outputs]
     PASS_REGISTRY["common::remove_symbolic_reshape"](prog)
     curr_outputs = [o.name for o in prog["main"].outputs]
-    assert curr_outputs == prev_outputs
+    if curr_outputs != prev_outputs:
+        raise AssertionError
 
     reshape_op = prog.find_ops(
         prefix=reshape_name, op_type="reshape", exactly_one=True
@@ -163,9 +166,11 @@ def test_remove_symbolic_reshape():
     shape_var = reshape_op.shape
     reshaped_var = reshape_op.outputs[0]
     # shape param cannot be symbolic after the pass
-    assert np.all(shape_var.sym_val == (-1, 2, 2))
+    if not np.all(shape_var.sym_val == (-1, 2, 2)):
+        raise AssertionError
     # output shape is still symbolic
-    assert np.all(reshaped_var.shape == (sym_b, 2, 2))
+    if not np.all(reshaped_var.shape == (sym_b, 2, 2)):
+        raise AssertionError
 
     if validate_model:
         assert_model_is_valid(prog, {"x": (3, 4)})
@@ -192,21 +197,30 @@ def test_loop_invariant_elimination1():
         return mb.while_loop(_cond=cond, _body=body, loop_vars=(a, b))
 
     while_op = prog.find_ops(op_type="while_loop", exactly_one=True)[0]
-    assert len(while_op.blocks[0].inputs) == 2
-    assert len(while_op.outputs) == 2
-    assert len(while_op.loop_vars) == 2
-    assert while_op.blocks[0].inputs[0].name == "a.x"
-    assert while_op.blocks[0].inputs[1].name == "b.x"
+    if len(while_op.blocks[0].inputs) != 2:
+        raise AssertionError
+    if len(while_op.outputs) != 2:
+        raise AssertionError
+    if len(while_op.loop_vars) != 2:
+        raise AssertionError
+    if while_op.blocks[0].inputs[0].name != "a.x":
+        raise AssertionError
+    if while_op.blocks[0].inputs[1].name != "b.x":
+        raise AssertionError
 
     prev_prog = copy.deepcopy(prog)
     PASS_REGISTRY["common::loop_invariant_elimination"](prog)
     assert_same_output_names(prev_prog, prog)
 
     while_op = prog.find_ops(op_type="while_loop", exactly_one=True)[0]
-    assert len(while_op.blocks[0].inputs) == 1
-    assert len(while_op.outputs) == 1
-    assert len(while_op.loop_vars) == 1
-    assert while_op.blocks[0].inputs[0].name == "a.x"
+    if len(while_op.blocks[0].inputs) != 1:
+        raise AssertionError
+    if len(while_op.outputs) != 1:
+        raise AssertionError
+    if len(while_op.loop_vars) != 1:
+        raise AssertionError
+    if while_op.blocks[0].inputs[0].name != "a.x":
+        raise AssertionError
 
     if validate_model:
         assert_model_is_valid(prog, {"a": (1, 2), "b": (1, 2)})
@@ -233,21 +247,30 @@ def test_loop_invariant_elimination2():
         return mb.while_loop(_cond=cond, _body=body, loop_vars=(a, b))
 
     while_op = prog.find_ops(op_type="while_loop", exactly_one=True)[0]
-    assert len(while_op.blocks[0].inputs) == 2
-    assert len(while_op.outputs) == 2
-    assert len(while_op.loop_vars) == 2
-    assert while_op.blocks[0].inputs[0].name == "a.x"
-    assert while_op.blocks[0].inputs[1].name == "b.x"
+    if len(while_op.blocks[0].inputs) != 2:
+        raise AssertionError
+    if len(while_op.outputs) != 2:
+        raise AssertionError
+    if len(while_op.loop_vars) != 2:
+        raise AssertionError
+    if while_op.blocks[0].inputs[0].name != "a.x":
+        raise AssertionError
+    if while_op.blocks[0].inputs[1].name != "b.x":
+        raise AssertionError
 
     prev_prog = copy.deepcopy(prog)
     PASS_REGISTRY["common::loop_invariant_elimination"](prog)
     assert_same_output_names(prev_prog, prog)
 
     while_op = prog.find_ops(op_type="while_loop", exactly_one=True)[0]
-    assert len(while_op.blocks[0].inputs) == 1
-    assert len(while_op.outputs) == 1
-    assert len(while_op.loop_vars) == 1
-    assert while_op.blocks[0].inputs[0].name == "a.x"
+    if len(while_op.blocks[0].inputs) != 1:
+        raise AssertionError
+    if len(while_op.outputs) != 1:
+        raise AssertionError
+    if len(while_op.loop_vars) != 1:
+        raise AssertionError
+    if while_op.blocks[0].inputs[0].name != "a.x":
+        raise AssertionError
 
     if validate_model:
         assert_model_is_valid(prog, {"a": (1, 2), "b": (1, 2)})
@@ -274,7 +297,7 @@ def test_gelu_tanh_approximation():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::fuse_gelu_tanh_approximation"
     )
-    assert get_op_types_in_program(prev_prog) == [
+    if get_op_types_in_program(prev_prog) != [
         "pow",
         "mul",
         "add",
@@ -283,8 +306,10 @@ def test_gelu_tanh_approximation():
         "add",
         "mul",
         "mul",
-    ]
-    assert get_op_types_in_program(prog) == ["gelu"]
+    ]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["gelu"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (3, 5, 6)},
@@ -323,7 +348,7 @@ def test_layernorm_fusion(axes_size):
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::fuse_layernorm_or_instancenorm"
     )
-    assert get_op_types_in_program(prev_prog) == [
+    if get_op_types_in_program(prev_prog) != [
         "reduce_mean",
         "sub",
         "square",
@@ -335,8 +360,10 @@ def test_layernorm_fusion(axes_size):
         "mul",
         "sub",
         "add",
-    ]
-    assert get_op_types_in_program(prog) == ["layer_norm"]
+    ]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["layer_norm"]:
+        raise AssertionError
     assert_model_is_valid(
         prog, {"x": shape}, expected_output_shapes={block.outputs[0].name: shape}
     )
@@ -370,7 +397,7 @@ def test_instancenorm_fusion():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::fuse_layernorm_or_instancenorm"
     )
-    assert get_op_types_in_program(prev_prog) == [
+    if get_op_types_in_program(prev_prog) != [
         "reduce_mean",
         "sub",
         "square",
@@ -382,8 +409,10 @@ def test_instancenorm_fusion():
         "mul",
         "sub",
         "add",
-    ]
-    assert get_op_types_in_program(prog) == ["instance_norm"]
+    ]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["instance_norm"]:
+        raise AssertionError
     assert_model_is_valid(
         prog, {"x": shape}, expected_output_shapes={block.outputs[0].name: shape}
     )
@@ -416,8 +445,10 @@ def test_onehot_matmul_to_gather_fusion(rank):
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::fuse_onehot_matmul_to_gather"
     )
-    assert get_op_types_in_program(prev_prog) == ["one_hot", "matmul"]
-    assert get_op_types_in_program(prog) == ["gather"]
+    if get_op_types_in_program(prev_prog) != ["one_hot", "matmul"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["gather"]:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": input_shape},
@@ -447,10 +478,13 @@ def test_concat_interleave_fusion_pass():
     prev_prog, prev_block, block = apply_pass_and_basic_check(
         prog, "common::detect_concat_interleave"
     )
-    assert get_op_types_in_program(prev_prog) == ["concat", "reshape", "transpose", "reshape"]
-    assert get_op_types_in_program(prog) == ["concat"]
+    if get_op_types_in_program(prev_prog) != ["concat", "reshape", "transpose", "reshape"]:
+        raise AssertionError
+    if get_op_types_in_program(prog) != ["concat"]:
+        raise AssertionError
     concat_op = prog.find_ops(op_type="concat", exactly_one=True)[0]
-    assert concat_op.interleave.val
+    if not concat_op.interleave.val:
+        raise AssertionError
     assert_model_is_valid(
         prog,
         {"x": (B, C, H, W), "y": (B, C, H, W)},

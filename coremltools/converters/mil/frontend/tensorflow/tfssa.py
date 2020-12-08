@@ -119,8 +119,10 @@ class SSAFunction(object):
         ]
         exits = [n.name for n in self.graph.values() if n.op in ("Return", "return")]
         if len(enters) > 0 or len(exits) > 0:
-            assert len(enters) > 0
-            assert len(exits) > 0
+            if len(enters) <= 0:
+                raise AssertionError
+            if len(exits) <= 0:
+                raise AssertionError
             self.inputs = enters
             self.input_types = [self.graph[v].datatype for v in self.inputs]
             self.outputs = exits
@@ -132,7 +134,8 @@ class SSAFunction(object):
                     self.inputs.append(k)
                     self.input_types.append(v.datatype)
                 elif len(v.inputs) != 0 and v.op == "Placeholder":
-                    assert len(v.inputs) == 1, "This is not a PlaceholderWithDefault!"
+                    if len(v.inputs) != 1:
+                        raise AssertionError("This is not a PlaceholderWithDefault!")
                     self.inputs.append(k)
                     self.input_types.append(v.datatype)
                 if (
@@ -161,7 +164,8 @@ class SSAFunction(object):
                 filtered_inputs.append(k)
                 self.input_types.append(v.datatype)
             elif len(v.inputs) != 0 and v.op == "Placeholder":
-                assert len(v.inputs) == 1, "This is not a PlaceholderWithDefault!"
+                if len(v.inputs) != 1:
+                    raise AssertionError("This is not a PlaceholderWithDefault!")
                 filtered_inputs.append(k)
                 self.input_types.append(v.datatype)
         for k in self.outputs:
@@ -495,7 +499,8 @@ class NetworkEnsemble(object):
         return dotstring
 
     def add_function_with_prefix(self, fprefix, tfssa):
-        assert isinstance(tfssa, SSAFunction)
+        if not isinstance(tfssa, SSAFunction):
+            raise AssertionError
         s = 0
         while fprefix + str(s) in self.functions:
             s += 1

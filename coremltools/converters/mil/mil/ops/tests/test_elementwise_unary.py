@@ -279,7 +279,8 @@ class TestElementwiseUnary:
         v = mb.abs(x=val)
         expected_outputs = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -290,7 +291,8 @@ class TestElementwiseUnary:
             [[3.14159265, 2.0943951, 1.57079633], [1.15927948, 1.04719755, 0.64350111]],
             dtype=np.float32,
         )
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -302,7 +304,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -317,7 +320,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -329,7 +333,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -339,7 +344,8 @@ class TestElementwiseUnary:
 
         v = mb.cast(x=val, dtype="int32")
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -348,7 +354,8 @@ class TestElementwiseUnary:
         v = mb.ceil(x=val)
         expected_outputs = np.array([[-1, 2, -3], [5, -5, 7]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -357,7 +364,8 @@ class TestElementwiseUnary:
         v = mb.clip(x=val, alpha=0.0, beta=5.0)
         expected_outputs = np.array([[0, 2, 0], [4.5, 0, 5]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -372,7 +380,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -384,14 +393,16 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
     def test_builder_erf_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.erf(x=x_val)
-        assert is_close(scipy.special.erf(x_val), v.val)
+        if not is_close(scipy.special.erf(x_val), v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -403,7 +414,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -414,7 +426,8 @@ class TestElementwiseUnary:
             [[0.5, 4.0, 0.125], [16, 0.03125, 64]], dtype=np.float32
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -423,7 +436,8 @@ class TestElementwiseUnary:
         v = mb.floor(x=val)
         expected_outputs = np.array([[-2, 2, -4], [4, -5, 6]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -433,7 +447,8 @@ class TestElementwiseUnary:
         expected_outputs = np.array(
             [[-1.0, 0.5, -0.33333334], [0.25, -0.2, 0.16666667]], dtype=np.float32
         )
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -445,7 +460,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -454,7 +470,8 @@ class TestElementwiseUnary:
         v = mb.round(x=val)
         expected_outputs = np.array([[-1, 2, -3], [5, -5, 7]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -466,7 +483,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -475,7 +493,8 @@ class TestElementwiseUnary:
         v = mb.sign(x=val)
         expected_outputs = np.array([[-1, 1, 0], [0, -1, 1]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -490,7 +509,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -502,7 +522,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -514,7 +535,8 @@ class TestElementwiseUnary:
             dtype=np.float32,
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -525,14 +547,16 @@ class TestElementwiseUnary:
             [[-1.5574, -2.185, 0.1425], [1.15782, 3.3805, -0.291]], dtype=np.float32
         )
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
     def test_builder_tanh_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.tanh(x=x_val)
-        assert is_close(np.tanh(x_val), v.val)
+        if not is_close(np.tanh(x_val), v.val):
+            raise AssertionError
 
     @ssa_fn
     @staticmethod
@@ -541,7 +565,8 @@ class TestElementwiseUnary:
         v = mb.threshold(x=val, alpha=1.0)
         expected_outputs = np.array([[1.0, 2, 1.0], [4.5, 1.0, 6.7]], dtype=np.float32)
 
-        assert is_close(expected_outputs, v.val)
+        if not is_close(expected_outputs, v.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "use_cpu_only, backend, epsilon",

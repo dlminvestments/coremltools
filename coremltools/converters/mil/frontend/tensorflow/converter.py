@@ -273,7 +273,8 @@ class TFConverter:
                 if func_y and fname not in dep[func_y]:
                     dep[func_y].append(fname)
 
-        assert len(dep[root]) == 0
+        if len(dep[root]) != 0:
+            raise AssertionError
         graph_stack = simple_topsort(dep)
 
         return graph_stack

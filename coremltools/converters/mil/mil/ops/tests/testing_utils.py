@@ -75,7 +75,8 @@ def run_compare_builder(
         + " variables {}"
     )
     assert_msg = msg.format(len(expected_output_types), len(output_vars))
-    assert len(output_vars) == len(expected_output_types), assert_msg
+    if len(output_vars) != len(expected_output_types):
+        raise AssertionError(assert_msg)
 
     for out_var, s in zip(output_vars, expected_output_types):
         if out_var.dtype != s[-1]:
@@ -112,11 +113,12 @@ def run_compare_builder(
         return
 
     if expected_outputs:
-        assert len(output_vars) == len(expected_outputs), (
-            "Provided expected_outputs {}"
-            " should match number of output"
-            " variables {}".format(len(expected_outputs), len(output_vars))
-        )
+        if len(output_vars) != len(expected_outputs):
+            raise AssertionError(
+                "Provided expected_outputs {}"
+                " should match number of output"
+                " variables {}".format(len(expected_outputs), len(output_vars))
+            )
 
         expected_outputs = {
             name: val for name, val in zip(output_names, expected_outputs)

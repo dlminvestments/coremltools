@@ -247,11 +247,12 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["relu", "relu", "log"])
 
-        assert (
-            prev_block.inputs["x"]
-            == prev_block.find_ops(op_type="transpose")[0].inputs["x"]
-        )
-        assert block.find_ops(op_type="log")[0].outputs[0] in block.outputs
+        if (
+            prev_block.inputs["x"] != prev_block.find_ops(op_type="transpose")[0].inputs["x"]
+        ):
+            raise AssertionError
+        if block.find_ops(op_type="log")[0].outputs[0] not in block.outputs:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3)},
@@ -301,16 +302,18 @@ class TransposeOptimizationPass(unittest.TestCase):
             ["relu", "relu", "transpose", "avg_pool", "log"],
         )
 
-        assert (
-            prev_block.inputs["x"]
-            == prev_block.find_ops(op_type="transpose")[0].inputs["x"]
-        )
-        assert block.find_ops(op_type="log")[0].outputs[0] == block.outputs[1]
-        assert (
-            block.find_ops(op_type="transpose")[0].outputs[0]
-            == block.find_ops(op_type="avg_pool")[0].inputs["x"]
-        )
-        assert list(block.find_ops(op_type="transpose")[0].perm.val) == [0, 2, 3, 1]
+        if (
+            prev_block.inputs["x"] != prev_block.find_ops(op_type="transpose")[0].inputs["x"]
+        ):
+            raise AssertionError
+        if block.find_ops(op_type="log")[0].outputs[0] != block.outputs[1]:
+            raise AssertionError
+        if (
+            block.find_ops(op_type="transpose")[0].outputs[0] != block.find_ops(op_type="avg_pool")[0].inputs["x"]
+        ):
+            raise AssertionError
+        if list(block.find_ops(op_type="transpose")[0].perm.val) != [0, 2, 3, 1]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3, 5)},
@@ -357,8 +360,10 @@ class TransposeOptimizationPass(unittest.TestCase):
             ["relu", "transpose", "avg_pool", "log", "transpose"],
         )
 
-        assert block.inputs["x"] == block.find_ops(op_type="relu")[0].inputs["x"]
-        assert block.outputs[0] == block.find_ops(op_type="relu")[0].outputs[0]
+        if block.inputs["x"] != block.find_ops(op_type="relu")[0].inputs["x"]:
+            raise AssertionError
+        if block.outputs[0] != block.find_ops(op_type="relu")[0].outputs[0]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3, 5)},
@@ -427,8 +432,10 @@ class TransposeOptimizationPass(unittest.TestCase):
             ["relu", "relu", "transpose", "avg_pool", "transpose", "avg_pool"],
         )
 
-        assert block.outputs[0] == block.find_ops(op_type="relu")[0].outputs[0]
-        assert block.outputs[1] == block.find_ops(op_type="relu")[1].outputs[0]
+        if block.outputs[0] != block.find_ops(op_type="relu")[0].outputs[0]:
+            raise AssertionError
+        if block.outputs[1] != block.find_ops(op_type="relu")[1].outputs[0]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3, 5)},
@@ -472,7 +479,8 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["relu", "relu", "transpose"])
 
-        assert block.outputs[0] == block.find_ops(op_type="relu")[0].outputs[0]
+        if block.outputs[0] != block.find_ops(op_type="relu")[0].outputs[0]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3, 5)},
@@ -511,7 +519,8 @@ class TransposeOptimizationPass(unittest.TestCase):
             get_op_types_in_program(prog), ["relu", "transpose", "transpose"]
         )
 
-        assert block.outputs[1] == block.find_ops(op_type="transpose")[0].outputs[0]
+        if block.outputs[1] != block.find_ops(op_type="transpose")[0].outputs[0]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3, 5)},
@@ -606,7 +615,8 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["relu", "reduce_mean", "log"])
 
-        assert list(block.find_ops(op_type="reduce_mean")[0].inputs["axes"].val) == [1]
+        if list(block.find_ops(op_type="reduce_mean")[0].inputs["axes"].val) != [1]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (10, 2, 3)},
@@ -649,7 +659,7 @@ class TransposeOptimizationPass(unittest.TestCase):
             get_op_types_in_program(prog), ["transpose", "pad", "log", "transpose"]
         )
 
-        assert list(block.find_ops(op_type="pad")[0].inputs["pad"].val.flatten()) == [
+        if list(block.find_ops(op_type="pad")[0].inputs["pad"].val.flatten()) != [
             0,
             0,
             0,
@@ -658,7 +668,8 @@ class TransposeOptimizationPass(unittest.TestCase):
             2,
             3,
             4,
-        ]
+        ]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (11, 2, 3, 6)},
@@ -695,7 +706,7 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["pad", "log"])
 
-        assert list(block.find_ops(op_type="pad")[0].inputs["pad"].val.flatten()) == [
+        if list(block.find_ops(op_type="pad")[0].inputs["pad"].val.flatten()) != [
             0,
             0,
             0,
@@ -704,7 +715,8 @@ class TransposeOptimizationPass(unittest.TestCase):
             4,
             1,
             2,
-        ]
+        ]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (11, 2, 3, 6)},
@@ -743,7 +755,7 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["pad", "log"])
 
-        assert list(block.find_ops(op_type="pad")[0].inputs["pad"].val.flatten()) == [
+        if list(block.find_ops(op_type="pad")[0].inputs["pad"].val.flatten()) != [
             0,
             0,
             1,
@@ -752,7 +764,8 @@ class TransposeOptimizationPass(unittest.TestCase):
             4,
             0,
             0,
-        ]
+        ]:
+            raise AssertionError
         assert_model_is_valid(
             prog,
             {"x": (11, 2, 3, 6)},
@@ -864,12 +877,14 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["relu", "add"])
 
-        assert block.find_ops(op_type="relu")[0].inputs["x"] == block.inputs["x"]
-        assert block.find_ops(op_type="add")[0].inputs["x"] == block.inputs["x"]
-        assert (
-            block.find_ops(op_type="add")[0].inputs["y"]
-            == block.find_ops(op_type="relu")[0].outputs[0]
-        )
+        if block.find_ops(op_type="relu")[0].inputs["x"] != block.inputs["x"]:
+            raise AssertionError
+        if block.find_ops(op_type="add")[0].inputs["x"] != block.inputs["x"]:
+            raise AssertionError
+        if (
+            block.find_ops(op_type="add")[0].inputs["y"] != block.find_ops(op_type="relu")[0].outputs[0]
+        ):
+            raise AssertionError
 
         assert_model_is_valid(
             prog,
@@ -909,8 +924,10 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["add"])
 
-        assert block.find_ops(op_type="add")[0].inputs["x"] == block.inputs["x"]
-        assert block.find_ops(op_type="add")[0].inputs["y"] == block.inputs["x"]
+        if block.find_ops(op_type="add")[0].inputs["x"] != block.inputs["x"]:
+            raise AssertionError
+        if block.find_ops(op_type="add")[0].inputs["y"] != block.inputs["x"]:
+            raise AssertionError
 
         assert_model_is_valid(
             prog,
@@ -1647,12 +1664,14 @@ class TransposeOptimizationPass(unittest.TestCase):
         )
         self.assertEqual(get_op_types_in_program(prog), ["relu", "add", "identity"])
 
-        assert block.find_ops(op_type="relu")[0].inputs["x"] == block.inputs["x"]
-        assert block.find_ops(op_type="add")[0].inputs["x"] == block.inputs["x"]
-        assert (
-            block.find_ops(op_type="add")[0].inputs["y"]
-            == block.find_ops(op_type="relu")[0].outputs[0]
-        )
+        if block.find_ops(op_type="relu")[0].inputs["x"] != block.inputs["x"]:
+            raise AssertionError
+        if block.find_ops(op_type="add")[0].inputs["x"] != block.inputs["x"]:
+            raise AssertionError
+        if (
+            block.find_ops(op_type="add")[0].inputs["y"] != block.find_ops(op_type="relu")[0].outputs[0]
+        ):
+            raise AssertionError
 
         assert_model_is_valid(
             prog,

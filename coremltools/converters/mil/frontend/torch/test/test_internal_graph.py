@@ -53,8 +53,10 @@ class TestTorchOps:
             attr={"value": test_data}, kind="constant", inputs=[], outputs=["1"]
         )
         ssa = self._construct_test_graph(context, ops.constant, node, "1")
-        assert np.allclose(test_data, ssa.val)
-        assert test_data.shape == ssa.shape
+        if not np.allclose(test_data, ssa.val):
+            raise AssertionError
+        if test_data.shape != ssa.shape:
+            raise AssertionError
 
     def test_constant_magic(self, context):
         test_val = ops.PYTORCH_MAGIC_DEFAULT
@@ -63,7 +65,8 @@ class TestTorchOps:
         )
         ssa = self._construct_test_graph(context, ops.constant, node, "1")
         # We expect the magic default to get converted to None
-        assert ssa is None
+        if ssa is not None:
+            raise AssertionError
 
     @staticmethod
     def _gen_constants(size, vals):
@@ -142,7 +145,8 @@ class TestTorchOps:
         ssa = self._construct_test_graph(
             context, op_func, node, output_name, constants=constants
         )
-        assert ssa.val == python_type(test_val)
+        if ssa.val != python_type(test_val):
+            raise AssertionError
 
     def test_add(self, context):
         test_input_1 = np.random.rand(2, 3)
@@ -415,7 +419,8 @@ class TestTorchOps:
             context, ops.matmul, matmul_node, output_name, constants=constants
         )
         expected_result = torch.matmul(mat1, mat2).detach().numpy()
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, axis, expected_shape",
@@ -446,8 +451,10 @@ class TestTorchOps:
             expected_result = torch.squeeze(test_data)
         else:
             expected_result = torch.squeeze(test_data, axis)
-        assert np.allclose(expected_result, ssa.val)
-        assert expected_result.size() == torch.Size(expected_shape)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
+        if expected_result.size() != torch.Size(expected_shape):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, axis, expected_shape",
@@ -468,8 +475,10 @@ class TestTorchOps:
             context, ops.unsqueeze, unsqueeze_node, output_name, constants=constants
         )
         expected_result = torch.unsqueeze(test_data, axis)
-        assert np.allclose(expected_result, ssa.val)
-        assert expected_result.size() == torch.Size(expected_shape)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
+        if expected_result.size() != torch.Size(expected_shape):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, start, end",
@@ -495,7 +504,8 @@ class TestTorchOps:
             context, ops.flatten, flatten_node, output_name, constants=constants
         )
         expected_result = torch.flatten(test_data, start, end)
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "start, end", [(0, -5), (100, 2), (2, 100), (-3, -4),],
@@ -530,7 +540,8 @@ class TestTorchOps:
             context, ops.permute, permute_node, output_name, constants=constants
         )
         expected_result = test_data.permute(*permutation)
-        assert expected_result.shape == ssa.shape
+        if expected_result.shape != ssa.shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "in_features, out_features, scaling",
@@ -557,7 +568,8 @@ class TestTorchOps:
         )
         torch_linear = nn.Linear(in_features=in_features, out_features=out_features,)
         expected_shape = tuple(torch_linear(input_data).shape)
-        assert expected_shape == ssa.shape
+        if expected_shape != ssa.shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "height, width, kernel_size, stride, padding, dilation",
@@ -615,8 +627,10 @@ class TestTorchOps:
             dilation=dilation,
         )
         expected_shape = tuple(torch_conv(test_input).shape)
-        assert ssa.val == None
-        assert expected_shape == ssa.shape
+        if ssa.val != None:
+            raise AssertionError
+        if expected_shape != ssa.shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "depth, height, width, kernel_size, stride, padding, dilation, groups",
@@ -696,8 +710,10 @@ class TestTorchOps:
         )
         expected_result = torch_conv(test_input)
         expected_shape = tuple(expected_result.shape)
-        assert ssa.val is None
-        assert expected_shape == ssa.shape
+        if ssa.val is not None:
+            raise AssertionError
+        if expected_shape != ssa.shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "height, width, kernel_size, stride, padding, dilation",
@@ -759,8 +775,10 @@ class TestTorchOps:
             dilation=dilation,
         )
         expected_shape = tuple(torch_conv(test_input).shape)
-        assert ssa.val == None
-        assert expected_shape == ssa.shape
+        if ssa.val != None:
+            raise AssertionError
+        if expected_shape != ssa.shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, dim, keepdim",
@@ -779,7 +797,8 @@ class TestTorchOps:
             context, ops.mean, mean_node, output_name, constants=constants
         )
         expected_result = torch.mean(test_input, dim, keepdim)
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     def test_mean_no_dims(self, context):
         test_input = torch.rand((3, 20, 20))
@@ -792,7 +811,8 @@ class TestTorchOps:
             context, ops.mean, mean_node, output_name, constants=constants
         )
         expected_result = torch.mean(test_input)
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     def test_embedding(self, context):
         EMBEDDING_DIMENSION = 10
@@ -812,7 +832,8 @@ class TestTorchOps:
         )
         torch_embedding = nn.Embedding.from_pretrained(test_input)
         expected_result = torch_embedding(torch.LongTensor(indices))
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "dim", [0, 1, 2, 3, 4],
@@ -834,7 +855,8 @@ class TestTorchOps:
             graph_inputs=graph_inputs,
         )
         expected_result = test_input.shape[dim]
-        assert expected_result == ssa.val
+        if expected_result != ssa.val:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "dim", [0, 1],
@@ -855,7 +877,8 @@ class TestTorchOps:
             graph_inputs=graph_inputs,
         )
         expected_result = test_shape[dim]
-        assert expected_result == ssa.sym_val
+        if expected_result != ssa.sym_val:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_size, shape",
@@ -872,7 +895,8 @@ class TestTorchOps:
             context, ops.view, view_node, output_name, constants=constants
         )
         expected_result = test_input.view(shape)
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, output_shape",
@@ -899,10 +923,12 @@ class TestTorchOps:
         )
         expected_result = torch._adaptive_avg_pool2d(test_input, output_shape)
         expected_shape = tuple(expected_result.shape)
-        assert expected_shape == ssa.shape
+        if expected_shape != ssa.shape:
+            raise AssertionError
         # We only expect numerical output when reducing to global average.
         if output_shape == (1, 1):
-            assert np.allclose(expected_result, ssa.val)
+            if not np.allclose(expected_result, ssa.val):
+                raise AssertionError
 
     def test_adaptive_avg_pool2d_exception(self, context):
         # For this test, the input tensor HW channels are dynamic.
@@ -949,8 +975,10 @@ class TestTorchOps:
         ssa = self._construct_test_graph(
             context, ops.batch_norm, batch_norm_node, output_name, constants=constants
         )
-        assert ssa.val == None
-        assert ssa.shape == tuple(test_input.shape)
+        if ssa.val != None:
+            raise AssertionError
+        if ssa.shape != tuple(test_input.shape):
+            raise AssertionError
 
     @pytest.mark.parametrize("input_shape", [(1, 3, 15, 15), (1, 1, 1, 1)])
     def test_instance_norm(self, context, input_shape):
@@ -977,8 +1005,10 @@ class TestTorchOps:
         ssa = self._construct_test_graph(
             context, ops.instance_norm, instant_norm_node, output_name, constants=constants
         )
-        assert ssa.val == None
-        assert ssa.shape == tuple(test_input.shape)
+        if ssa.val != None:
+            raise AssertionError
+        if ssa.shape != tuple(test_input.shape):
+            raise AssertionError
 
     @pytest.mark.parametrize("axis", [1, 2, 3])
     @staticmethod
@@ -1021,7 +1051,8 @@ class TestTorchOps:
         expected_result = torch.cat(
             (const_input, test_input1, test_input2), dim=axis
         ).numpy()
-        assert np.allclose(expected_result.shape, ssa.shape)
+        if not np.allclose(expected_result.shape, ssa.shape):
+            raise AssertionError
 
     @pytest.mark.parametrize("axis", [0, 1, 2, 3, 4])
     @staticmethod
@@ -1062,7 +1093,8 @@ class TestTorchOps:
 
         ssa = context["output"]
         expected_result = np.stack((const_input, test_input1, test_input2), axis=axis)
-        assert np.allclose(expected_result.shape, ssa.shape)
+        if not np.allclose(expected_result.shape, ssa.shape):
+            raise AssertionError
 
     def test_item(self, context):
         const_val = 0
@@ -1073,7 +1105,8 @@ class TestTorchOps:
         ssa = self._construct_test_graph(
             context, ops.item, item_node, output_name, constants=constants
         )
-        assert ssa.val == const_val
+        if ssa.val != const_val:
+            raise AssertionError
 
     def test_item_exception(self, context):
         const_val = [0, 1]
@@ -1119,8 +1152,10 @@ class TestTorchOps:
             graph_inputs=graph_inputs,
             constants=constants,
         )
-        assert ssa.val == None
-        assert ssa.shape == input_shape
+        if ssa.val != None:
+            raise AssertionError
+        if ssa.shape != input_shape:
+            raise AssertionError
 
     @pytest.mark.parametrize("shape", [(1, 2), (2, 3, 4, 5), (3, 4, 5),])
     def test_ones(self, context, shape):
@@ -1133,7 +1168,8 @@ class TestTorchOps:
         ssa = self._construct_test_graph(
             context, ops.ones, ones_node, output_name, constants=constants,
         )
-        assert ssa.shape == shape
+        if ssa.shape != shape:
+            raise AssertionError
 
     @pytest.mark.parametrize("input_shape", [(1, 2), (2, 3, 4, 5), (3, 4, 5),])
     def test_ones_like(self, context, input_shape):
@@ -1152,7 +1188,8 @@ class TestTorchOps:
             graph_inputs=graph_inputs,
             constants=constants,
         )
-        assert ssa.shape == input_shape
+        if ssa.shape != input_shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_size, dim, index",
@@ -1187,7 +1224,8 @@ class TestTorchOps:
             .squeeze(dim)
             .shape
         )
-        assert np.allclose(ssa.shape, expected_shape)
+        if not np.allclose(ssa.shape, expected_shape):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "dynamic, test_tuple", itertools.product([True, False], [True, False])
@@ -1237,12 +1275,15 @@ class TestTorchOps:
         ssa_constants = []
         for name in constants_unpacked:
             ssa_constants.append(context[name].val)
-        assert ssa_constants == constant_vals
+        if ssa_constants != constant_vals:
+            raise AssertionError
 
         if dynamic:
             ssa_dyanmic = context[graph_input_name + "_out"]
-            assert ssa_dyanmic.val is None
-            assert ssa_dyanmic.shape == input_shape
+            if ssa_dyanmic.val is not None:
+                raise AssertionError
+            if ssa_dyanmic.shape != input_shape:
+                raise AssertionError
 
     def _test_pool(
         self, context, test_input, param_list, op_kind, op_func, expected_result
@@ -1258,7 +1299,8 @@ class TestTorchOps:
             context, op_func, pool_node, output_name, constants=constants,
         )
         expected_shape = tuple(expected_result.shape)
-        assert expected_shape == ssa.shape
+        if expected_shape != ssa.shape:
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, kernel_size, stride, pad, include_pad, ceil_mode",
@@ -1464,7 +1506,8 @@ class TestTorchOps:
             context, ops.floor, floor_node, output_name, constants=constants,
         )
         expected_result = test_input.floor()
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     def test_erf(self, context):
         test_input = torch.rand(1, 2, 3, 4)
@@ -1474,7 +1517,8 @@ class TestTorchOps:
             context, ops.erf, node, output_name, constants=constants
         )
         expected_result = test_input.erf()
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     def test_implicittensortonum(self, context):
         input_shape = (1,)
@@ -1493,7 +1537,8 @@ class TestTorchOps:
             output_name,
             graph_inputs=graph_inputs,
         )
-        assert ssa.shape == ()
+        if ssa.shape != ():
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "chunks, dim", itertools.product([2, 3, 5], [0, 1, 2, 3]),
@@ -1641,7 +1686,8 @@ class TestTorchOps:
         ssa = self._construct_test_graph(
             context, ops.noop, node, output_name, constants=constants
         )
-        assert np.allclose(test_input.numpy(), ssa.val)
+        if not np.allclose(test_input.numpy(), ssa.val):
+            raise AssertionError
 
     def test_tanh(self, context):
         test_input = torch.rand(3, 4, 5)
@@ -1653,7 +1699,8 @@ class TestTorchOps:
             context, ops.tanh, node, output_name, constants=constants
         )
         expected_result = torch.tanh(test_input)
-        assert np.allclose(expected_result.numpy(), ssa.val)
+        if not np.allclose(expected_result.numpy(), ssa.val):
+            raise AssertionError
 
     # TODO: test for @keepdim==True when the backend bug is fixed.
     # rdar://62566799
@@ -1764,7 +1811,8 @@ class TestTorchOps:
             context, ops.mean, sum_node, output_name, constants=constants
         )
         expected_result = torch.sum(test_input, dim, keepdim)
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     def test_sum_no_dims(self, context):
         test_input = torch.rand((3, 20, 20))
@@ -1777,7 +1825,8 @@ class TestTorchOps:
             context, ops.mean, sum_node, output_name, constants=constants
         )
         expected_result = torch.sum(test_input)
-        assert np.allclose(expected_result, ssa.val)
+        if not np.allclose(expected_result, ssa.val):
+            raise AssertionError
 
     def test_neg(self, context):
         test_input = torch.rand(3, 4, 5)
@@ -1789,7 +1838,8 @@ class TestTorchOps:
             context, ops.neg, node, output_name, constants=constants
         )
         expected_result = torch.neg(test_input)
-        assert np.allclose(expected_result.numpy(), ssa.val)
+        if not np.allclose(expected_result.numpy(), ssa.val):
+            raise AssertionError
 
     @pytest.mark.parametrize(
         "input_shape, k, dim, largest",

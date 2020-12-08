@@ -38,10 +38,14 @@ def test_empty_block():
         return x0
 
     block = prog.functions["main"]
-    assert len(block.operations) == 0
-    assert len(block.inputs) == 1
-    assert len(block.outputs) == 1
-    assert block.inputs["x0"] == block.outputs[0]
+    if len(block.operations) != 0:
+        raise AssertionError
+    if len(block.inputs) != 1:
+        raise AssertionError
+    if len(block.outputs) != 1:
+        raise AssertionError
+    if block.inputs["x0"] != block.outputs[0]:
+        raise AssertionError
     print(prog)
 
 
@@ -60,10 +64,14 @@ def test_add_op():
         x1 = mb.log(x=x0)
     block.set_outputs([x1])
     print("after:\n{}".format(prog))
-    assert block.inputs["x0"] == block.find_ops(op_type="log")[0].inputs["x"]
-    assert len(block.operations) == 1
-    assert block.operations[0].op_type == "log"
-    assert block.outputs[0] == x1
+    if block.inputs["x0"] != block.find_ops(op_type="log")[0].inputs["x"]:
+        raise AssertionError
+    if len(block.operations) != 1:
+        raise AssertionError
+    if block.operations[0].op_type != "log":
+        raise AssertionError
+    if block.outputs[0] != x1:
+        raise AssertionError
 
 
 def test_remove_op():
@@ -82,10 +90,14 @@ def test_remove_op():
     block.set_outputs([x0])
     block.remove_ops(ops)
     print("after:\n{}".format(prog))
-    assert len(block.operations) == 0
-    assert len(block.inputs) == 1
-    assert len(block.outputs) == 1
-    assert block.inputs["x0"] == block.outputs[0]
+    if len(block.operations) != 0:
+        raise AssertionError
+    if len(block.inputs) != 1:
+        raise AssertionError
+    if len(block.outputs) != 1:
+        raise AssertionError
+    if block.inputs["x0"] != block.outputs[0]:
+        raise AssertionError
 
 
 def test_remove_op2():
@@ -104,10 +116,14 @@ def test_remove_op2():
     block.set_outputs([x0])
     block.remove_ops(ops)
     print("after:\n{}".format(prog))
-    assert len(block.operations) == 0
-    assert len(block.inputs) == 1
-    assert len(block.outputs) == 1
-    assert block.inputs["x0"] == block.outputs[0]
+    if len(block.operations) != 0:
+        raise AssertionError
+    if len(block.inputs) != 1:
+        raise AssertionError
+    if len(block.outputs) != 1:
+        raise AssertionError
+    if block.inputs["x0"] != block.outputs[0]:
+        raise AssertionError
 
 
 def test_op_removal_and_insertion():
@@ -145,13 +161,14 @@ def test_op_removal_and_insertion():
     prev_prog = copy.deepcopy(prog)
 
     print("before:\n{}".format(prog))
-    assert get_op_types_in_program(prog) == [
+    if get_op_types_in_program(prog) != [
         "transpose",
         "relu",
         "avg_pool",
         "transpose",
         "log",
-    ]
+    ]:
+        raise AssertionError
     block = prog.functions["main"]
 
     def remove_transpose(block):
@@ -166,11 +183,13 @@ def test_op_removal_and_insertion():
 
     # remove 1st transpose
     remove_transpose(block)
-    assert get_op_types_in_program(prog) == ["relu", "avg_pool", "transpose", "log"]
+    if get_op_types_in_program(prog) != ["relu", "avg_pool", "transpose", "log"]:
+        raise AssertionError
 
     # remove 2nd transpose
     remove_transpose(block)
-    assert get_op_types_in_program(prog) == ["relu", "avg_pool", "log"]
+    if get_op_types_in_program(prog) != ["relu", "avg_pool", "log"]:
+        raise AssertionError
 
     print("after transpose ops removal:\n{}".format(prog))
 
@@ -188,7 +207,8 @@ def test_op_removal_and_insertion():
     )
 
     print("after transpose insertion:\n{}".format(prog))
-    assert get_op_types_in_program(prog) == ["relu", "transpose", "avg_pool", "log"]
+    if get_op_types_in_program(prog) != ["relu", "transpose", "avg_pool", "log"]:
+        raise AssertionError
 
     for op in block.operations:
         op.type_value_inference(overwrite_output=True)
@@ -209,9 +229,12 @@ def test_simple_substituion():
 
     print("before:\n{}".format(prog))
     block = prog.functions["main"]
-    assert len(block.find_ops(op_type="log")) == 1
-    assert len(block.find_ops(op_type="add")) == 1
-    assert len(block.find_ops(op_type="mul")) == 0
+    if len(block.find_ops(op_type="log")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="add")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="mul")) != 0:
+        raise AssertionError
 
     add = block.find_ops(op_type="add")[0]
 
@@ -225,9 +248,12 @@ def test_simple_substituion():
         # because we need to replace any op affected by add with 'mul'
         x2 = mb.mul(x=x0, y=y0, before_op=add)
 
-    assert len(block.find_ops(op_type="mul")) == 1
-    assert len(block.find_ops(op_type="add")) == 1
-    assert len(block.find_ops(op_type="log")) == 1
+    if len(block.find_ops(op_type="mul")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="add")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="log")) != 1:
+        raise AssertionError
 
     # It's important to set anchor_op = 'mul' because new_var is only visible
     # after 'mul'.
@@ -235,9 +261,12 @@ def test_simple_substituion():
     block.remove_ops([add])
 
     print("after:\n{}".format(prog))
-    assert len(block.find_ops(op_type="add")) == 0
-    assert len(block.find_ops(op_type="mul")) == 1
-    assert len(block.find_ops(op_type="log")) == 1
+    if len(block.find_ops(op_type="add")) != 0:
+        raise AssertionError
+    if len(block.find_ops(op_type="mul")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="log")) != 1:
+        raise AssertionError
 
 
 def test_substitute_nested_op():
@@ -254,10 +283,14 @@ def test_substitute_nested_op():
 
     print("before:\n{}".format(prog))
     block = prog.functions["main"]
-    assert len(block.find_ops(op_type="less")) == 1
-    assert len(block.find_ops(op_type="abs")) == 2
-    assert len(block.find_ops(op_type="cond")) == 1
-    assert len(block.find_ops(op_type="log")) == 1
+    if len(block.find_ops(op_type="less")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="abs")) != 2:
+        raise AssertionError
+    if len(block.find_ops(op_type="cond")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="log")) != 1:
+        raise AssertionError
 
     cond = block.find_ops(op_type="cond")[0]
     x0 = block.inputs["x0"]
@@ -268,10 +301,14 @@ def test_substitute_nested_op():
     block.remove_ops([cond])
 
     print("after:\n{}".format(prog))
-    assert len(block.find_ops(op_type="less")) == 1
-    assert len(block.find_ops(op_type="log")) == 1
-    assert len(block.find_ops(op_type="cond")) == 0
-    assert len(block.find_ops(op_type="abs")) == 0
+    if len(block.find_ops(op_type="less")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="log")) != 1:
+        raise AssertionError
+    if len(block.find_ops(op_type="cond")) != 0:
+        raise AssertionError
+    if len(block.find_ops(op_type="abs")) != 0:
+        raise AssertionError
 
 
 def test_simple_transpose_squash():
@@ -291,7 +328,8 @@ def test_simple_transpose_squash():
 
     print("before:\n{}".format(prog))
     block = prog.functions["main"]
-    assert len(block.find_ops(op_type="transpose")) == 6
+    if len(block.find_ops(op_type="transpose")) != 6:
+        raise AssertionError
 
     def can_squash(trans1, trans2):
         return (
@@ -329,4 +367,5 @@ def test_simple_transpose_squash():
         block.remove_ops([trans1, trans2])
 
     print("after:\n{}".format(prog))
-    assert len(block.find_ops(op_type="transpose")) == 0
+    if len(block.find_ops(op_type="transpose")) != 0:
+        raise AssertionError

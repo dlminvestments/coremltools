@@ -44,7 +44,8 @@ class linear(Operation):
         x_type = self.x.dtype
         x_shape = self.x.shape
         weight_shape = self.weight.shape
-        assert len(weight_shape) == 2
+        if len(weight_shape) != 2:
+            raise AssertionError
 
         shape = list(x_shape)
         shape[-1] = weight_shape[0]

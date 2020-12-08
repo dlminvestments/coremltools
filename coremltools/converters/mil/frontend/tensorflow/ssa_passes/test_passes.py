@@ -42,7 +42,8 @@ def test_backfill_make_list_elem_type():
 
     # tf_make_list has no elem_type info
     make_list_op = prog.find_ops(op_type="tf_make_list", exactly_one=True)[0]
-    assert make_list_op.outputs[0].elem_type == types.unknown
+    if make_list_op.outputs[0].elem_type != types.unknown:
+        raise AssertionError
 
     prev_prog = copy.deepcopy(prog)
     PASS_REGISTRY["tensorflow::backfill_make_list_elem_type"](prog)
@@ -51,6 +52,7 @@ def test_backfill_make_list_elem_type():
 
     # tf_make_list is replaced with make_list and should have elem_type now
     make_list_op = prog.find_ops(op_type="make_list", exactly_one=True)[0]
-    assert make_list_op.outputs[0].elem_type.get_shape() == elem_shape
+    if make_list_op.outputs[0].elem_type.get_shape() != elem_shape:
+        raise AssertionError
 
     assert_model_is_valid(prog, {"update": elem_shape})

@@ -2762,7 +2762,8 @@ def while_loop(const_context, builder, op):
     # Assume that all loop vars aren't loop invariant (invariant loop vars
     # should've be optimized away in graph passes).
     for v_in, vx_in in zip(op.loop_vars, cond_block.inputs):
-        assert v_in.name != vx_in.name, "Loop invariant detected in {}".format(op)
+        if v_in.name == vx_in.name:
+            raise AssertionError("Loop invariant detected in {}".format(op))
         builder.add_copy(
             name=vx_in.name + "_input_copy",
             input_name=make_input(const_context, builder, v_in),

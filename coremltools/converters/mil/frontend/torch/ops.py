@@ -73,7 +73,8 @@ def convert_block(context, block, inputs):
                 number expected by the block.
     """
 
-    assert len(block.inputs) == len(inputs)
+    if len(block.inputs) != len(inputs):
+        raise AssertionError
 
     # Start a new context frame.
     context.push((block.inputs, inputs))
@@ -188,8 +189,10 @@ def _construct_constant(val, name):
 
 @register_torch_op
 def constant(context, node):
-    assert len(node.inputs) == 0
-    assert len(node.outputs) == 1
+    if len(node.inputs) != 0:
+        raise AssertionError
+    if len(node.outputs) != 1:
+        raise AssertionError
 
     name = node.name
     val = node.attr["value"]
@@ -199,7 +202,8 @@ def constant(context, node):
 
 
 def _array_construct(context, node, array_type):
-    assert len(node.outputs) == 1
+    if len(node.outputs) != 1:
+        raise AssertionError
     inputs = _get_inputs(context, node)
     scalar_inputs = [
         inp
@@ -275,7 +279,8 @@ def gt(context, node):
 
 @register_torch_op(torch_alias=["t", "transpose_"])
 def transpose(context, node):
-    assert len(node.outputs) == 1
+    if len(node.outputs) != 1:
+        raise AssertionError
     inputs = _get_inputs(context, node)
     x = inputs[0]
 
@@ -287,7 +292,8 @@ def transpose(context, node):
             raise ValueError("transpose without dims for rank > 2 is unsupported")
         res = mb.transpose(x=x, perm=[1, 0], name=node.name)
     else:
-        assert len(inputs) == 3
+        if len(inputs) != 3:
+            raise AssertionError
         ax0 = inputs[1].val
         ax1 = inputs[2].val
 
@@ -325,7 +331,8 @@ def matmul(context, node):
 @register_torch_op
 def add(context, node):
     add_inputs = _get_inputs(context, node)
-    assert len(node.outputs) == 1
+    if len(node.outputs) != 1:
+        raise AssertionError
 
     # TODO (sberardi): 3rd param to aten::add is a scale factor, need to handle that.
     # out=input+alpha x other
@@ -348,8 +355,10 @@ def addmm(context, node):
     # addmm(Tensor input, Tensor mat1, Tensor mat2, Scalar beta=1, Scalar alpha=1)
     # output = beta * input + alpha * mat1 * mat2
 
-    assert len(node.inputs) == 5
-    assert len(node.outputs) == 1
+    if len(node.inputs) != 5:
+        raise AssertionError
+    if len(node.outputs) != 1:
+        raise AssertionError
 
     inputs = [context[name] for name in node.inputs]
     bias = inputs[0]
@@ -709,7 +718,8 @@ def pow_(context, node):
 @register_torch_op(torch_alias=["rsub"])
 def sub(context, node):
     inputs = _get_inputs(context, node, expected=[2, 3])
-    assert len(node.outputs) == 1
+    if len(node.outputs) != 1:
+        raise AssertionError
 
     if node.kind == "rsub":
         # rsub reverses the order of arguments
@@ -756,7 +766,8 @@ def mean(context, node):
 
     # Last input to mean is an optional output tensor. We always expect this to
     # be None or absent.
-    assert len(inputs) <= 3 or inputs[3] is None
+    if not (len(inputs) <= 3 or inputs[3] is None):
+        raise AssertionError
     func = mb.reduce_sum if node.kind == "sum" else mb.reduce_mean
     res = func(**kwargs)
     context.add(res)
@@ -816,7 +827,8 @@ def adaptive_avg_pool2d(context, node):
 
     _input = inputs[0]
     output_size = inputs[1].val
-    assert isinstance(output_size, _np.ndarray)
+    if not isinstance(output_size, _np.ndarray):
+        raise AssertionError
     output_size = tuple(output_size)
 
     if output_size == (1, 1):
@@ -867,7 +879,8 @@ def adaptive_max_pool2d(context, node):
 
     _input = inputs[0]
     output_size = inputs[1].val
-    assert isinstance(output_size, _np.ndarray)
+    if not isinstance(output_size, _np.ndarray):
+        raise AssertionError
     output_size = tuple(output_size)
 
     if output_size == (1, 1):
@@ -1210,7 +1223,8 @@ def lstm(context, node):
             weights = weights[0:2] + weights[4:6]
 
             # (2.)
-            assert len(biases) == 4
+            if len(biases) != 4:
+                raise AssertionError
             for index in range(len(biases)):
                 biases[index] = _ifzo_to_ifoz(
                     biases[index],
@@ -1404,12 +1418,14 @@ def tupleunpack(context, node):
                 len(node.outputs), len(values)
             )
         )
-    assert len(values) == len(node.outputs)
+    if len(values) != len(node.outputs):
+        raise AssertionError
     # @value is either a numpy primitive or a Var object
     for value, output in zip(values, node.outputs):
         if not isinstance(value, Var):
             value = _construct_constant(value, name=output)
-        assert isinstance(value, Var)
+        if not isinstance(value, Var):
+            raise AssertionError
         context.add(value, output)
 
 
@@ -1536,7 +1552,8 @@ def loop(context, node):
 
     # Make sure the loop returned the expected number of outputs. Note that the
     # first two loop outputs are the iteration count and condition.
-    assert len(loop) - 2 == len(node.outputs)
+    if len(loop) - 2 != len(node.outputs):
+        raise AssertionError
     for output_name, output_var in zip(node.outputs, loop[2:]):
         context.add(output_var, torch_name=output_name)
 
@@ -1575,7 +1592,8 @@ def _if(context, node):
     inputs = _get_inputs(context, node, expected=1)
     condition = inputs[0]
 
-    assert len(node.blocks) == 2
+    if len(node.blocks) != 2:
+        raise AssertionError
     true_block = node.blocks[0]
     false_block = node.blocks[1]
 
@@ -1595,7 +1613,8 @@ def _if(context, node):
         cond = (cond,)
 
     # Make sure the condition returned the expected number of outputs.
-    assert len(cond) == len(node.outputs)
+    if len(cond) != len(node.outputs):
+        raise AssertionError
     for output_name, output_var in zip(node.outputs, cond):
         context.add(output_var, torch_name=output_name)
 
@@ -1607,9 +1626,12 @@ def select(context, node):
     dim = inputs[1].val
     index = inputs[2].val
 
-    assert dim.shape == ()
-    assert index.shape == ()
-    assert _input.val is None
+    if dim.shape != ():
+        raise AssertionError
+    if index.shape != ():
+        raise AssertionError
+    if _input.val is not None:
+        raise AssertionError
 
     # NOTE:
     # Each index in @begin_array/@end_array corresponds to a dimension of @_input
@@ -1723,7 +1745,8 @@ def log_softmax(context, node):
     x = inputs[0]
     axis = inputs[1]
     out = inputs[2]  # Ignored.
-    assert out is None
+    if out is not None:
+        raise AssertionError
     res = mb.softmax(x=x, axis=axis, name=node.name + "_softmax")
     res = mb.log(x=res, name=node.name)
     context.add(res)
@@ -1909,7 +1932,8 @@ def implicittensortonum(context, node):
     if _input.shape == (): #already a scalar
         context.add(_input, node.name)
     else:
-        assert _input.shape == (1,)
+        if _input.shape != (1,):
+            raise AssertionError
         # shape: (1,) -> ()
         squeeze = mb.squeeze(x=_input, name=node.name)
         context.add(squeeze)
@@ -2116,7 +2140,8 @@ def max(context, node):
 
     values = mb.reduce_max(x=_input, axes=[dim], keep_dims=keepdim)
     indices = mb.reduce_argmax(x=_input, axis=dim, keep_dims=keepdim)
-    assert len(node.outputs) == 2
+    if len(node.outputs) != 2:
+        raise AssertionError
     values_name = node.outputs[0]
     indices_name = node.outputs[1]
     context.add(values, torch_name=values_name)

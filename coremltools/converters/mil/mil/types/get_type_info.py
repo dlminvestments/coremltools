@@ -55,7 +55,8 @@ def get_python_method_type(py_function):
 def get_type_info(t):
     if hasattr(t, "__type_info__"):
         ret = t.__type_info__()
-        assert ret.python_class is not None
+        if ret.python_class is None:
+            raise AssertionError
         return ret
     elif isinstance(t, type):
         return Type(t.__name__, python_class=t)
