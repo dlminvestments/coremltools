@@ -34,7 +34,8 @@ class NearestNeighborsBuilderTest(unittest.TestCase):
         # Do any cleanup here
         pass
 
-    def create_builder(self, default_class_label="default_label"):
+    @staticmethod
+    def create_builder(default_class_label="default_label"):
         builder = KNearestNeighborsClassifierBuilder(
             input_name="input",
             output_name="output",

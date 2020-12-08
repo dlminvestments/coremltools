@@ -707,7 +707,8 @@ class DescriptorPool(object):
     self._enum_descriptors[enum_name] = desc
     return desc
 
-  def _MakeFieldDescriptor(self, field_proto, message_name, index,
+  @staticmethod
+  def _MakeFieldDescriptor(field_proto, message_name, index,
                            is_extension=False):
     """Creates a field descriptor from a FieldDescriptorProto.
 
@@ -851,7 +852,8 @@ class DescriptorPool(object):
 
     field_desc.type = field_proto.type
 
-  def _MakeEnumValueDescriptor(self, value_proto, index):
+  @staticmethod
+  def _MakeEnumValueDescriptor(value_proto, index):
     """Creates a enum value descriptor object from a enum value proto.
 
     Args:
@@ -960,7 +962,8 @@ class DescriptorPool(object):
       for parent_dep in dep_desc.dependencies:
         yield parent_dep
 
-  def _GetTypeFromScope(self, package, type_name, scope):
+  @staticmethod
+  def _GetTypeFromScope(package, type_name, scope):
     """Finds a given type name in the current scope.
 
     Args:

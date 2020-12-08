@@ -51,15 +51,18 @@ class CorrectnessTest(unittest.TestCase):
     def runTest(self):
         pass
 
-    def _compare_shapes(self, np_preds, coreml_preds):
+    @staticmethod
+    def _compare_shapes(np_preds, coreml_preds):
         return np.squeeze(np_preds).shape == np.squeeze(coreml_preds).shape
 
-    def _test_shape_equality(self, np_preds, coreml_preds):
+    @staticmethod
+    def _test_shape_equality(np_preds, coreml_preds):
         np.testing.assert_array_equal(
             np.squeeze(coreml_preds).shape, np.squeeze(np_preds).shape
         )
 
-    def _test_nd_shape_equality(self, np_preds, coreml_preds, shape=()):
+    @staticmethod
+    def _test_nd_shape_equality(np_preds, coreml_preds, shape=()):
         if shape:
             np.testing.assert_array_equal(coreml_preds.shape, shape)
         else:
@@ -68,7 +71,8 @@ class CorrectnessTest(unittest.TestCase):
                 return
             np.testing.assert_array_equal(coreml_preds.shape, np_preds.shape)
 
-    def _compare_predictions(self, np_preds, coreml_preds, delta=0.01):
+    @staticmethod
+    def _compare_predictions(np_preds, coreml_preds, delta=0.01):
         np_preds = np_preds.flatten()
         coreml_preds = coreml_preds.flatten()
         max_arr = np.maximum(np.maximum(np_preds, coreml_preds), 1.0)
@@ -7040,7 +7044,8 @@ class IOS14SingleLayerTests(CorrectnessTest):
     "Only supported on macOS 10.16+",
 )
 class ReorganizeDataTests(CorrectnessTest):
-    def _to_rank_4(self, x):
+    @staticmethod
+    def _to_rank_4(x):
         from_rank = len(x.shape)
         if from_rank == 3:
             return np.reshape(x, [1] + list(x.shape))
@@ -7049,7 +7054,8 @@ class ReorganizeDataTests(CorrectnessTest):
         elif from_rank == 5:
             return np.squeeze(x, axis=0)
 
-    def _from_rank_4(self, x, to_rank):
+    @staticmethod
+    def _from_rank_4(x, to_rank):
         if to_rank == 3:
             return np.squeeze(x, axis=0)
         elif to_rank == 4:

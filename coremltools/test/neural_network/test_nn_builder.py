@@ -129,8 +129,8 @@ class ControlFlowCorrectnessTest(unittest.TestCase):
     "Only supported on macOS 10.14+",
 )
 class BasicNumericCorrectnessTest_1014NewLayers(unittest.TestCase):
+    @staticmethod
     def build_quant_conv_layer(
-        self,
         W=None,
         quantization_type="linear",
         nbits=8,
@@ -456,7 +456,8 @@ class BasicNumericCorrectnessTest_1015NewLayers(unittest.TestCase):
     not _is_macos() or _macos_version() < (10, 13), "Only supported on macOS 10.13+"
 )
 class BasicNumericCorrectnessTest(unittest.TestCase):
-    def _build_nn_with_one_ip_layer(self):
+    @staticmethod
+    def _build_nn_with_one_ip_layer():
         input_features = [("data", datatypes.Array(3))]
         output_features = [("out", None)]
         builder = NeuralNetworkBuilder(

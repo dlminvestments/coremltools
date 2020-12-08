@@ -1280,7 +1280,8 @@ class KerasBasicNumericCorrectnessTest(KerasNumericCorrectnessTest):
         # Test the keras model
         self._test_keras_model(model, input_blob="data", output_blob="output")
 
-    def test_medium_no_sequence_gru_random(self):
+    @staticmethod
+    def test_medium_no_sequence_gru_random():
         np.random.seed(1988)
         input_dim = 10
         input_length = 1

@@ -657,7 +657,8 @@ class JsonFormatTest(JsonFormatBase):
                     'Message type "proto3.TestMessage" has no field named '
                     '"unknownName".')
 
-  def testIgnoreUnknownField(self):
+  @staticmethod
+  def testIgnoreUnknownField():
     text = '{"unknownName": 1}'
     parsed_message = json_format_proto3_pb2.TestMessage()
     json_format.Parse(text, parsed_message, ignore_unknown_fields=True)

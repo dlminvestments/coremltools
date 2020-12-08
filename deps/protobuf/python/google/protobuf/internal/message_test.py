@@ -929,7 +929,8 @@ class MessageTest(BaseTestCase):
     with self.assertRaises(pickle.PickleError) as _:
       pickle.dumps(m.repeated_int32, pickle.HIGHEST_PROTOCOL)
 
-  def testSortEmptyRepeatedCompositeContainer(self, message_module):
+  @staticmethod
+  def testSortEmptyRepeatedCompositeContainer(message_module):
     """Exercise a scenario that has led to segfaults in the past.
     """
     m = message_module.TestAllTypes()
@@ -1777,7 +1778,8 @@ class ValidTypeNamesTest(BaseTestCase):
 
 class PackedFieldTest(BaseTestCase):
 
-  def setMessage(self, message):
+  @staticmethod
+  def setMessage(message):
     message.repeated_int32.append(1)
     message.repeated_int64.append(1)
     message.repeated_uint32.append(1)

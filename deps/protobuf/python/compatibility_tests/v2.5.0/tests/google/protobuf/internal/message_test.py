@@ -483,7 +483,8 @@ class MessageTest(unittest.TestCase):
         unittest_pb2.TestParsingMerge.repeated_ext]), 3)
 
 
-  def testSortEmptyRepeatedCompositeContainer(self):
+  @staticmethod
+  def testSortEmptyRepeatedCompositeContainer():
     """Exercise a scenario that has led to segfaults in the past.
     """
     m = unittest_pb2.TestAllTypes()

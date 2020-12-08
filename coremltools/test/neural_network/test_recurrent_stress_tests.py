@@ -1822,7 +1822,8 @@ class InitialStateRecurrentModels(unittest.TestCase):
     """
 
     @unittest.skip("failing - TODO re-enable when it passes consistently")
-    def test_initial_state_GRU(self):
+    @staticmethod
+    def test_initial_state_GRU():
         data = np.random.rand(1, 1, 2)
 
         model = keras.models.Sequential()
@@ -1859,7 +1860,8 @@ class InitialStateRecurrentModels(unittest.TestCase):
             coreml_output_2 = np.expand_dims(coreml_output_2, 1)
             np.testing.assert_array_almost_equal(coreml_output_2.T, keras_output_2)
 
-    def test_initial_state_SimpleRNN(self):
+    @staticmethod
+    def test_initial_state_SimpleRNN():
         data = np.random.rand(1, 1, 2)
         model = keras.models.Sequential()
         model.add(
@@ -1893,7 +1895,8 @@ class InitialStateRecurrentModels(unittest.TestCase):
             coreml_output_2 = np.expand_dims(coreml_output_2, 1)
             np.testing.assert_array_almost_equal(coreml_output_2.T, keras_output_2)
 
-    def test_initial_state_LSTM(self):
+    @staticmethod
+    def test_initial_state_LSTM():
         data = np.random.rand(1, 1, 2)
 
         model = keras.models.Sequential()
