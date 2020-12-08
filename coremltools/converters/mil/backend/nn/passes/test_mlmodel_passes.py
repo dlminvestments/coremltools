@@ -26,7 +26,8 @@ np.random.seed(10)
 
 
 class MLModelPassesTest(unittest.TestCase):
-    def test_load_constant_remove(self):
+    @staticmethod
+    def test_load_constant_remove():
         input_features = [("data", datatypes.Array(*(3, 4)))]
         output_features = [("out", None)]
         builder = neural_network.NeuralNetworkBuilder(
@@ -48,7 +49,8 @@ class MLModelPassesTest(unittest.TestCase):
         remove_disconnected_layers(spec)
         np.testing.assert_equal(2, len(spec.neuralNetwork.layers))
 
-    def test_dead_layer_remove(self):
+    @staticmethod
+    def test_dead_layer_remove():
         input_features = [("data", datatypes.Array(*(3, 4)))]
         output_features = [("out", None)]
         builder = neural_network.NeuralNetworkBuilder(
@@ -77,7 +79,8 @@ class MLModelPassesTest(unittest.TestCase):
         np.testing.assert_equal(2, len(spec.neuralNetwork.layers))
 
     @pytest.mark.xfail
-    def test_dead_layer_remove_branch(self):
+    @staticmethod
+    def test_dead_layer_remove_branch():
         convergence_tolerance = 1e-8
 
         input_features = [("input", datatypes.Array(*(2,)))]
@@ -126,7 +129,8 @@ class MLModelPassesTest(unittest.TestCase):
             np.testing.assert_equal(len(builder.spec.neuralNetwork.layers), 1)
 
     @pytest.mark.xfail
-    def test_dead_layer_partial_branch(self):
+    @staticmethod
+    def test_dead_layer_partial_branch():
         convergence_tolerance = 1e-8
 
         input_features = [("input", datatypes.Array(*(2,)))]
@@ -182,7 +186,8 @@ class MLModelPassesTest(unittest.TestCase):
             len(builder.spec.neuralNetwork.layers[1].branch.elseBranch.layers), 2
         )
 
-    def test_conv_crop_bn_to_conv_bn_crop(self):
+    @staticmethod
+    def test_conv_crop_bn_to_conv_bn_crop():
         input_features = [("data", datatypes.Array(1, 10, 10))]
         output_features = [("out", None)]
         builder = neural_network.NeuralNetworkBuilder(input_features, output_features)
@@ -247,7 +252,8 @@ class MLModelPassesTest(unittest.TestCase):
             after_pass_out = mlmodel.predict(data_dict, useCPUOnly=True)["out"]
             np.testing.assert_almost_equal(before_pass_out, after_pass_out, decimal=3)
 
-    def test_conv_crop_bn_relu_to_conv_bn_relu_crop(self):
+    @staticmethod
+    def test_conv_crop_bn_relu_to_conv_bn_relu_crop():
         input_features = [("data", datatypes.Array(1, 10, 10))]
         output_features = [("out", None)]
         builder = neural_network.NeuralNetworkBuilder(input_features, output_features)
@@ -957,7 +963,8 @@ class Redundant_Transposees_Test(unittest.TestCase):
         )
         self._test_builder(builder, input_shape, 1)
 
-    def test_transpose(self):
+    @staticmethod
+    def test_transpose():
         def _build_and_test_network(input_size, transpose_layers, expected_layers):
             """
             Helper function for testing transpose removal.

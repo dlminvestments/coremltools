@@ -61,7 +61,8 @@ class Pipeline(object):
         # Save the spec as a member variable.
         self.spec = spec
 
-    def _validate_updatable_pipeline_on_add_model(self, spec):
+    @staticmethod
+    def _validate_updatable_pipeline_on_add_model(spec):
         if spec.isUpdatable:
             raise ValueError(
                 "New sub-models cannot be added after the pipeline has been marked as updatable"
@@ -89,7 +90,8 @@ class Pipeline(object):
         step_spec = pipeline.models.add()
         step_spec.CopyFrom(spec)
 
-    def _validate_sub_models_and_make_updatable(self, pipeline, spec):
+    @staticmethod
+    def _validate_sub_models_and_make_updatable(pipeline, spec):
 
         num_models = len(pipeline.models)
         if num_models < 1:

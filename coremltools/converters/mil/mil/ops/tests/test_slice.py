@@ -48,7 +48,8 @@ class TestSliceByIndex:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array(list(range(24))).reshape((2, 3, 4))
         v = [
             mb.slice_by_index(x=x_val, begin=[1, 1, 1], end=[2, 2, 2]),

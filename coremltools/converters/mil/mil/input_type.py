@@ -152,10 +152,12 @@ class _InputType(object):
         """
         return self._is_compatible(v)
 
-    def _is_compatible(self, v):
+    @staticmethod
+    def _is_compatible(v):
         return True
 
-    def _get_predefined_datatype(self):
+    @staticmethod
+    def _get_predefined_datatype():
         """
         Override this function if datatype can be known without `_default` or
         `_val`.

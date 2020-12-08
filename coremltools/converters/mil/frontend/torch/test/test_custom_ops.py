@@ -62,7 +62,8 @@ class TestCompositeOp:
 
     @pytest.mark.xfail(reason="rdar://65230439 fails with stochastic numeric mismatch", run=False)
     @pytest.mark.parametrize("input_shape", [(100, 180), (56, 123)])
-    def test_composite_op(self, input_shape):
+    @staticmethod
+    def test_composite_op(input_shape):
         _set_torch_reg_op("cosine_similarity", custom_cosine_similarity)
         model = nn.CosineSimilarity(dim=1, eps=1e-6)
         run_compare_torch([input_shape, input_shape], model)
@@ -115,12 +116,14 @@ class TestCustomOp:
         )
         context.add(x)
 
-    def test_custom_sparse_mm_op(self, input_shape=(4, 4)):
+    @staticmethod
+    def test_custom_sparse_mm_op(input_shape=(4, 4)):
         class TestLayer(nn.Module):
             def __init__(self):
                 super(TestLayer, self).__init__()
 
-            def forward(self, x, y):
+            @staticmethod
+            def forward(x, y):
                 x = torch.sparse.mm(x, y)
                 return x
 

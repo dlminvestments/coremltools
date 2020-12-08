@@ -132,8 +132,9 @@ class KerasNumericCorrectnessTest(unittest.TestCase):
     def runTest(self):
         pass
 
+    @staticmethod
     def _get_coreml_model_params_and_test_input(
-        self, model, mode, one_dim_seq_flags, input_name_shape_dict={}
+        model, mode, one_dim_seq_flags, input_name_shape_dict={}
     ):
         # Generate data
         nb_inputs = len(model.inputs)

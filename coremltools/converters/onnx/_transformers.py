@@ -112,7 +112,8 @@ class NodesFuser(object):
         """Returns true if this subset of nodes is eligible for fusion."""
         raise NotImplementedError("Must be implemented by subclass.")
 
-    def merge(self, graph, nodes):  # type: (Graph, Sequence[Node]) -> Sequence[Node]
+    @staticmethod
+    def merge(graph, nodes):  # type: (Graph, Sequence[Node]) -> Sequence[Node]
         """Merge nodes"""
         nodes[0].outputs = nodes[-1].outputs
         return [nodes[0]]

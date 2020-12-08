@@ -43,7 +43,8 @@ class TestLinear:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = random_gen(shape=(2, 2), rand_min=-37, rand_max=64)
         weight_val = random_gen(shape=(2, 2), rand_min=-91, rand_max=84)
         bias_val = random_gen(shape=(2,), rand_min=0.0, rand_max=9.0)
@@ -140,7 +141,8 @@ class TestMatMul:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = random_gen(shape=(2, 2, 4), rand_min=-37, rand_max=64)
         y_val = random_gen(shape=(2, 4, 2), rand_min=-91, rand_max=84)
         v = mb.matmul(x=x_val, y=y_val)

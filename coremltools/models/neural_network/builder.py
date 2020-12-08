@@ -721,7 +721,8 @@ class NeuralNetworkBuilder(object):
                 idx
             ].type.multiArrayType.dataType = _Model_pb2.ArrayFeatureType.DOUBLE
 
-    def _check_fp16_weight_param_exists(self, layers):
+    @staticmethod
+    def _check_fp16_weight_param_exists(layers):
         """
         Checks if the network has at least one weight_param which is in FP16 format
 

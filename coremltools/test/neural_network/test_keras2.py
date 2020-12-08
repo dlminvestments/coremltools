@@ -789,7 +789,8 @@ class KerasSingleLayerTest(unittest.TestCase):
         self.assertIsNotNone(layers[0].sequenceRepeat)
 
     @pytest.mark.xfail(raises=ValueError)
-    def test_unsupported_variational_deconv(self):
+    @staticmethod
+    def test_unsupported_variational_deconv():
         from keras.layers import Input, Lambda, Conv2D, Flatten, Dense
 
         x = Input(shape=(8, 8, 3))

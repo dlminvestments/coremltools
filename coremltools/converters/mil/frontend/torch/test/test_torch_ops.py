@@ -280,11 +280,13 @@ class TestConvTranspose:
 
 class TestCond:
     @pytest.mark.parametrize("backend", backends)
-    def test_cond(self, backend):
+    @staticmethod
+    def test_cond(backend):
         in_features = 1
         out_features = 2
         class TestNet(nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 if torch.squeeze(x) < 10.:
                     return x*10.
                 else:
@@ -305,7 +307,8 @@ class TestLoop:
             def __init__(self):
                 super(TestLayer, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 x = 2.0 * x
                 return x
 
@@ -333,7 +336,8 @@ class TestLoop:
             def __init__(self):
                 super(TestLayer, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 x = 0.5 * x
                 return x
 
@@ -437,7 +441,8 @@ class TestBranch:
             def __init__(self):
                 super(TestLayer, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 x = torch.mean(x)
                 return x
 
@@ -656,7 +661,8 @@ class TestMaxPool:
 
 
 class TestLSTM:
-    def _pytorch_hidden_to_coreml(self, x):
+    @staticmethod
+    def _pytorch_hidden_to_coreml(x):
         # Split of Direction axis
         f, b = torch.split(x, [1] * x.shape[0], dim=0)
         # Concat on Hidden Size axis
@@ -821,12 +827,14 @@ class TestConcat:
     # has one item. NN throws an error for this case, hence why we have to
     # run through the full conversion process to test it.
     @pytest.mark.parametrize("backend", backends)
-    def test_cat(self, backend):
+    @staticmethod
+    def test_cat(backend):
         class TestNet(nn.Module):
             def __init__(self):
                 super(TestNet, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 x = torch.cat((x,), axis=1)
                 return x
 
@@ -844,7 +852,8 @@ class TestReduction:
             def __init__(self):
                 super(TestMax, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.max(x, dim=dim, keepdim=keepdim)
 
         input_data = torch.rand(input_shape)
@@ -895,7 +904,8 @@ class TestExpand:
         input_shape, output_shape = shapes
 
         class TestModel(torch.nn.Module):
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return x.expand(*output_shape)
 
         model = TestModel()
@@ -911,7 +921,8 @@ class TestExpand:
     )
     def test_expand_as(self, backend, input_shapes):
         class TestModel(torch.nn.Module):
-            def forward(self, x, y):
+            @staticmethod
+            def forward(x, y):
                 return x.expand_as(y)
 
         model = TestModel()
@@ -1137,7 +1148,8 @@ class TestActivation:
             def __init__(self):
                 super().__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.erf(x)
 
         model = ERFActivation().eval()
@@ -1297,7 +1309,8 @@ class TestElementWiseUnary:
 class TestMatMul:
 
     @pytest.mark.parametrize("backend", backends)
-    def test_bmm(self, backend):
+    @staticmethod
+    def test_bmm(backend):
         shape_x, shape_y = (3,4,5), (3,5,6)
         model = ModuleWrapper(function=torch.bmm)
         run_compare_torch(
@@ -1346,7 +1359,8 @@ class TestTo:
     )
     def test_cast_bug(self, backend):
         class TestModel(torch.nn.Module):
-            def forward(self, spans, embedding):
+            @staticmethod
+            def forward(spans, embedding):
                 spans = spans.float().relu().int()
 
                 max1, _ = torch.max(spans, dim=1, keepdim=False)
@@ -1369,7 +1383,8 @@ class TestSlice:
             def __init__(self):
                 super(DynamicSlicer, self).__init__()
 
-            def forward(self, x, context_length):
+            @staticmethod
+            def forward(x, context_length):
                 return x[context_length:, :, :]
 
         class Model(torch.nn.Module):
@@ -1456,7 +1471,8 @@ class TestTopk:
             def __init__(self):
                 super(TopkModel, self).__init__()
 
-            def forward(self, x):
+            @staticmethod
+            def forward(x):
                 return torch.topk(x, k, dim=dim, largest=largest)
 
         input_data = torch.rand(input_shape)

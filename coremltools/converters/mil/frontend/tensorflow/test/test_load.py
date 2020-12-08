@@ -40,7 +40,8 @@ class TestTf1ModelInputsOutputs:
         if os.path.exists(self.saved_model_dir):
             shutil.rmtree(self.saved_model_dir)
 
-    def test_infer_inputs(self):
+    @staticmethod
+    def test_infer_inputs():
         x_shape = (3, 4, 5)
 
         @make_tf_graph([x_shape])
@@ -61,7 +62,8 @@ class TestTf1ModelInputsOutputs:
         input_dict = dict(zip(inputs, input_values))
         run_compare_tf(model, input_dict, outputs)
 
-    def test_infer_outputs(self):
+    @staticmethod
+    def test_infer_outputs():
         x_shape = (3, 4, 5)
 
         @make_tf_graph([x_shape])
@@ -79,7 +81,8 @@ class TestTf1ModelInputsOutputs:
         input_dict = dict(zip(inputs, input_values))
         run_compare_tf(model, input_dict, outputs)
 
-    def test_infer_inputs_and_outputs(self):
+    @staticmethod
+    def test_infer_inputs_and_outputs():
         x_shape = (3, 4, 5)
 
         @make_tf_graph([x_shape])
@@ -94,7 +97,8 @@ class TestTf1ModelInputsOutputs:
         input_dict = dict(zip(inputs, input_values))
         run_compare_tf(model, input_dict, outputs)
 
-    def test_extract_sub_model(self):
+    @staticmethod
+    def test_extract_sub_model():
         x_shape = (3, 4, 5)
         y_shape = (3, 4, 5)
 
@@ -110,7 +114,8 @@ class TestTf1ModelInputsOutputs:
         mlmodel = converter.convert(model, outputs=[first_output_name])
         assert mlmodel is not None
 
-    def test_auto_image_nhwc_input_names(self):
+    @staticmethod
+    def test_auto_image_nhwc_input_names():
         x_shape = (4, 5, 3)
 
         @make_tf_graph([x_shape])
@@ -122,7 +127,8 @@ class TestTf1ModelInputsOutputs:
         mlmodel = converter.convert(model, inputs=[ImageType()])
         assert mlmodel is not None
 
-    def test_auto_image_nchw_input_names(self):
+    @staticmethod
+    def test_auto_image_nchw_input_names():
         x_shape = (3, 4, 5)
 
         @make_tf_graph([x_shape])
@@ -170,7 +176,8 @@ class TestTf1ModelInputsOutputs:
         # successful conversion
         converter.convert(model, minimum_deployment_target=target)
 
-    def test_invalid_output_names(self):
+    @staticmethod
+    def test_invalid_output_names():
         x_shape = (3, 4, 5)
 
         @make_tf_graph([x_shape])
@@ -182,7 +189,8 @@ class TestTf1ModelInputsOutputs:
             converter.convert(model, source=frontend, outputs=["invalid_name"])
         e.match(r".* is not in graph")
 
-    def test_missing_placeholder_shape(self):
+    @staticmethod
+    def test_missing_placeholder_shape():
         x_shape = None  # Missing Placeholder shape
 
         @make_tf_graph([x_shape])
@@ -198,7 +206,8 @@ class TestTf1ModelInputsOutputs:
         mlmodel = converter.convert(model, source=frontend, inputs=[ct.TensorType(shape=())])
         assert mlmodel is not None
 
-    def test_scalar_placeholder_shape(self):
+    @staticmethod
+    def test_scalar_placeholder_shape():
         x_shape = ()  # Scalar Placeholder Shape
 
         @make_tf_graph([x_shape])
@@ -213,7 +222,8 @@ class TestTf1ModelInputsOutputs:
         input_dict = dict(zip(inputs, input_values))
         run_compare_tf(model, input_dict, outputs)
 
-    def test_shaping_utils(self):
+    @staticmethod
+    def test_shaping_utils():
         @make_tf_graph([(None, 4, 5)])
         def build_flexible_model(x):
             return tf.nn.relu(x)
@@ -282,7 +292,8 @@ class TestTf1ModelInputsOutputs:
                 input_dict = {input_name: input_values[0]}
                 ret = mlmodel.predict(input_dict)
 
-    def test_default_data_types(self):
+    @staticmethod
+    def test_default_data_types():
         @make_tf_graph([(2, 2)])
         def build_model(x):
             return tf.nn.relu(x)
@@ -313,7 +324,8 @@ class TestTf1ModelFormats:
         if os.path.exists(self.saved_model_dir):
             shutil.rmtree(self.saved_model_dir)
 
-    def test_graph_def(self):
+    @staticmethod
+    def test_graph_def():
         with tf.Graph().as_default() as graph:
             x = tf.placeholder(tf.float32, shape=(3, 4, 5))
             out = tf.nn.relu(x)
@@ -348,7 +360,8 @@ class TestTf1ModelFormats:
         mlmodel = converter.convert(self.saved_model_dir)
         assert mlmodel is not None
 
-    def test_tf_keras(self):
+    @staticmethod
+    def test_tf_keras():
         keras_model = tf.keras.Sequential(
             [tf.keras.layers.ReLU(input_shape=(4, 5), batch_size=3)]
         )
@@ -375,7 +388,8 @@ class TestTf1ModelFormats:
         )
         assert mlmodel is not None
 
-    def test_model_metadata(self):
+    @staticmethod
+    def test_model_metadata():
         with tf.Graph().as_default() as graph:
             x = tf.placeholder(tf.float32, shape=(3, 4, 5))
             out = tf.nn.relu(x)
@@ -387,7 +401,8 @@ class TestTf1ModelFormats:
         assert "com.github.apple.coremltools.source" in metadata_keys
         assert "tensorflow==1." in metadata_keys["com.github.apple.coremltools.source"]
 
-    def test_invalid_format_none(self):
+    @staticmethod
+    def test_invalid_format_none():
         with pytest.raises(NotImplementedError) as e:
             converter.convert(None, source="tensorflow")
         e.match(r"Expected model format: .* .pb")
@@ -400,13 +415,15 @@ class TestTf1ModelFormats:
             converter.convert(invalid_filename, source="tensorflow")
         e.match(r"Expected model format: .* .pb")
 
-    def test_invalid_converter_source(self):
+    @staticmethod
+    def test_invalid_converter_source():
         with pytest.raises(ValueError) as e:
             converter.convert(None, source="invalid")
         expected_msg = r'Unrecognized value of argument "source": .*'
         e.match(expected_msg)
 
-    def test_invalid_converter_minimum_deployment_flag(self):
+    @staticmethod
+    def test_invalid_converter_minimum_deployment_flag():
         with pytest.raises(TypeError) as e:
             converter.convert(
                 None, source="tensorflow", minimum_deployment_target="iOs14"
@@ -418,7 +435,8 @@ class TestTf1ModelFormats:
 
         e.match(expected_msg)
 
-    def test_invalid_converter_target(self):
+    @staticmethod
+    def test_invalid_converter_target():
         with tf.Graph().as_default() as graph:
             x = tf.placeholder(tf.float32, shape=(3, 4, 5))
             out = tf.nn.relu(x)

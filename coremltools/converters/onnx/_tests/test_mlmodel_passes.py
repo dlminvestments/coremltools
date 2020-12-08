@@ -8,7 +8,8 @@ from coremltools.converters.mil.backend.nn.passes.mlmodel_passes import (
 
 
 class MLModelPassesTest(unittest.TestCase):
-    def test_load_constant_remove(self):
+    @staticmethod
+    def test_load_constant_remove():
         input_features = [("data", datatypes.Array(*(3, 4)))]
         output_features = [("out", None)]
         builder = neural_network.NeuralNetworkBuilder(

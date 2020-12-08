@@ -273,7 +273,8 @@ class TestElementwiseUnary:
         )
 
     @ssa_fn
-    def test_builder_abs_eval(self):
+    @staticmethod
+    def test_builder_abs_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.abs(x=val)
         expected_outputs = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
@@ -281,7 +282,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_acos_eval(self):
+    @staticmethod
+    def test_builder_acos_eval():
         val = np.array([[-1, -0.5, 0], [0.4, 0.5, 0.8]], dtype=np.float32)
         v = mb.acos(x=val)
         expected_outputs = np.array(
@@ -291,7 +293,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_asin_eval(self):
+    @staticmethod
+    def test_builder_asin_eval():
         val = np.array([[-1, -0.5, 0], [0.4, 0.5, 0.8]], dtype=np.float32)
         v = mb.asin(x=val)
         expected_outputs = np.array(
@@ -302,7 +305,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_atan_eval(self):
+    @staticmethod
+    def test_builder_atan_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.atan(x=val)
         expected_outputs = np.array(
@@ -316,7 +320,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_atanh_eval(self):
+    @staticmethod
+    def test_builder_atanh_eval():
         val = np.array([[-0.8, -0.5, 0], [0.4, 0.5, 0.8]], dtype=np.float32)
         v = mb.atanh(x=val)
         expected_outputs = np.array(
@@ -327,7 +332,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_cast_eval(self):
+    @staticmethod
+    def test_builder_cast_eval():
         val = np.array([[-1.2, 2, -3.4], [4.5, -5, 6.7]], dtype=np.float32)
         expected_outputs = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.int32)
 
@@ -336,7 +342,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_ceil_eval(self):
+    @staticmethod
+    def test_builder_ceil_eval():
         val = np.array([[-1.2, 2, -3.4], [4.5, -5, 6.7]], dtype=np.float32)
         v = mb.ceil(x=val)
         expected_outputs = np.array([[-1, 2, -3], [5, -5, 7]], dtype=np.float32)
@@ -344,7 +351,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_clip_eval(self):
+    @staticmethod
+    def test_builder_clip_eval():
         val = np.array([[-1.2, 2, -3.4], [4.5, -5, 6.7]], dtype=np.float32)
         v = mb.clip(x=val, alpha=0.0, beta=5.0)
         expected_outputs = np.array([[0, 2, 0], [4.5, 0, 5]], dtype=np.float32)
@@ -352,7 +360,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_cos_eval(self):
+    @staticmethod
+    def test_builder_cos_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.cos(x=val)
         expected_outputs = np.array(
@@ -366,7 +375,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_cosh_eval(self):
+    @staticmethod
+    def test_builder_cosh_eval():
         val = np.array([[-1, -2, -3], [1, 2, 3]], dtype=np.float32)
         v = mb.cosh(x=val)
         expected_outputs = np.array(
@@ -377,13 +387,15 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_erf_eval(self):
+    @staticmethod
+    def test_builder_erf_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.erf(x=x_val)
         assert is_close(scipy.special.erf(x_val), v.val)
 
     @ssa_fn
-    def test_builder_exp_eval(self):
+    @staticmethod
+    def test_builder_exp_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.exp(x=val)
         expected_outputs = np.array(
@@ -394,7 +406,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_exp2_eval(self):
+    @staticmethod
+    def test_builder_exp2_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.exp2(x=val)
         expected_outputs = np.array(
@@ -404,7 +417,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_floor_eval(self):
+    @staticmethod
+    def test_builder_floor_eval():
         val = np.array([[-1.2, 2, -3.4], [4.5, -5, 6.7]], dtype=np.float32)
         v = mb.floor(x=val)
         expected_outputs = np.array([[-2, 2, -4], [4, -5, 6]], dtype=np.float32)
@@ -412,7 +426,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_inverse_eval(self):
+    @staticmethod
+    def test_builder_inverse_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.inverse(x=val)
         expected_outputs = np.array(
@@ -421,7 +436,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_log_eval(self):
+    @staticmethod
+    def test_builder_log_eval():
         val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.log(x=val)
         expected_outputs = np.array(
@@ -432,7 +448,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_round_eval(self):
+    @staticmethod
+    def test_builder_round_eval():
         val = np.array([[-1.2, 2, -3.4], [4.6, -5, 6.7]], dtype=np.float32)
         v = mb.round(x=val)
         expected_outputs = np.array([[-1, 2, -3], [5, -5, 7]], dtype=np.float32)
@@ -440,7 +457,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_rsqrt_eval(self):
+    @staticmethod
+    def test_builder_rsqrt_eval():
         val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.rsqrt(x=val)
         expected_outputs = np.array(
@@ -451,7 +469,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_sign_eval(self):
+    @staticmethod
+    def test_builder_sign_eval():
         val = np.array([[-1, 2, 0], [0, -5, 6]], dtype=np.float32)
         v = mb.sign(x=val)
         expected_outputs = np.array([[-1, 1, 0], [0, -1, 1]], dtype=np.float32)
@@ -459,7 +478,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_sin_eval(self):
+    @staticmethod
+    def test_builder_sin_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.sin(x=val)
         expected_outputs = np.array(
@@ -473,7 +493,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_sinh_eval(self):
+    @staticmethod
+    def test_builder_sinh_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.sinh(x=val)
         expected_outputs = np.array(
@@ -484,7 +505,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_sqrt_eval(self):
+    @staticmethod
+    def test_builder_sqrt_eval():
         val = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
         v = mb.sqrt(x=val)
         expected_outputs = np.array(
@@ -495,7 +517,8 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_tan_eval(self):
+    @staticmethod
+    def test_builder_tan_eval():
         val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.tan(x=val)
         expected_outputs = np.array(
@@ -505,13 +528,15 @@ class TestElementwiseUnary:
         assert is_close(expected_outputs, v.val)
 
     @ssa_fn
-    def test_builder_tanh_eval(self):
+    @staticmethod
+    def test_builder_tanh_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.tanh(x=x_val)
         assert is_close(np.tanh(x_val), v.val)
 
     @ssa_fn
-    def test_builder_threshold_eval(self):
+    @staticmethod
+    def test_builder_threshold_eval():
         val = np.array([[-1.2, 2, -3.4], [4.5, -5, 6.7]], dtype=np.float32)
         v = mb.threshold(x=val, alpha=1.0)
         expected_outputs = np.array([[1.0, 2, 1.0], [4.5, 1.0, 6.7]], dtype=np.float32)

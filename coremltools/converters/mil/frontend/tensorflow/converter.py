@@ -236,7 +236,8 @@ class TFConverter:
         self.context = TranscriptionContext()
         self.tensorflow_passes = tensorflow_passes
 
-    def _get_placeholder_shape_from_tf_graph(self, tfgraph, name):
+    @staticmethod
+    def _get_placeholder_shape_from_tf_graph(tfgraph, name):
 
         error_message = "Unable to determine the shape of input: {}." \
                         " Please provide its shape during conversion, using \n" \
@@ -254,7 +255,8 @@ class TFConverter:
 
         return shape
 
-    def _get_stack(self, tfssa, root="main"):
+    @staticmethod
+    def _get_stack(tfssa, root="main"):
         # We're trying to get a order of how to loop through the graphs.
         # This is NOT necessarily a DAG.
         dep = {x: [] for x in tfssa.functions}
@@ -299,7 +301,8 @@ class TFConverter:
             if self._get_tensor_name(n) not in output_nodes + all_nodes:
                 raise KeyError('Output node name "{}" does exist.'.format(n))
 
-    def check_placeholder_output(self, prog, outputs_name):
+    @staticmethod
+    def check_placeholder_output(prog, outputs_name):
         """
         Handle the cases where placeholder is output.
         There is a case where the program is like

@@ -42,7 +42,8 @@ class TestClampedReLU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.clamped_relu(x=x_val, alpha=2.0, beta=1.0)
 
@@ -111,7 +112,8 @@ class TestELU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.elu(x=x_val, alpha=2.0)
 
@@ -158,7 +160,8 @@ class TestGeLU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
 
         mode = "TANH_APPROXIMATION"
@@ -247,7 +250,8 @@ class TestLeakyReLU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.leaky_relu(x=x_val, alpha=2.0)
 
@@ -283,7 +287,8 @@ class TestLinearActivation:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.linear_activation(x=x_val, alpha=2.0, beta=3.0)
         assert is_close(x_val * 2.0 + 3.0, v.val)
@@ -349,7 +354,8 @@ class TestPReLU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         alpha = np.array([1, 2, 3], dtype=np.float32)
         v = mb.prelu(x=x_val, alpha=alpha)
@@ -365,19 +371,22 @@ class TestPReLU:
         assert is_close(x_pos + b * alpha_br, v.val)
 
     @ssa_fn
-    def test_builder_eval1(self):
+    @staticmethod
+    def test_builder_eval1():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r".* dimension -3 .*"):
             v = mb.prelu(x=x_val, alpha=np.array([1, 2], dtype=np.float32))
 
     @ssa_fn
-    def test_builder_eval2(self):
+    @staticmethod
+    def test_builder_eval2():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r"alpha .* rank 1"):
             v = mb.prelu(x=x_val, alpha=np.array([[1, 2, 3]], dtype=np.float32))
 
     @ssa_fn
-    def test_builder_eval3(self):
+    @staticmethod
+    def test_builder_eval3():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r"x .* rank 3"):
             v = mb.prelu(x=[1], alpha=np.array([[1, 2, 3]], dtype=np.float32))
@@ -444,7 +453,8 @@ class TestReLU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.relu(x=x_val)
         assert is_close(np.maximum(x_val, 0), v.val)
@@ -477,7 +487,8 @@ class TestReLU6:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 7, -3], [4, -5, 8]], dtype=np.float32)
         v = mb.relu6(x=x_val)
         assert is_close(np.minimum(np.maximum(x_val, 0), 6), v.val)
@@ -513,7 +524,8 @@ class TestScaledTanh:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.scaled_tanh(x=x_val, alpha=2.0, beta=1.0)
         assert is_close(2.0 * np.tanh(x_val * 1.0), v.val)
@@ -578,7 +590,8 @@ class TestSigmoid:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.sigmoid(x=x_val)
         assert is_close(1 / (1 + np.exp(-x_val)), v.val)
@@ -613,7 +626,8 @@ class TestSigmoidHard:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         alpha = 1.0
         beta = 2.0
@@ -677,7 +691,8 @@ class TestSoftplus:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.softplus(x=x_val)
         assert is_close(
@@ -725,7 +740,8 @@ class TestSoftplusParametric:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         v = mb.softplus_parametric(
             x=x_val,
@@ -743,7 +759,8 @@ class TestSoftplusParametric:
         assert is_close(out, v.val)
 
     @ssa_fn
-    def test_builder_eval2(self):
+    @staticmethod
+    def test_builder_eval2():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r".* dimension -3 .*"):
             v = mb.softplus_parametric(
@@ -753,7 +770,8 @@ class TestSoftplusParametric:
             )
 
     @ssa_fn
-    def test_builder_eval3(self):
+    @staticmethod
+    def test_builder_eval3():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r"alpha .* rank 1"):
             v = mb.softplus_parametric(
@@ -763,7 +781,8 @@ class TestSoftplusParametric:
             )
 
     @ssa_fn
-    def test_builder_eval4(self):
+    @staticmethod
+    def test_builder_eval4():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r"x .* rank 3"):
             v = mb.softplus_parametric(
@@ -773,7 +792,8 @@ class TestSoftplusParametric:
             )
 
     @ssa_fn
-    def test_builder_eval5(self):
+    @staticmethod
+    def test_builder_eval5():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r".* dimension -3 .*"):
             v = mb.softplus_parametric(
@@ -783,7 +803,8 @@ class TestSoftplusParametric:
             )
 
     @ssa_fn
-    def test_builder_eval6(self):
+    @staticmethod
+    def test_builder_eval6():
         x_val = np.array([[[-1, 3, 6]], [[-1, 2, -3]], [[4, -5, 6]]], dtype=np.float32)
         with pytest.raises(ValueError, match=r"beta .* rank 1"):
             v = mb.softplus_parametric(
@@ -859,7 +880,8 @@ class TestSoftmax:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.softmax(x=x_val, axis=0)
         assert is_close(scipy.special.softmax(x_val, axis=0), v.val)
@@ -895,7 +917,8 @@ class TestSoftsign:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[-1, 2, -3], [4, -5, 6]], dtype=np.float32)
         v = mb.softsign(x=x_val)
         assert is_close(x_val / (1 + np.abs(x_val)), v.val)
@@ -928,7 +951,8 @@ class TestThresholdedReLU:
         )
 
     @ssa_fn
-    def test_builder_eval(self):
+    @staticmethod
+    def test_builder_eval():
         x_val = np.array([[0, 2, 0], [4, 0, 6]], dtype=np.float32)
         v = mb.thresholded_relu(x=x_val, alpha=2.0)
         assert is_close(np.maximum(x_val - 2.0, 0), v.val)
