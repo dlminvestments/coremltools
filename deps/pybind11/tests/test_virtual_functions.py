@@ -16,11 +16,13 @@ def test_override(capture, msg):
             print('ExtendedExampleVirt::run(%i), calling parent..' % value)
             return super(ExtendedExampleVirt, self).run(value + 1)
 
-        def run_bool(self):
+        @staticmethod
+        def run_bool():
             print('ExtendedExampleVirt::run_bool()')
             return False
 
-        def get_string1(self):
+        @staticmethod
+        def get_string1():
             return "override1"
 
         def pure_virtual(self):
@@ -30,7 +32,8 @@ def test_override(capture, msg):
         def __init__(self, state):
             super(ExtendedExampleVirt2, self).__init__(state + 1)
 
-        def get_string2(self):
+        @staticmethod
+        def get_string2():
             return "override2"
 
     ex12 = ExampleVirt(10)
@@ -79,11 +82,13 @@ def test_inheriting_repeat():
     from pybind11_tests import A_Repeat, B_Repeat, C_Repeat, D_Repeat, A_Tpl, B_Tpl, C_Tpl, D_Tpl
 
     class AR(A_Repeat):
-        def unlucky_number(self):
+        @staticmethod
+        def unlucky_number():
             return 99
 
     class AT(A_Tpl):
-        def unlucky_number(self):
+        @staticmethod
+        def unlucky_number():
             return 999
 
     obj = AR()
@@ -148,10 +153,12 @@ def test_inheriting_repeat():
     assert obj.say_everything() == "B says hi 1 times 4444"
 
     class DR(D_Repeat):
-        def unlucky_number(self):
+        @staticmethod
+        def unlucky_number():
             return 123
 
-        def lucky_number(self):
+        @staticmethod
+        def lucky_number():
             return 42.0
 
     for obj in [D_Repeat(), D_Tpl()]:
@@ -167,13 +174,16 @@ def test_inheriting_repeat():
     assert obj.say_everything() == "B says hi 1 times 123"
 
     class DT(D_Tpl):
-        def say_something(self, times):
+        @staticmethod
+        def say_something(times):
             return "DT says:" + (' quack' * times)
 
-        def unlucky_number(self):
+        @staticmethod
+        def unlucky_number():
             return 1234
 
-        def lucky_number(self):
+        @staticmethod
+        def lucky_number():
             return -4.25
 
     obj = DT()
@@ -190,13 +200,16 @@ def test_inheriting_repeat():
             return -3
 
     class BT(B_Tpl):
-        def say_something(self, times):
+        @staticmethod
+        def say_something(times):
             return "BT" * times
 
-        def unlucky_number(self):
+        @staticmethod
+        def unlucky_number():
             return -7
 
-        def lucky_number(self):
+        @staticmethod
+        def lucky_number():
             return -1.375
 
     obj = BT()
@@ -215,7 +228,8 @@ def test_move_support():
     from pybind11_tests import NCVirt, NonCopyable, Movable
 
     class NCVirtExt(NCVirt):
-        def get_noncopyable(self, a, b):
+        @staticmethod
+        def get_noncopyable(a, b):
             # Constructs and returns a new instance:
             nc = NonCopyable(a * a, b * b)
             return nc
@@ -231,7 +245,8 @@ def test_move_support():
             self.nc = NonCopyable(a, b)
             return self.nc
 
-        def get_movable(self, a, b):
+        @staticmethod
+        def get_movable(a, b):
             # Return a new instance without storing it
             return Movable(a, b)
 

@@ -692,7 +692,8 @@ class _Parser(object):
     if not tokenizer.TryConsume(','):
       tokenizer.TryConsume(';')
 
-  def _ConsumeAnyTypeUrl(self, tokenizer):
+  @staticmethod
+  def _ConsumeAnyTypeUrl(tokenizer):
     """Consumes a google.protobuf.Any type URL and returns the type name."""
     # Consume "type.googleapis.com/".
     tokenizer.ConsumeIdentifier()

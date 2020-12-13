@@ -45,7 +45,8 @@ from google.protobuf import symbol_database
 
 class SymbolDatabaseTest(unittest.TestCase):
 
-  def _Database(self):
+  @staticmethod
+  def _Database():
     if descriptor._USE_C_DESCRIPTORS:
       # The C++ implementation does not allow mixing descriptors from
       # different pools.

@@ -74,7 +74,8 @@ class SimpleTextFormatTests(unittest.TestCase):
 # Base class with some common functionality.
 class TextFormatBase(unittest.TestCase):
 
-  def ReadGolden(self, golden_filename):
+  @staticmethod
+  def ReadGolden(golden_filename):
     with test_util.GoldenFile(golden_filename) as f:
       return (f.readlines() if str is bytes else  # PY3
               [golden_line.decode('utf-8') for golden_line in f])
@@ -86,7 +87,8 @@ class TextFormatBase(unittest.TestCase):
   def CompareToGoldenText(self, text, golden_text):
     self.assertEqual(text, golden_text)
 
-  def RemoveRedundantZeros(self, text):
+  @staticmethod
+  def RemoveRedundantZeros(text):
     # Some platforms print 1e+5 as 1e+005.  This is fine, but we need to remove
     # these zeros in order to match the golden file.
     text = text.replace('e+0','e+').replace('e+0','e+') \

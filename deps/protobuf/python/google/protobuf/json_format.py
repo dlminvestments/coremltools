@@ -276,7 +276,8 @@ class _Printer(object):
       return js
     return self._RegularMessageToJsonObject(sub_message, js)
 
-  def _GenericMessageToJsonObject(self, message):
+  @staticmethod
+  def _GenericMessageToJsonObject(message):
     """Converts message according to Proto3 JSON Specification."""
     # Duration, Timestamp and FieldMask have ToJsonString method to do the
     # convert. Users can also call the method directly.
@@ -530,7 +531,8 @@ class _Parser(object):
     message.value = sub_message.SerializeToString()
     message.type_url = type_url
 
-  def _ConvertGenericMessage(self, value, message):
+  @staticmethod
+  def _ConvertGenericMessage(value, message):
     """Convert a JSON representation into message with FromJsonString."""
     # Durantion, Timestamp, FieldMask have FromJsonString method to do the
     # convert. Users can also call the method directly.
@@ -571,7 +573,8 @@ class _Parser(object):
       self._ConvertValueMessage(value[key], message.fields[key])
     return
 
-  def _ConvertWrapperMessage(self, value, message):
+  @staticmethod
+  def _ConvertWrapperMessage(value, message):
     """Convert a JSON representation into Wrapper message."""
     field = message.DESCRIPTOR.fields_by_name['value']
     setattr(message, 'value', _ConvertScalarFieldValue(value, field))
