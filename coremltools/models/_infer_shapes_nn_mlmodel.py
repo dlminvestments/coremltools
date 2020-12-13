@@ -434,7 +434,8 @@ def infer_shapes(nn_spec, input_spec, input_shape_dict=None):
     shape_dict = {}
     if input_shape_dict:
         for key, value in input_shape_dict.items():
-            assert len(value) == 5, "Shape of the input must be of length 5"
+            if len(value) != 5:
+                raise AssertionError("Shape of the input must be of length 5")
             shape_dict[key] = value
 
     # construct input_shape_dict from the model description
@@ -474,7 +475,8 @@ def infer_shapes(nn_spec, input_spec, input_shape_dict=None):
 
     for i, layer in enumerate(layers):
         for inp in layer.input:
-            assert inp in shape_dict, "Input %s shape not cannot be determined" % (inp)
+            if inp not in shape_dict:
+                raise AssertionError("Input %s shape not cannot be determined" % (inp))
         layer_type = layer.WhichOneof("layer")
         if layer_type == "custom":
             break

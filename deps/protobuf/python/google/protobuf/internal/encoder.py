@@ -233,7 +233,8 @@ def StringSizer(field_number, is_repeated, is_packed):
   tag_size = _TagSize(field_number)
   local_VarintSize = _VarintSize
   local_len = len
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def RepeatedFieldSize(value):
       result = tag_size * len(value)
@@ -255,7 +256,8 @@ def BytesSizer(field_number, is_repeated, is_packed):
   tag_size = _TagSize(field_number)
   local_VarintSize = _VarintSize
   local_len = len
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def RepeatedFieldSize(value):
       result = tag_size * len(value)
@@ -275,7 +277,8 @@ def GroupSizer(field_number, is_repeated, is_packed):
   """Returns a sizer for a group field."""
 
   tag_size = _TagSize(field_number) * 2
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def RepeatedFieldSize(value):
       result = tag_size * len(value)
@@ -294,7 +297,8 @@ def MessageSizer(field_number, is_repeated, is_packed):
 
   tag_size = _TagSize(field_number)
   local_VarintSize = _VarintSize
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def RepeatedFieldSize(value):
       result = tag_size * len(value)
@@ -685,7 +689,8 @@ def StringEncoder(field_number, is_repeated, is_packed):
   tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
   local_EncodeVarint = _EncodeVarint
   local_len = len
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def EncodeRepeatedField(write, value):
       for element in value:
@@ -709,7 +714,8 @@ def BytesEncoder(field_number, is_repeated, is_packed):
   tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
   local_EncodeVarint = _EncodeVarint
   local_len = len
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def EncodeRepeatedField(write, value):
       for element in value:
@@ -730,7 +736,8 @@ def GroupEncoder(field_number, is_repeated, is_packed):
 
   start_tag = TagBytes(field_number, wire_format.WIRETYPE_START_GROUP)
   end_tag = TagBytes(field_number, wire_format.WIRETYPE_END_GROUP)
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def EncodeRepeatedField(write, value):
       for element in value:
@@ -751,7 +758,8 @@ def MessageEncoder(field_number, is_repeated, is_packed):
 
   tag = TagBytes(field_number, wire_format.WIRETYPE_LENGTH_DELIMITED)
   local_EncodeVarint = _EncodeVarint
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     def EncodeRepeatedField(write, value):
       for element in value:

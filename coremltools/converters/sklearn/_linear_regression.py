@@ -62,7 +62,8 @@ def _convert(model, features, target):
     lr = spec.glmRegressor
 
     if isinstance(model.intercept_, _np.ndarray):
-        assert len(model.intercept_) == 1
+        if len(model.intercept_) != 1:
+            raise AssertionError
         lr.offset.append(model.intercept_[0])
     else:
         lr.offset.append(model.intercept_)

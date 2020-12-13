@@ -48,7 +48,8 @@ class GradientBoostingRegressorBostonHousingScikitNumericTest(unittest.TestCase)
             output_data = [{"out": row} for row in pl.transform(data.data)]
 
             result = evaluate_transformer(spec, input_data, output_data)
-            assert result["num_errors"] == 0
+            if result["num_errors"] != 0:
+                raise AssertionError
 
     @staticmethod
     def test_boston_OHE_plus_trees():
@@ -75,4 +76,5 @@ class GradientBoostingRegressorBostonHousingScikitNumericTest(unittest.TestCase)
             # Evaluate it
             result = evaluate_regressor(spec, df, "target", verbose=False)
 
-            assert result["max_error"] < 0.0001
+            if result["max_error"] >= 0.0001:
+                raise AssertionError

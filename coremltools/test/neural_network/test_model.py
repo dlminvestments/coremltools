@@ -180,7 +180,8 @@ class MLModelTest(unittest.TestCase):
             try:
                 model.predict({})
             except Exception as e:
-                assert "Core ML model specification version" in str(e)
+                if "Core ML model specification version" not in str(e):
+                    raise AssertionError
                 raise
         self.spec.specificationVersion = 1
 
@@ -195,9 +196,12 @@ class MLModelTest(unittest.TestCase):
             # Cause all warnings to always be triggered.
             warnings.simplefilter("always")
             model = MLModel(self.spec)
-            assert len(w) == 1
-            assert issubclass(w[-1].category, RuntimeWarning)
-            assert "not able to run predict()" in str(w[-1].message)
+            if len(w) != 1:
+                raise AssertionError
+            if not issubclass(w[-1].category, RuntimeWarning):
+                raise AssertionError
+            if "not able to run predict()" not in str(w[-1].message):
+                raise AssertionError
         self.spec.specificationVersion = 1
         model = MLModel(self.spec)
 
@@ -243,14 +247,16 @@ class MLModelTest(unittest.TestCase):
         # manually set a invalid specification version
         self.spec.specificationVersion = -1
         model = MLModel(self.spec)
-        assert model.get_spec().specificationVersion == 1
+        if model.get_spec().specificationVersion != 1:
+            raise AssertionError
 
         # manually set a high specification version
         self.spec.specificationVersion = 4
         filename = tempfile.mktemp(suffix=".mlmodel")
         save_spec(self.spec, filename, auto_set_specification_version=True)
         model = MLModel(filename)
-        assert model.get_spec().specificationVersion == 1
+        if model.get_spec().specificationVersion != 1:
+            raise AssertionError
 
         # simple neural network with only spec 1 layer
         input_features = [("data", datatypes.Array(3))]
@@ -264,7 +270,8 @@ class MLModelTest(unittest.TestCase):
         model.save(filename)
         # load the model back
         model = MLModel(filename)
-        assert model.get_spec().specificationVersion == 1
+        if model.get_spec().specificationVersion != 1:
+            raise AssertionError
 
         # test save without automatic set specification version
         self.spec.specificationVersion = 3
@@ -272,7 +279,8 @@ class MLModelTest(unittest.TestCase):
         save_spec(self.spec, filename, auto_set_specification_version=False)
         model = MLModel(filename)
         # the specification version should be original
-        assert model.get_spec().specificationVersion == 3
+        if model.get_spec().specificationVersion != 3:
+            raise AssertionError
 
     def test_multiarray_type_convert_to_float(self):
         input_features = [("data", datatypes.Array(2))]

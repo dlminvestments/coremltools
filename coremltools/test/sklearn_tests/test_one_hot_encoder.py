@@ -129,7 +129,8 @@ class OneHotEncoderScikitTest(unittest.TestCase):
 
             result = evaluate_transformer(spec, input_data, output_data)
 
-            assert result["num_errors"] == 0
+            if result["num_errors"] != 0:
+                raise AssertionError
 
     # This test still isn't working
     @unittest.skipUnless(
@@ -159,7 +160,8 @@ class OneHotEncoderScikitTest(unittest.TestCase):
 
             result = evaluate_transformer(spec, input_data, output_data)
 
-            assert result["num_errors"] == 0
+            if result["num_errors"] != 0:
+                raise AssertionError
 
     @unittest.skipUnless(
         _is_macos() and _macos_version() >= (10, 13), "Only supported on macOS 10.13+"
@@ -197,7 +199,8 @@ class OneHotEncoderScikitTest(unittest.TestCase):
                     X = _X.copy()
 
                     # This appears to be the only type now working.
-                    assert X.dtype == np.dtype(dt)
+                    if X.dtype != np.dtype(dt):
+                        raise AssertionError
 
                     model = OneHotEncoder(
                         categorical_features=categorical_features, sparse=sparse
@@ -216,7 +219,8 @@ class OneHotEncoderScikitTest(unittest.TestCase):
 
                     result = evaluate_transformer(spec, input_data, output_data)
 
-                    assert result["num_errors"] == 0
+                    if result["num_errors"] != 0:
+                        raise AssertionError
 
             # Test normal data inside a pipeline
             for sparse in (True, False):
@@ -259,7 +263,8 @@ class OneHotEncoderScikitTest(unittest.TestCase):
 
                     result = evaluate_transformer(spec, input_data, output_data)
 
-                    assert result["num_errors"] == 0
+                    if result["num_errors"] != 0:
+                        raise AssertionError
 
     def test_conversion_bad_inputs(self):
         # Error on converting an untrained model

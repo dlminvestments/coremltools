@@ -110,13 +110,15 @@ class Node(object):
         self.metadata = {}  # type: Dict[Any, Any]
 
     def add_parent(self, parent_node):  # type: (Node) -> None
-        assert parent_node not in self.parents
+        if parent_node in self.parents:
+            raise AssertionError
         self.parents.append(parent_node)
         if self not in parent_node.children:
             parent_node.children.append(self)
 
     def add_child(self, child_node):  # type: (Node) -> None
-        assert child_node not in self.children
+        if child_node in self.children:
+            raise AssertionError
         self.children.append(child_node)
         if self not in child_node.parents:
             child_node.parents.append(self)

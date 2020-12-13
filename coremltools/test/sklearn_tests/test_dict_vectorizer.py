@@ -40,7 +40,8 @@ class DictVectorizerScikitTest(unittest.TestCase):
                 [{"output": x_r} for x_r in X],
                 True,
             )
-            assert ret["num_errors"] == 0
+            if ret["num_errors"] != 0:
+                raise AssertionError
 
     def test_dictvectorizer(self):
 

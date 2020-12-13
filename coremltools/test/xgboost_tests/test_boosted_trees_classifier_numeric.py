@@ -74,8 +74,10 @@ class BoostedTreeClassificationBostonHousingScikitNumericTest(unittest.TestCase)
             import numpy as np
             # fix initial default prediction for multiclass classification
             # https://github.com/scikit-learn/scikit-learn/pull/12983
-            assert hasattr(scikit_model, 'init_')
-            assert hasattr(scikit_model.init_, 'priors')
+            if not hasattr(scikit_model, 'init_'):
+                raise AssertionError
+            if not hasattr(scikit_model.init_, 'priors'):
+                raise AssertionError
             scikit_model.init_.priors = np.log(scikit_model.init_.priors)
 
         if _is_macos() and _macos_version() >= (10, 13):

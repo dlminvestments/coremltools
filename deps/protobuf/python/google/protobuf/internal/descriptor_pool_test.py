@@ -132,10 +132,12 @@ class DescriptorPoolTest(unittest.TestCase):
                      file_desc4.name)
 
     # Tests the generated pool.
-    assert descriptor_pool.Default().FindFileContainingSymbol(
-        'google.protobuf.python.internal.Factory2Message.one_more_field')
-    assert descriptor_pool.Default().FindFileContainingSymbol(
-        'google.protobuf.python.internal.another_field')
+    if not descriptor_pool.Default().FindFileContainingSymbol(
+        'google.protobuf.python.internal.Factory2Message.one_more_field'):
+      raise AssertionError
+    if not descriptor_pool.Default().FindFileContainingSymbol(
+        'google.protobuf.python.internal.another_field'):
+      raise AssertionError
 
   def testFindFileContainingSymbolFailure(self):
     with self.assertRaises(KeyError):

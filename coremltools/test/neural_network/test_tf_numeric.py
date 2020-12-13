@@ -493,8 +493,10 @@ class StressTest(CorrectnessTest):
                 h_end = r[3] * (1 - h_start) + h_start
                 roi[ii, :] = [h_start, w_start, h_end, w_end]
                 roi[ii, :] = np.round(100 * roi[ii, :]) / 100
-                assert roi[ii, 0] <= roi[ii, 2]
-                assert roi[ii, 1] <= roi[ii, 3]
+                if roi[ii, 0] > roi[ii, 2]:
+                    raise AssertionError
+                if roi[ii, 1] > roi[ii, 3]:
+                    raise AssertionError
 
             tf_preds = get_tf_predictions_crop_resize(
                 np.transpose(X, [0, 2, 3, 1]), roi, box_ind, params

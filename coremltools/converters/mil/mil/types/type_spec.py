@@ -26,8 +26,10 @@ class Type:
     def __init__(self, name, tparam=None, python_class=None):
         if tparam is None:
             tparam = []
-        assert isinstance(name, _string_types)
-        assert isinstance(tparam, list)
+        if not isinstance(name, _string_types):
+            raise AssertionError
+        if not isinstance(tparam, list):
+            raise AssertionError
         self.name = name
         self.tparam = tparam
         self.python_class = python_class
@@ -72,8 +74,10 @@ class FunctionType:
     __slots__ = ["inputs", "output", "python_function"]
 
     def __init__(self, inputs, output, python_function=None):
-        assert isinstance(inputs, list)
-        assert isinstance(output, (FunctionType, Type))
+        if not isinstance(inputs, list):
+            raise AssertionError
+        if not isinstance(output, (FunctionType, Type)):
+            raise AssertionError
         self.inputs = inputs
         self.output = output
         self.python_function = python_function

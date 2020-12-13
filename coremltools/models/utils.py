@@ -183,7 +183,8 @@ def _fp32_to_fp16_byte_array(fp32_arr):
 
 
 def _wp_to_fp16wp(wp):
-    assert wp
+    if not wp:
+        raise AssertionError
     # If the float32 field is empty do nothing.
     if len(wp.floatValue) == 0:
         return
@@ -577,7 +578,8 @@ def _sanitize_value(x):
     elif isinstance(x, dict):
         return dict((_sanitize_value(k), _sanitize_value(v)) for k, v in x.items())
     else:
-        assert False, str(x)
+        if not False:
+            raise AssertionError(str(x))
 
 
 def _element_equal(x, y):
@@ -642,7 +644,8 @@ def evaluate_transformer(model, input_data, reference_output, verbose=False):
 
     num_errors = 0
     for index, row in enumerate(input_data):
-        assert isinstance(row, dict)
+        if not isinstance(row, dict):
+            raise AssertionError
         sanitized_row = _sanitize_value(row)
         ref_data = _sanitize_value(reference_output[index])
         if verbose:
@@ -651,8 +654,10 @@ def evaluate_transformer(model, input_data, reference_output, verbose=False):
 
         predicted = _sanitize_value(model.predict(sanitized_row))
 
-        assert isinstance(ref_data, dict)
-        assert isinstance(predicted, dict)
+        if not isinstance(ref_data, dict):
+            raise AssertionError
+        if not isinstance(predicted, dict):
+            raise AssertionError
 
         predicted_trimmed = dict((k, predicted[k]) for k in ref_data.keys())
 

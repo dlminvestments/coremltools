@@ -72,19 +72,26 @@ _converter_module_list = [
 
 
 def _test_module(m):
-    assert m.model_type in ["transformer", "regressor", "classifier"], m.__name__
+    if m.model_type not in ["transformer", "regressor", "classifier"]:
+        raise AssertionError(m.__name__)
     if m.model_type == "transformer":
-        assert hasattr(m, "update_dimension"), m.__name__
+        if not hasattr(m, "update_dimension"):
+            raise AssertionError(m.__name__)
     if m.model_type == "classifier":
-        assert hasattr(m, "supports_output_scores"), m.__name__
-        assert hasattr(m, "get_output_classes"), m.__name__
-    assert hasattr(m, "sklearn_class"), m.__name__
-    assert hasattr(m, "get_input_dimension"), m.__name__
+        if not hasattr(m, "supports_output_scores"):
+            raise AssertionError(m.__name__)
+        if not hasattr(m, "get_output_classes"):
+            raise AssertionError(m.__name__)
+    if not hasattr(m, "sklearn_class"):
+        raise AssertionError(m.__name__)
+    if not hasattr(m, "get_input_dimension"):
+        raise AssertionError(m.__name__)
 
     return True
 
 
-assert all(_test_module(m) for m in _converter_module_list)
+if not all(_test_module(m) for m in _converter_module_list):
+    raise AssertionError
 
 _converter_lookup = dict(
     (md.sklearn_class, i) for i, md in enumerate(_converter_module_list)
@@ -247,7 +254,8 @@ def _convert_sklearn_model(
                 features, _PIPELINE_INTERNAL_FEATURE_NAME
             )
 
-            assert _output_dimension == current_num_dimensions
+            if _output_dimension != current_num_dimensions:
+                raise AssertionError
             ft_out_features = [
                 (
                     _PIPELINE_INTERNAL_FEATURE_NAME,
@@ -268,7 +276,8 @@ def _convert_sklearn_model(
             )
 
     overall_mode = obj_list[-1].module.model_type
-    assert overall_mode in ("transformer", "regressor", "classifier")
+    if overall_mode not in ("transformer", "regressor", "classifier"):
+        raise AssertionError
 
     # Now, go through each transformer in the sequence of transformers and add
     # it to the pipeline.

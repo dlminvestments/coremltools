@@ -58,4 +58,5 @@ class NumericalImputerTestCase(unittest.TestCase):
 
                 result = evaluate_transformer(spec, input_data, output_data)
 
-                assert result["num_errors"] == 0
+                if result["num_errors"] != 0:
+                    raise AssertionError

@@ -259,9 +259,10 @@ def _IsSingletonList(testcases):
 
 
 def _ModifyClass(class_object, testcases, naming_type):
-  assert not getattr(class_object, '_id_suffix', None), (
-      'Cannot add parameters to %s,'
-      ' which already has parameterized methods.' % (class_object,))
+  if getattr(class_object, '_id_suffix', None):
+    raise AssertionError(
+        'Cannot add parameters to %s,'
+        ' which already has parameterized methods.' % (class_object,))
   class_object._id_suffix = id_suffix = {}
   # We change the size of __dict__ while we iterate over it, 
   # which Python 3.x will complain about, so use copy().
@@ -299,8 +300,9 @@ def _ParameterDecorator(naming_type, testcases):
       return _ParameterizedTestIter(obj, testcases, naming_type)
 
   if _IsSingletonList(testcases):
-    assert _NonStringIterable(testcases[0]), (
-        'Single parameter argument must be a non-string iterable')
+    if not _NonStringIterable(testcases[0]):
+      raise AssertionError(
+          'Single parameter argument must be a non-string iterable')
     testcases = testcases[0]
 
   return _Apply
@@ -373,14 +375,16 @@ def _UpdateClassDictForParamTestCase(dct, id_suffix, name, iterator):
     iterator: The iterator generating the individual test cases.
   """
   for idx, func in enumerate(iterator):
-    assert callable(func), 'Test generators must yield callables, got %r' % (
-        func,)
+    if not callable(func):
+      raise AssertionError('Test generators must yield callables, got %r' % (
+          func,))
     if getattr(func, '__x_use_name__', False):
       new_name = func.__name__
     else:
       new_name = '%s%s%d' % (name, _SEPARATOR, idx)
-    assert new_name not in dct, (
-        'Name of parameterized test case "%s" not unique' % (new_name,))
+    if new_name in dct:
+      raise AssertionError(
+          'Name of parameterized test case "%s" not unique' % (new_name,))
     dct[new_name] = func
     id_suffix[new_name] = getattr(func, '__x_extra_id__', '')
 

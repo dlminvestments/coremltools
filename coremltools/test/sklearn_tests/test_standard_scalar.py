@@ -40,7 +40,8 @@ class StandardScalerTestCase(unittest.TestCase):
             [{"out": row} for row in output],
         )
 
-        assert metrics["num_errors"] == 0
+        if metrics["num_errors"] != 0:
+            raise AssertionError
 
     @staticmethod
     def test_boston():
@@ -61,4 +62,5 @@ class StandardScalerTestCase(unittest.TestCase):
 
         metrics = evaluate_transformer(spec, input_data, output_data)
 
-        assert metrics["num_errors"] == 0
+        if metrics["num_errors"] != 0:
+            raise AssertionError

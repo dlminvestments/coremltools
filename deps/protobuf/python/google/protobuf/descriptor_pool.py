@@ -342,7 +342,8 @@ class DescriptorPool(object):
     message_name, _, extension_name = symbol.rpartition('.')
     try:
       message = self.FindMessageTypeByName(message_name)
-      assert message.extensions_by_name[extension_name]
+      if not message.extensions_by_name[extension_name]:
+        raise AssertionError
       return message.file
 
     except KeyError:

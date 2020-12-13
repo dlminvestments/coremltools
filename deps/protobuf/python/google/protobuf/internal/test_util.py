@@ -712,7 +712,8 @@ class NonStandardInteger(numbers.Integral):
   """
 
   def __init__(self, val, error_string_on_conversion=None):
-    assert isinstance(val, numbers.Integral)
+    if not isinstance(val, numbers.Integral):
+      raise AssertionError
     if isinstance(val, NonStandardInteger):
       val = val.val
     self.val = val

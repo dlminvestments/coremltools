@@ -87,27 +87,32 @@ def make_int(width, unsigned):
 
         @annotate(delay_type_int, other=delay_type_int)
         def __add__(self, other):
-            assert isinstance(other, int)
+            if not isinstance(other, int):
+                raise AssertionError
             return int(self.val + other.val)
 
         @annotate(delay_type_int, other=delay_type_int)
         def __sub__(self, other):
-            assert isinstance(other, int)
+            if not isinstance(other, int):
+                raise AssertionError
             return int(self.val - other.val)
 
         @annotate(delay_type_int, other=delay_type_int)
         def __mul__(self, other):
-            assert isinstance(other, int)
+            if not isinstance(other, int):
+                raise AssertionError
             return int(self.val * other.val)
 
         @annotate(delay_type_int, other=delay_type_int)
         def __div__(self, other):
-            assert isinstance(other, int)
+            if not isinstance(other, int):
+                raise AssertionError
             return int(self.val // other.val)
 
         @annotate(delay_type_int, other=delay_type_int)
         def __mod__(self, other):
-            assert isinstance(other, int)
+            if not isinstance(other, int):
+                raise AssertionError
             return int(self.val % other.val)
 
         @annotate(delay_type.bool, other=delay_type_int)

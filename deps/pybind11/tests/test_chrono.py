@@ -9,19 +9,23 @@ def test_chrono_system_clock():
     date2 = datetime.datetime.today()
 
     # The returned value should be a datetime
-    assert isinstance(date1, datetime.datetime)
+    if not isinstance(date1, datetime.datetime):
+        raise AssertionError
 
     # The numbers should vary by a very small amount (time it took to execute)
     diff = abs(date1 - date2)
 
     # There should never be a days/seconds difference
-    assert diff.days == 0
-    assert diff.seconds == 0
+    if diff.days != 0:
+        raise AssertionError
+    if diff.seconds != 0:
+        raise AssertionError
 
     # We test that no more than about 0.5 seconds passes here
     # This makes sure that the dates created are very close to the same
     # but if the testing system is incredibly overloaded this should still pass
-    assert diff.microseconds < 500000
+    if diff.microseconds >= 500000:
+        raise AssertionError
 
 
 def test_chrono_system_clock_roundtrip():
@@ -34,13 +38,17 @@ def test_chrono_system_clock_roundtrip():
     date2 = test_chrono2(date1)
 
     # The returned value should be a datetime
-    assert isinstance(date2, datetime.datetime)
+    if not isinstance(date2, datetime.datetime):
+        raise AssertionError
 
     # They should be identical (no information lost on roundtrip)
     diff = abs(date1 - date2)
-    assert diff.days == 0
-    assert diff.seconds == 0
-    assert diff.microseconds == 0
+    if diff.days != 0:
+        raise AssertionError
+    if diff.seconds != 0:
+        raise AssertionError
+    if diff.microseconds != 0:
+        raise AssertionError
 
 
 def test_chrono_duration_roundtrip():
@@ -53,13 +61,17 @@ def test_chrono_duration_roundtrip():
     diff = date2 - date1
 
     # Make sure this is a timedelta
-    assert isinstance(diff, datetime.timedelta)
+    if not isinstance(diff, datetime.timedelta):
+        raise AssertionError
 
     cpp_diff = test_chrono3(diff)
 
-    assert cpp_diff.days == diff.days
-    assert cpp_diff.seconds == diff.seconds
-    assert cpp_diff.microseconds == diff.microseconds
+    if cpp_diff.days != diff.days:
+        raise AssertionError
+    if cpp_diff.seconds != diff.seconds:
+        raise AssertionError
+    if cpp_diff.microseconds != diff.microseconds:
+        raise AssertionError
 
 
 def test_chrono_duration_subtraction_equivalence():
@@ -72,9 +84,12 @@ def test_chrono_duration_subtraction_equivalence():
     diff = date2 - date1
     cpp_diff = test_chrono4(date2, date1)
 
-    assert cpp_diff.days == diff.days
-    assert cpp_diff.seconds == diff.seconds
-    assert cpp_diff.microseconds == diff.microseconds
+    if cpp_diff.days != diff.days:
+        raise AssertionError
+    if cpp_diff.seconds != diff.seconds:
+        raise AssertionError
+    if cpp_diff.microseconds != diff.microseconds:
+        raise AssertionError
 
 
 def test_chrono_steady_clock():
@@ -84,8 +99,10 @@ def test_chrono_steady_clock():
     time1 = test_chrono5()
     time2 = test_chrono5()
 
-    assert isinstance(time1, datetime.timedelta)
-    assert isinstance(time2, datetime.timedelta)
+    if not isinstance(time1, datetime.timedelta):
+        raise AssertionError
+    if not isinstance(time2, datetime.timedelta):
+        raise AssertionError
 
 
 def test_chrono_steady_clock_roundtrip():
@@ -95,12 +112,16 @@ def test_chrono_steady_clock_roundtrip():
     time1 = datetime.timedelta(days=10, seconds=10, microseconds=100)
     time2 = test_chrono6(time1)
 
-    assert isinstance(time2, datetime.timedelta)
+    if not isinstance(time2, datetime.timedelta):
+        raise AssertionError
 
     # They should be identical (no information lost on roundtrip)
-    assert time1.days == time2.days
-    assert time1.seconds == time2.seconds
-    assert time1.microseconds == time2.microseconds
+    if time1.days != time2.days:
+        raise AssertionError
+    if time1.seconds != time2.seconds:
+        raise AssertionError
+    if time1.microseconds != time2.microseconds:
+        raise AssertionError
 
 
 def test_floating_point_duration():
@@ -110,7 +131,10 @@ def test_floating_point_duration():
     # Test using 35.525123 seconds as an example floating point number in seconds
     time = test_chrono7(35.525123)
 
-    assert isinstance(time, datetime.timedelta)
+    if not isinstance(time, datetime.timedelta):
+        raise AssertionError
 
-    assert time.seconds == 35
-    assert 525122 <= time.microseconds <= 525123
+    if time.seconds != 35:
+        raise AssertionError
+    if 525122 > time.microseconds:
+        raise AssertionError
