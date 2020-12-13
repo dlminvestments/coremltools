@@ -347,7 +347,8 @@ class ReflectionTest(BaseTestCase):
     TestCompositeHasBits('optional_foreign_message', 'c')
     TestCompositeHasBits('optional_import_message', 'd')
 
-  def testReferencesToNestedMessage(self):
+  @staticmethod
+  def testReferencesToNestedMessage():
     proto = unittest_pb2.TestAllTypes()
     nested = proto.optional_nested_message
     del proto
@@ -364,7 +365,8 @@ class ReflectionTest(BaseTestCase):
     self.assertTrue(not proto.HasField('optional_nested_message'))
     self.assertEqual(0, proto.optional_nested_message.bb)
 
-  def testGetDefaultMessageAfterDisconnectingDefaultMessage(self):
+  @staticmethod
+  def testGetDefaultMessageAfterDisconnectingDefaultMessage():
     proto = unittest_pb2.TestAllTypes()
     nested = proto.optional_nested_message
     proto.ClearField('optional_nested_message')
@@ -409,7 +411,8 @@ class ReflectionTest(BaseTestCase):
     proto1.ClearField('optional_nested_message')
     self.assertTrue(not proto1.HasField('optional_nested_message'))
 
-  def testDisconnectingLazyNestedMessage(self):
+  @staticmethod
+  def testDisconnectingLazyNestedMessage():
     # This test exercises releasing a nested message that is lazy. This test
     # only exercises real code in the C++ implementation as Python does not
     # support lazy parsing, but the current C++ implementation results in
@@ -2438,7 +2441,8 @@ class SerializationTest(BaseTestCase):
     self.assertEqual((5, wire_format.WIRETYPE_VARINT), ReadTag())
     self.assertEqual(5, d.ReadSInt32())
 
-  def testCanonicalSerializationOrderSameAsCpp(self):
+  @staticmethod
+  def testCanonicalSerializationOrderSameAsCpp():
     # Copy of the same test we use for C++.
     proto = unittest_pb2.TestFieldOrderings()
     test_util.SetAllFieldsAndExtensions(proto)
@@ -2940,7 +2944,8 @@ class ClassAPITest(BaseTestCase):
     self.assertIn('sibling', message_class.__dict__)
     self.assertIn('leaf', message_class.child.__dict__)
 
-  def _GetSerializedFileDescriptor(self, name):
+  @staticmethod
+  def _GetSerializedFileDescriptor(name):
     """Get a serialized representation of a test FileDescriptorProto.
 
     Args:

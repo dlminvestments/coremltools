@@ -139,7 +139,8 @@ class IntValueChecker(object):
     proposed_value = self._TYPE(proposed_value)
     return proposed_value
 
-  def DefaultValue(self):
+  @staticmethod
+  def DefaultValue():
     return 0
 
 
@@ -170,7 +171,8 @@ class UnicodeValueChecker(object):
   Always returns a unicode value, even if the input is of type str.
   """
 
-  def CheckValue(self, proposed_value):
+  @staticmethod
+  def CheckValue(proposed_value):
     if not isinstance(proposed_value, (bytes, six.text_type)):
       message = ('%.1024r has type %s, but expected one of: %s' %
                  (proposed_value, type(proposed_value), (bytes, six.text_type)))
@@ -187,7 +189,8 @@ class UnicodeValueChecker(object):
                          (proposed_value))
     return proposed_value
 
-  def DefaultValue(self):
+  @staticmethod
+  def DefaultValue():
     return u""
 
 

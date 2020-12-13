@@ -16,7 +16,8 @@ def test_dispatch_issue(msg):
     from pybind11_tests.issues import DispatchIssue, dispatch_issue_go
 
     class PyClass1(DispatchIssue):
-        def dispatch(self):
+        @staticmethod
+        def dispatch():
             return "Yay.."
 
     class PyClass2(DispatchIssue):

@@ -13,7 +13,8 @@ def test_alias_delay_initialization1(capture):
         def __init__(self):
             super(B, self).__init__()
 
-        def f(self):
+        @staticmethod
+        def f():
             print("In python f()")
 
     # C++ version
@@ -50,7 +51,8 @@ def test_alias_delay_initialization2(capture):
         def __init__(self):
             super(B2, self).__init__()
 
-        def f(self):
+        @staticmethod
+        def f():
             print("In python B2.f()")
 
     # No python subclass version

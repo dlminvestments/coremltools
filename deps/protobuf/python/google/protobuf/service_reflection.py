@@ -215,7 +215,8 @@ class _ServiceBuilder(object):
     return lambda inst, rpc_controller, request, callback: (
         self._NonImplementedMethod(method.name, rpc_controller, callback))
 
-  def _NonImplementedMethod(self, method_name, rpc_controller, callback):
+  @staticmethod
+  def _NonImplementedMethod(method_name, rpc_controller, callback):
     """The body of all methods in the generated service class.
 
     Args:
@@ -266,7 +267,8 @@ class _ServiceStubBuilder(object):
     return (lambda inst, rpc_controller, request, callback=None:
         self._StubMethod(inst, method, rpc_controller, request, callback))
 
-  def _StubMethod(self, stub, method_descriptor,
+  @staticmethod
+  def _StubMethod(stub, method_descriptor,
                   rpc_controller, request, callback):
     """The body of all service methods in the generated stub class.
 
