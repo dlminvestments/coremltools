@@ -63,13 +63,16 @@ def convert(model, input_features, output_features):
 
     if input_dimension is not None:
         # Make sure that our starting dimensions are correctly managed.
-        assert len(input_features) == 1
-        assert input_features[0][1] == datatypes.Array(input_dimension)
+        if len(input_features) != 1:
+            raise AssertionError
+        if input_features[0][1] != datatypes.Array(input_dimension):
+            raise AssertionError
 
     input_dimension = input_features[0][1].num_elements
 
     expected_output_dimension = update_dimension(model, input_dimension)
-    assert output_features[0][1] == datatypes.Array(expected_output_dimension)
+    if output_features[0][1] != datatypes.Array(expected_output_dimension):
+        raise AssertionError
 
     # Create a pipeline that can do all of the subsequent feature extraction.
     feature_vectorizer_input_features = []
@@ -198,7 +201,8 @@ def convert(model, input_features, output_features):
     )
 
     # Make sure that the feature vectorizer input actually matches up with the
-    assert _num_out_dim == output_features[0][1].num_elements
+    if _num_out_dim != output_features[0][1].num_elements:
+        raise AssertionError
 
     pline.add_model(fvec)
 

@@ -23,7 +23,8 @@ def test_alias_delay_initialization1(capture):
         call_f(a)
         del a
         pytest.gc_collect()
-    assert capture == "A.f()"
+    if capture != "A.f()":
+        raise AssertionError
 
     # Python version
     with capture:
@@ -31,12 +32,13 @@ def test_alias_delay_initialization1(capture):
         call_f(b)
         del b
         pytest.gc_collect()
-    assert capture == """
+    if capture != """
         PyA.PyA()
         PyA.f()
         In python f()
         PyA.~PyA()
-    """
+    """:
+        raise AssertionError
 
 
 def test_alias_delay_initialization2(capture):
@@ -61,12 +63,13 @@ def test_alias_delay_initialization2(capture):
         call_f(a2)
         del a2
         pytest.gc_collect()
-    assert capture == """
+    if capture != """
         PyA2.PyA2()
         PyA2.f()
         A2.f()
         PyA2.~PyA2()
-    """
+    """:
+        raise AssertionError
 
     # Python subclass version
     with capture:
@@ -74,9 +77,10 @@ def test_alias_delay_initialization2(capture):
         call_f(b2)
         del b2
         pytest.gc_collect()
-    assert capture == """
+    if capture != """
         PyA2.PyA2()
         PyA2.f()
         In python B2.f()
         PyA2.~PyA2()
-    """
+    """:
+        raise AssertionError

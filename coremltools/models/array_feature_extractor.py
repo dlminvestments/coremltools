@@ -26,8 +26,10 @@ def create_array_feature_extractor(
     """
 
     # Make sure that our starting stuff is in the proper form.
-    assert len(input_features) == 1
-    assert isinstance(input_features[0][1], datatypes.Array)
+    if len(input_features) != 1:
+        raise AssertionError
+    if not isinstance(input_features[0][1], datatypes.Array):
+        raise AssertionError
 
     # Create the model.
     spec = _Model_pb2.Model()
@@ -51,7 +53,8 @@ def create_array_feature_extractor(
     output_features = [(output_name, output_type)]
 
     for idx in extract_indices:
-        assert idx < input_features[0][1].num_elements
+        if idx >= input_features[0][1].num_elements:
+            raise AssertionError
         spec.arrayFeatureExtractor.extractIndex.append(idx)
 
     set_transform_interface_params(spec, input_features, output_features)

@@ -57,8 +57,10 @@ def convert(model, input_features, output_features):
     spec = _Model_pb2.Model()
     spec.specificationVersion = SPECIFICATION_VERSION
 
-    assert len(input_features) == 1
-    assert isinstance(input_features[0][1], datatypes.Array)
+    if len(input_features) != 1:
+        raise AssertionError
+    if not isinstance(input_features[0][1], datatypes.Array):
+        raise AssertionError
 
     # feature name in and out are the same here
     spec = set_transform_interface_params(spec, input_features, output_features)

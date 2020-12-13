@@ -35,9 +35,11 @@ class TestNeuralNetworkPrediction:
             out = model.predict(input, useCPUOnly=True)
         except RuntimeError as e:
             print(e)
-            assert str(e) == "Error compiling model: \"The file couldn’t be saved.\"."
+            if str(e) != "Error compiling model: \"The file couldn’t be saved.\".":
+                raise AssertionError
         else:
-            assert out['output'].shape == (1, 3, 3)
+            if out['output'].shape != (1, 3, 3):
+                raise AssertionError
             np.testing.assert_allclose(expected, out['output'])
             print("Core ML output", out)
 

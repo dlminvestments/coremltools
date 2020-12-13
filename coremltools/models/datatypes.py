@@ -79,10 +79,12 @@ class Array(_DatatypeBase):
         # Create a multi dimension array five by two by ten.
         >>> multi_arr = coremltools.models.datatypes.Array(5, 2, 10)
         """
-        assert len(dimensions) >= 1
-        assert all(
+        if len(dimensions) < 1:
+            raise AssertionError
+        if not all(
             isinstance(d, _integer_types + (_np.int64, _np.int32)) for d in dimensions
-        ), "Dimensions must be ints, not {}".format(str(dimensions))
+        ):
+            raise AssertionError("Dimensions must be ints, not {}".format(str(dimensions)))
         self.dimensions = dimensions
 
         num_elements = 1

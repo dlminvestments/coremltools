@@ -49,7 +49,8 @@ def assert_model_is_valid(
     # Avoid circular import
     from coremltools.converters.mil.testing_reqs import ct
     mlmodel = ct.convert(program, source="mil", convert_to=backend)
-    assert mlmodel is not None
+    if mlmodel is None:
+        raise AssertionError
 
     if verbose:
         from coremltools.models.neural_network.printer import print_network_spec
@@ -57,23 +58,28 @@ def assert_model_is_valid(
 
     if _IS_MACOS:
         prediction = mlmodel.predict(input_dict, useCPUOnly=True)
-        assert prediction is not None
+        if prediction is None:
+            raise AssertionError
         if expected_output_shapes is not None:
             for out_name, out_shape in expected_output_shapes.items():
-                assert out_name in prediction
-                assert out_shape == prediction[out_name].shape
+                if out_name not in prediction:
+                    raise AssertionError
+                if out_shape != prediction[out_name].shape:
+                    raise AssertionError
 
 
 def assert_same_output_names(prog1, prog2, func_name="main"):
     prog1_outputs = [o.name for o in prog1[func_name].outputs]
     prog2_outputs = [o.name for o in prog2[func_name].outputs]
-    assert prog1_outputs == prog2_outputs
+    if prog1_outputs != prog2_outputs:
+        raise AssertionError
 
 
 def assert_same_output_shapes(prog1, prog2, func_name="main"):
     prog1_output_shapes = [o.shape for o in prog1[func_name].outputs]
     prog2_output_shapes = [o.shape for o in prog2[func_name].outputs]
-    assert prog1_output_shapes == prog2_output_shapes
+    if prog1_output_shapes != prog2_output_shapes:
+        raise AssertionError
 
 
 def get_op_types_in_program(prog, func_name="main", skip_const_ops=True):
@@ -210,9 +216,10 @@ def compare_backend(
                 "Output {} differs. useCPUOnly={}.\nInput={}, "
                 + "\nExpected={}, \nOutput={}\n"
             )
-            assert is_close(expected, pred[o], atol, rtol), msg.format(
-                o, use_cpu_only, input_key_values, expected, pred[o]
-            )
+            if not is_close(expected, pred[o], atol, rtol):
+                raise AssertionError(msg.format(
+                    o, use_cpu_only, input_key_values, expected, pred[o]
+                ))
 
 
 def compare_shapes(
@@ -244,7 +251,8 @@ def compare_shapes(
             # remove this special case when support is added
             if expected.shape == () and pred[o].shape == (1,):
                 continue
-            assert pred[o].shape == expected.shape, msg
+            if pred[o].shape != expected.shape:
+                raise AssertionError(msg)
 
 
 def get_core_ml_prediction(

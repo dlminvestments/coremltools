@@ -7,10 +7,11 @@ def _get_visible_items(d):
 
 
 def _check_visible_modules(actual, expected):
-    assert set(actual) == set(expected), "API mis-matched. Got %s, expected %s" % (
-        actual,
-        expected,
-    )
+    if set(actual) != set(expected):
+        raise AssertionError("API mis-matched. Got %s, expected %s" % (
+            actual,
+            expected,
+        ))
 
 
 class TestApiVisibilities:

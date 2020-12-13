@@ -5505,7 +5505,8 @@ class NeuralNetworkBuilder(object):
         else:
             spec_layer_params.numSplits = num_splits
 
-        assert len(output_names) == spec_layer_params.numSplits
+        if len(output_names) != spec_layer_params.numSplits:
+            raise AssertionError
         return spec_layer
 
     def add_slice_static(
@@ -5552,11 +5553,16 @@ class NeuralNetworkBuilder(object):
         """
 
         rank = len(begin_ids)
-        assert len(end_ids) == rank
-        assert len(strides) == rank
-        assert len(begin_masks) == rank
-        assert len(end_masks) == rank
-        assert squeeze_masks is None or len(squeeze_masks) == rank
+        if len(end_ids) != rank:
+            raise AssertionError
+        if len(strides) != rank:
+            raise AssertionError
+        if len(begin_masks) != rank:
+            raise AssertionError
+        if len(end_masks) != rank:
+            raise AssertionError
+        if not (squeeze_masks is None or len(squeeze_masks) == rank):
+            raise AssertionError
 
         spec_layer = self._add_generic_layer(name, [input_name], [output_name])
         spec_layer_params = spec_layer.sliceStatic
@@ -5691,7 +5697,8 @@ class NeuralNetworkBuilder(object):
                 or self.spec.specificationVersion < _SPECIFICATION_VERSION_IOS_14
             ):
                 self.spec.specificationVersion = _SPECIFICATION_VERSION_IOS_14
-        assert all([i > 0 for i in reps])
+        if not all([i > 0 for i in reps]):
+            raise AssertionError
         spec_layer_params.reps.extend(reps)
         return spec_layer
 

@@ -6487,7 +6487,8 @@ class IOS14SingleLayerTests(CorrectnessTest):
             torch_padding = torch.nn.ConstantPad3d(tuple(padding_list), 0)
             padding_values = padding_list[:]
         else:
-            assert False
+            if not False:
+                raise AssertionError
 
         # Validate output shape
         for i in range(3):

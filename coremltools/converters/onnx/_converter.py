@@ -798,7 +798,8 @@ def convert(
                 mapp = graph.onnx_coreml_shape_mapping[feature.name]
                 onnx_shape = graph.shape_dict[feature.name]
                 if raise_error:
-                    assert len(mapp) == len(onnx_shape), "Something wrong in shape"
+                    if len(mapp) != len(onnx_shape):
+                        raise AssertionError("Something wrong in shape")
                 if len(mapp) == len(onnx_shape):
                     shape = []
                     for i in range(5):

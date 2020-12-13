@@ -614,7 +614,8 @@ def _quantize_wp_field(wp, nbits, qm, shape, axis=0, **kwargs):
 
 
 def _unpack_to_bytes(byte_arr, num_weights, nbits):
-    assert num_weights % 1 == 0
+    if num_weights % 1 != 0:
+        raise AssertionError
     num_weights = int(num_weights)
     bit_arr = _decompose_bytes_to_bit_arr(byte_arr.flatten().tolist())
     bit_arr = _np.array(bit_arr[: num_weights * nbits]).reshape((num_weights, nbits))
@@ -960,7 +961,8 @@ def _quantize_nn_spec(nn_spec, nbits, qm, **kwargs):
             def _lstmwp_to_fp16_lstmwp(
                 lstm_wp, nbits, qm, i_size, o_size, has_peephole=True
             ):
-                assert lstm_wp
+                if not lstm_wp:
+                    raise AssertionError
                 _quantize_wp_field(
                     lstm_wp.inputGateWeightMatrix,
                     nbits,

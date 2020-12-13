@@ -46,18 +46,22 @@ def list(arg, init_length=None, dynamic_length=True):
 
         @annotate(void, other=T[0])
         def append(self, other):
-            assert isinstance(other, self.T[0])
+            if not isinstance(other, self.T[0]):
+                raise AssertionError
             self.val.append(other)
 
         @annotate(T[0], index=type_int.int)
         def __getitem__(self, index):
-            assert isinstance(index, type_int.int)
+            if not isinstance(index, type_int.int):
+                raise AssertionError
             return self.val[index.val]
 
         @annotate(void, index=type_int.int, newval=T[0])
         def __setitem__(self, index, newval):
-            assert isinstance(index, type_int.int)
-            assert isinstance(newval, self.T[0])
+            if not isinstance(index, type_int.int):
+                raise AssertionError
+            if not isinstance(newval, self.T[0]):
+                raise AssertionError
             self.val[index.val] = newval
 
         @annotate(type_int.int)

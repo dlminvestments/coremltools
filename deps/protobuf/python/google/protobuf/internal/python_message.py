@@ -340,7 +340,8 @@ def _AttachFieldHelpers(cls, field_descriptor):
 def _AddClassAttributesForNestedExtensions(descriptor, dictionary):
   extension_dict = descriptor.extensions_by_name
   for extension_name, extension_field in extension_dict.items():
-    assert extension_name not in dictionary
+    if extension_name in dictionary:
+      raise AssertionError
     dictionary[extension_name] = extension_field
 
 
@@ -570,7 +571,8 @@ def _AddPropertiesForField(field, cls):
   """
   # Catch it if we add other types that we should
   # handle specially here.
-  assert _FieldDescriptor.MAX_CPPTYPE == 10
+  if _FieldDescriptor.MAX_CPPTYPE != 10:
+    raise AssertionError
 
   constant_name = field.name.upper() + "_FIELD_NUMBER"
   setattr(cls, constant_name, field.number)
@@ -1208,7 +1210,8 @@ def _AddMergeFromMethod(cls):
           "Parameter to MergeFrom() must be instance of same class: "
           'expected %s got %s.' % (cls.__name__, msg.__class__.__name__))
 
-    assert msg is not self
+    if msg is self:
+      raise AssertionError
     self._Modified()
 
     fields = self._fields

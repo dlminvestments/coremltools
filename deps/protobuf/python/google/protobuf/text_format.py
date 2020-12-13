@@ -684,7 +684,8 @@ class _Parser(object):
         merger(tokenizer, message, field)
 
     else:  # Proto field is unknown.
-      assert self.allow_unknown_extension
+      if not self.allow_unknown_extension:
+        raise AssertionError
       _SkipFieldContents(tokenizer)
 
     # For historical reasons, fields may optionally be separated by commas or

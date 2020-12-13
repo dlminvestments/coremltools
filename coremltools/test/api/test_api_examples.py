@@ -356,7 +356,8 @@ class TestTensorFlow2ConverterExamples:
         label_url = 'https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt'
         class_labels = urllib.request.urlopen(label_url).read().splitlines()
         class_labels = class_labels[1:]  # remove the first class which is background
-        assert len(class_labels) == 1000
+        if len(class_labels) != 1000:
+            raise AssertionError
 
         # make sure entries of class_labels are strings
         for i, label in enumerate(class_labels):
@@ -406,7 +407,8 @@ class TestTensorFlow2ConverterExamples:
         out_dict = model.predict({input_name: example_image})
 
         # Print out top-1 prediction
-        assert out_dict["classLabel"] == "daisy"
+        if out_dict["classLabel"] != "daisy":
+            raise AssertionError
 
 @pytest.mark.skipif(not _HAS_TORCH, reason=MSG_TORCH_NOT_FOUND)
 class TestPyTorchConverterExamples:
@@ -584,7 +586,8 @@ class TestMILExamples:
             prediction = mlmodel.predict(
                 {"x": np.random.rand(1, 100, 100, 3).astype(np.float32),}
             )
-            assert len(prediction) == 1
+            if len(prediction) != 1:
+                raise AssertionError
 
 class TestFlexibleShape:
     @staticmethod
@@ -1114,7 +1117,8 @@ class TestMILConverterExamples:
             y = tf.nn.relu(x, name="output")
 
         model = ct.convert(graph, convert_to='mil')
-        assert isinstance(model, ct.converters.mil.Program)
+        if not isinstance(model, ct.converters.mil.Program):
+            raise AssertionError
 
     @staticmethod
     @pytest.mark.skipif(not _HAS_TF_2, reason=MSG_TF2_NOT_FOUND)
@@ -1125,7 +1129,8 @@ class TestMILConverterExamples:
         y = tf.keras.layers.Dense(16, activation="softmax")(x)
         keras_model = tf.keras.Model(x, y)
         model = ct.convert(keras_model, convert_to='mil')
-        assert isinstance(model, ct.converters.mil.Program)
+        if not isinstance(model, ct.converters.mil.Program):
+            raise AssertionError
 
     @staticmethod
     @pytest.mark.skipif(not _HAS_TORCH, reason=MSG_TORCH_NOT_FOUND)
@@ -1158,4 +1163,5 @@ class TestMILConverterExamples:
             inputs=[ct.TensorType(name="input", shape=example_input.shape)],
             convert_to='mil'
         )
-        assert isinstance(model, ct.converters.mil.Program)
+        if not isinstance(model, ct.converters.mil.Program):
+            raise AssertionError

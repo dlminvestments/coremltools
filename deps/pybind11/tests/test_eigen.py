@@ -49,30 +49,42 @@ def test_nonunit_stride_from_python():
     counting_mat = np.arange(9.0, dtype=np.float32).reshape((3, 3))
     first_row = counting_mat[0, :]
     first_col = counting_mat[:, 0]
-    assert np.array_equal(double_row(first_row), 2.0 * first_row)
-    assert np.array_equal(double_col(first_row), 2.0 * first_row)
-    assert np.array_equal(double_row(first_col), 2.0 * first_col)
-    assert np.array_equal(double_col(first_col), 2.0 * first_col)
+    if not np.array_equal(double_row(first_row), 2.0 * first_row):
+        raise AssertionError
+    if not np.array_equal(double_col(first_row), 2.0 * first_row):
+        raise AssertionError
+    if not np.array_equal(double_row(first_col), 2.0 * first_col):
+        raise AssertionError
+    if not np.array_equal(double_col(first_col), 2.0 * first_col):
+        raise AssertionError
 
     counting_3d = np.arange(27.0, dtype=np.float32).reshape((3, 3, 3))
     slices = [counting_3d[0, :, :], counting_3d[:, 0, :], counting_3d[:, :, 0]]
     for slice_idx, ref_mat in enumerate(slices):
-        assert np.array_equal(double_mat_cm(ref_mat), 2.0 * ref_mat)
-        assert np.array_equal(double_mat_rm(ref_mat), 2.0 * ref_mat)
+        if not np.array_equal(double_mat_cm(ref_mat), 2.0 * ref_mat):
+            raise AssertionError
+        if not np.array_equal(double_mat_rm(ref_mat), 2.0 * ref_mat):
+            raise AssertionError
 
 
 @pytest.requires_eigen_and_numpy
 def test_nonunit_stride_to_python():
     from pybind11_tests import diagonal, diagonal_1, diagonal_n, block
 
-    assert np.all(diagonal(ref) == ref.diagonal())
-    assert np.all(diagonal_1(ref) == ref.diagonal(1))
+    if not np.all(diagonal(ref) == ref.diagonal()):
+        raise AssertionError
+    if not np.all(diagonal_1(ref) == ref.diagonal(1)):
+        raise AssertionError
     for i in range(-5, 7):
-        assert np.all(diagonal_n(ref, i) == ref.diagonal(i)), "diagonal_n({})".format(i)
+        if not np.all(diagonal_n(ref, i) == ref.diagonal(i)):
+            raise AssertionError("diagonal_n({})".format(i))
 
-    assert np.all(block(ref, 2, 1, 3, 3) == ref[2:5, 1:4])
-    assert np.all(block(ref, 1, 4, 4, 2) == ref[1:, 4:])
-    assert np.all(block(ref, 1, 4, 3, 2) == ref[1:4, 4:])
+    if not np.all(block(ref, 2, 1, 3, 3) == ref[2:5, 1:4]):
+        raise AssertionError
+    if not np.all(block(ref, 1, 4, 4, 2) == ref[1:, 4:]):
+        raise AssertionError
+    if not np.all(block(ref, 1, 4, 3, 2) == ref[1:4, 4:]):
+        raise AssertionError
 
 
 @pytest.requires_eigen_and_numpy
@@ -82,14 +94,16 @@ def test_eigen_ref_to_python():
     chols = [cholesky1, cholesky2, cholesky3, cholesky4, cholesky5, cholesky6]
     for i, chol in enumerate(chols, start=1):
         mymat = chol(np.array([[1, 2, 4], [2, 13, 23], [4, 23, 77]]))
-        assert np.all(mymat == np.array([[1, 0, 0], [2, 3, 0], [4, 5, 6]])), "cholesky{}".format(i)
+        if not np.all(mymat == np.array([[1, 0, 0], [2, 3, 0], [4, 5, 6]])):
+            raise AssertionError("cholesky{}".format(i))
 
 
 @pytest.requires_eigen_and_numpy
 def test_special_matrix_objects():
     from pybind11_tests import incr_diag, symmetric_upper, symmetric_lower
 
-    assert np.all(incr_diag(7) == np.diag([1, 2, 3, 4, 5, 6, 7]))
+    if not np.all(incr_diag(7) == np.diag([1, 2, 3, 4, 5, 6, 7])):
+        raise AssertionError
 
     asymm = np.array([[ 1,  2,  3,  4],
                       [ 5,  6,  7,  8],
@@ -102,23 +116,28 @@ def test_special_matrix_objects():
             symm_lower[i, j] = symm_lower[j, i]
             symm_upper[j, i] = symm_upper[i, j]
 
-    assert np.all(symmetric_lower(asymm) == symm_lower)
-    assert np.all(symmetric_upper(asymm) == symm_upper)
+    if not np.all(symmetric_lower(asymm) == symm_lower):
+        raise AssertionError
+    if not np.all(symmetric_upper(asymm) == symm_upper):
+        raise AssertionError
 
 
 @pytest.requires_eigen_and_numpy
 def test_dense_signature(doc):
     from pybind11_tests import double_col, double_row, double_mat_rm
 
-    assert doc(double_col) == """
+    if doc(double_col) != """
         double_col(arg0: numpy.ndarray[float32[m, 1]]) -> numpy.ndarray[float32[m, 1]]
-    """
-    assert doc(double_row) == """
+    """:
+        raise AssertionError
+    if doc(double_row) != """
         double_row(arg0: numpy.ndarray[float32[1, n]]) -> numpy.ndarray[float32[1, n]]
-    """
-    assert doc(double_mat_rm) == """
+    """:
+        raise AssertionError
+    if doc(double_mat_rm) != """
         double_mat_rm(arg0: numpy.ndarray[float32[m, n]]) -> numpy.ndarray[float32[m, n]]
-    """
+    """:
+        raise AssertionError
 
 
 @pytest.requires_eigen_and_scipy
@@ -137,9 +156,11 @@ def test_sparse():
 def test_sparse_signature(doc):
     from pybind11_tests import sparse_passthrough_r, sparse_passthrough_c
 
-    assert doc(sparse_passthrough_r) == """
+    if doc(sparse_passthrough_r) != """
         sparse_passthrough_r(arg0: scipy.sparse.csr_matrix[float32]) -> scipy.sparse.csr_matrix[float32]
-    """  # noqa: E501 line too long
-    assert doc(sparse_passthrough_c) == """
+    """:
+        raise AssertionError
+    if doc(sparse_passthrough_c) != """
         sparse_passthrough_c(arg0: scipy.sparse.csc_matrix[float32]) -> scipy.sparse.csc_matrix[float32]
-    """  # noqa: E501 line too long
+    """:
+        raise AssertionError

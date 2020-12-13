@@ -472,7 +472,8 @@ def StringDecoder(field_number, is_repeated, is_packed, key, new_default):
       e.reason = '%s in field: %s' % (e, key.full_name)
       raise
 
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     tag_bytes = encoder.TagBytes(field_number,
                                  wire_format.WIRETYPE_LENGTH_DELIMITED)
@@ -509,7 +510,8 @@ def BytesDecoder(field_number, is_repeated, is_packed, key, new_default):
 
   local_DecodeVarint = _DecodeVarint
 
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     tag_bytes = encoder.TagBytes(field_number,
                                  wire_format.WIRETYPE_LENGTH_DELIMITED)
@@ -548,7 +550,8 @@ def GroupDecoder(field_number, is_repeated, is_packed, key, new_default):
                                    wire_format.WIRETYPE_END_GROUP)
   end_tag_len = len(end_tag_bytes)
 
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     tag_bytes = encoder.TagBytes(field_number,
                                  wire_format.WIRETYPE_START_GROUP)
@@ -593,7 +596,8 @@ def MessageDecoder(field_number, is_repeated, is_packed, key, new_default):
 
   local_DecodeVarint = _DecodeVarint
 
-  assert not is_packed
+  if is_packed:
+    raise AssertionError
   if is_repeated:
     tag_bytes = encoder.TagBytes(field_number,
                                  wire_format.WIRETYPE_LENGTH_DELIMITED)

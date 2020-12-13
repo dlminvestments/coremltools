@@ -922,7 +922,8 @@ def _convert_bn(
     channels = set()
     for v in node.input_tensors.values():
         channels.add(v.shape)
-    assert len(channels) == 1
+    if len(channels) != 1:
+        raise AssertionError
     channels = channels.pop()
     scale = (
         node.input_tensors[node.inputs[1]]
