@@ -20,13 +20,13 @@ class FeatureManagementTests(unittest.TestCase):
             ("c", dt.Double()),
         ]
         out = fm.process_or_validate_features(features)
-        self.assertEquals(out, processed_features)
+        self.assertEqual(out, processed_features)
         self.assertTrue(fm.is_valid_feature_list(out))
 
     def test_single_array(self):
         # test both int and long as input to num_dimensions
         for t in six.integer_types:
-            self.assertEquals(
+            self.assertEqual(
                 fm.process_or_validate_features("a", num_dimensions=t(10)),
                 [("a", dt.Array(10))],
             )

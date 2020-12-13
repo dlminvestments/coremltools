@@ -105,7 +105,7 @@ class ManyImagesKeras(unittest.TestCase):
             coreml_input_dict["data"] = PIL.Image.fromarray(data.astype(np.uint8))
             coreml_preds = coreml_model.predict(coreml_input_dict)["output"].flatten()
 
-            self.assertEquals(len(keras_preds), len(coreml_preds))
+            self.assertEqual(len(keras_preds), len(coreml_preds))
             max_relative_error = compare_models(keras_preds, coreml_preds)
             self.assertAlmostEquals(max(max_relative_error, 0.001), 0.001, delta=1e-6)
 
@@ -181,7 +181,7 @@ class ManyImagesKeras(unittest.TestCase):
             coreml_preds = coreml_model.predict(coreml_input_dict)["output"].flatten()
 
             # compare
-            self.assertEquals(len(keras_preds), len(coreml_preds))
+            self.assertEqual(len(keras_preds), len(coreml_preds))
             max_relative_error = compare_models(keras_preds, coreml_preds)
             self.assertAlmostEquals(max(max_relative_error, 0.001), 0.001, delta=1e-6)
 

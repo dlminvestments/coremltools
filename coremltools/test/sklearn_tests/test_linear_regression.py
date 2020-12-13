@@ -46,16 +46,16 @@ class LinearRegressionScikitTest(unittest.TestCase):
         self.assertIsNotNone(spec.description)
 
         # Test the interface class
-        self.assertEquals(spec.description.predictedFeatureName, "target")
+        self.assertEqual(spec.description.predictedFeatureName, "target")
 
         # Test the inputs and outputs
-        self.assertEquals(len(spec.description.output), 1)
-        self.assertEquals(spec.description.output[0].name, "target")
-        self.assertEquals(
+        self.assertEqual(len(spec.description.output), 1)
+        self.assertEqual(spec.description.output[0].name, "target")
+        self.assertEqual(
             spec.description.output[0].type.WhichOneof("Type"), "doubleType"
         )
         for input_type in spec.description.input:
-            self.assertEquals(input_type.type.WhichOneof("Type"), "doubleType")
+            self.assertEqual(input_type.type.WhichOneof("Type"), "doubleType")
         self.assertEqual(
             sorted(input_names), sorted(map(lambda x: x.name, spec.description.input))
         )
@@ -65,9 +65,9 @@ class LinearRegressionScikitTest(unittest.TestCase):
             spec.pipelineRegressor.pipeline.models[-1].HasField("glmRegressor")
         )
         lr = spec.pipelineRegressor.pipeline.models[-1].glmRegressor
-        self.assertEquals(lr.offset, self.scikit_model.intercept_)
-        self.assertEquals(len(lr.weights), 1)
-        self.assertEquals(len(lr.weights[0].value), 13)
+        self.assertEqual(lr.offset, self.scikit_model.intercept_)
+        self.assertEqual(len(lr.weights), 1)
+        self.assertEqual(len(lr.weights[0].value), 13)
         i = 0
         for w in lr.weights[0].value:
             self.assertAlmostEqual(w, self.scikit_model.coef_[i])
