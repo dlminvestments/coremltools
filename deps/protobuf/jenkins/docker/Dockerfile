@@ -7,7 +7,7 @@
 # changes.
 
 # Base Dockerfile for gRPC dev images
-FROM debian:latest
+FROM debian:buster-20210329-slim
 
 # Apt source for old Python versions.
 RUN echo 'deb http://ppa.launchpad.net/fkrull/deadsnakes/ubuntu trusty main' > /etc/apt/sources.list.d/deadsnakes.list && \
