@@ -53,7 +53,9 @@ class BoostedTreeClassificationBostonHousingScikitNumericTest(unittest.TestCase)
         self.feature_names = scikit_data.feature_names
         self.output_name = "target"
 
-    def _check_metrics(self, metrics, params={}):
+    def _check_metrics(self, metrics, params=None):
+        if params is None:
+            params = {}
         self.assertEqual(
             metrics["num_errors"],
             0,
@@ -172,7 +174,9 @@ class BoostedTreeClassificationBostonHousingXGboostNumericTest(unittest.TestCase
     Unit test class for testing xgboost converter and running both models
     """
 
-    def _check_metrics(self, metrics, params={}):
+    def _check_metrics(self, metrics, params=None):
+        if params is None:
+            params = {}
         self.assertEqual(
             metrics["num_errors"],
             0,

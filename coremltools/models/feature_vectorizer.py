@@ -13,7 +13,7 @@ from ._interface_management import set_transform_interface_params
 from ._feature_management import is_valid_feature_list, process_or_validate_features
 
 
-def create_feature_vectorizer(input_features, output_feature_name, known_size_map={}):
+def create_feature_vectorizer(input_features, output_feature_name, known_size_map=None):
     """
     Creates a feature vectorizer from input features, return the spec for
     a feature vectorizer that puts everything into a single array of length
@@ -47,6 +47,8 @@ def create_feature_vectorizer(input_features, output_feature_name, known_size_ma
         given as dictionaries of index to value.
 
     """
+    if known_size_map is None:
+        known_size_map = {}
 
     spec = _Model_pb2.Model()
     spec.specificationVersion = SPECIFICATION_VERSION

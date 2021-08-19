@@ -318,7 +318,7 @@ def _convert(
     input_names=None,
     output_names=None,
     image_input_names=None,
-    input_name_shape_dict={},
+    input_name_shape_dict=None,
     is_bgr=False,
     red_bias=0.0,
     green_bias=0.0,
@@ -336,6 +336,8 @@ def _convert(
     respect_trainable=False,
     use_float_arraytype=False,
 ):
+    if input_name_shape_dict is None:
+        input_name_shape_dict = {}
     # Check Keras format
     if _keras.backend.image_data_format() == "channels_first":
         print(

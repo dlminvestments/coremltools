@@ -152,7 +152,7 @@ def dimension_of_array_features(features):
     return dim
 
 
-def process_or_validate_features(features, num_dimensions=None, feature_type_map={}):
+def process_or_validate_features(features, num_dimensions=None, feature_type_map=None):
     """
     Puts features into a standard form from a number of different possible forms.
 
@@ -204,6 +204,8 @@ def process_or_validate_features(features, num_dimensions=None, feature_type_map
     If num_dimensions is given, it is used to check against the existing features,
     or fill in missing information in the case when features is a single string.
     """
+    if feature_type_map is None:
+        feature_type_map = {}
 
     original_features = copy(features)
 

@@ -152,12 +152,14 @@ class CorrectnessTest(unittest.TestCase):
         expected,
         model_precision=_MLMODEL_FULL_PRECISION,
         useCPUOnly=False,
-        output_name_shape_dict={},
+        output_name_shape_dict=None,
         validate_shapes_only=False,
         test_metric="rel_error",
         delta=0.01,
         SNR=30,
     ):
+        if output_name_shape_dict is None:
+            output_name_shape_dict = {}
 
         model_dir = None
         # if we're given a path to a model

@@ -2168,7 +2168,7 @@ class NeuralNetworkBuilder(object):
         output_shape=None,
         input_name="data",
         output_name="out",
-        dilation_factors=[1, 1],
+        dilation_factors=None,
         padding_top=0,
         padding_bottom=0,
         padding_left=0,
@@ -2276,6 +2276,8 @@ class NeuralNetworkBuilder(object):
         add_convolution3d, add_pooling, add_activation, add_batchnorm
 
         """
+        if dilation_factors is None:
+            dilation_factors = [1, 1]
 
         if isinstance(input_name, tuple):
             input_names = list(input_name)
@@ -5655,7 +5657,7 @@ class NeuralNetworkBuilder(object):
 
         return spec_layer
 
-    def add_tile(self, name, input_name, output_name, reps=[]):
+    def add_tile(self, name, input_name, output_name, reps=None):
         """
         Add a tile layer to the model that construct a tensor by repeating the
         input tensor multiple number of times.
@@ -5679,6 +5681,8 @@ class NeuralNetworkBuilder(object):
         --------
         add_stack, add_concat_nd
         """
+        if reps is None:
+            reps = []
         if isinstance(input_name, tuple):
             input_names = list(input_name)
         elif isinstance(input_name, list):
@@ -6586,7 +6590,7 @@ class NeuralNetworkBuilder(object):
         output_name,
         value=0.0,
         pad_to_given_output_size_mode=False,
-        pad_amounts=[],
+        pad_amounts=None,
     ):
         """
         Add a constant pad layer.
@@ -6612,6 +6616,8 @@ class NeuralNetworkBuilder(object):
         --------
         add_padding
         """
+        if pad_amounts is None:
+            pad_amounts = []
 
         spec_layer = self._add_generic_layer(name, input_names, [output_name])
         spec_layer_params = spec_layer.constantPad

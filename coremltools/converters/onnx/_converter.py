@@ -471,15 +471,15 @@ def _prepare_onnx_graph(
 def convert(
     model,  # type: Union[onnx.ModelProto, Text]
     mode=None,  # type: Optional[Text]
-    image_input_names=[],  # type: Sequence[Text]
-    preprocessing_args={},  # type: Dict[Text, Any]
-    image_output_names=[],  # type: Sequence[Text]
-    deprocessing_args={},  # type: Dict[Text, Any]
+    image_input_names=None,  # type: Sequence[Text]
+    preprocessing_args=None,  # type: Dict[Text, Any]
+    image_output_names=None,  # type: Sequence[Text]
+    deprocessing_args=None,  # type: Dict[Text, Any]
     class_labels=None,  # type: Union[Text, Iterable[Text], None]
     predicted_feature_name="classLabel",  # type: Text
     add_custom_layers=False,  # type: bool
-    custom_conversion_functions={},  # type: Dict[Text, Any]
-    onnx_coreml_input_shape_map={},  # type: Dict[Text, List[int,...]]
+    custom_conversion_functions=None,  # type: Dict[Text, Any]
+    onnx_coreml_input_shape_map=None,  # type: Dict[Text, List[int,...]]
     minimum_ios_deployment_target="12",
 ):
     # type: (...) -> MLModel
@@ -540,6 +540,18 @@ def convert(
     -------
     model: A coreml model.
     """
+    if image_input_names is None:
+        image_input_names = []
+    if preprocessing_args is None:
+        preprocessing_args = {}
+    if image_output_names is None:
+        image_output_names = []
+    if deprocessing_args is None:
+        deprocessing_args = {}
+    if custom_conversion_functions is None:
+        custom_conversion_functions = {}
+    if onnx_coreml_input_shape_map is None:
+        onnx_coreml_input_shape_map = {}
     if not _HAS_ONNX:
         raise ModuleNotFoundError("Missing ONNX package.")
 

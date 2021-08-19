@@ -363,7 +363,7 @@ def _convert_to_spec(
     input_names=None,
     output_names=None,
     image_input_names=None,
-    input_name_shape_dict={},
+    input_name_shape_dict=None,
     is_bgr=False,
     red_bias=0.0,
     green_bias=0.0,
@@ -559,6 +559,8 @@ def _convert_to_spec(
         ...   ['my_input_1', 'my_input_2'], output_names = ['my_output'])
 
     """
+    if input_name_shape_dict is None:
+        input_name_shape_dict = {}
     if model_precision not in _VALID_MLMODEL_PRECISION_TYPES:
         raise RuntimeError("Model precision {} is not valid".format(model_precision))
 
@@ -622,7 +624,7 @@ def convert(
     input_names=None,
     output_names=None,
     image_input_names=None,
-    input_name_shape_dict={},
+    input_name_shape_dict=None,
     is_bgr=False,
     red_bias=0.0,
     green_bias=0.0,
@@ -806,6 +808,8 @@ def convert(
         ...   ['my_input_1', 'my_input_2'], output_names = ['my_output'])
 
     """
+    if input_name_shape_dict is None:
+        input_name_shape_dict = {}
     spec = _convert_to_spec(
         model,
         input_names=input_names,

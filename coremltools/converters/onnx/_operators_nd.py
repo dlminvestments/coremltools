@@ -177,8 +177,10 @@ def add_bn_with_expansion(
     epsilon=None,
     compute_mean_var=False,
     instance_normalization=False,
-    axes_for_expansion=[],
+    axes_for_expansion=None,
 ):
+    if axes_for_expansion is None:
+        axes_for_expansion = []
     real_input_name = input_name
     real_output_name = output_name
 
