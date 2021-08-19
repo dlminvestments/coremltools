@@ -3,8 +3,10 @@ def test_multiple_inheritance_cpp():
 
     mt = MIType(3, 4)
 
-    assert mt.foo() == 3
-    assert mt.bar() == 4
+    if mt.foo() != 3:
+        raise AssertionError
+    if mt.bar() != 4:
+        raise AssertionError
 
 
 def test_multiple_inheritance_mix1():
@@ -24,8 +26,10 @@ def test_multiple_inheritance_mix1():
 
     mt = MITypePy(3, 4)
 
-    assert mt.foo() == 3
-    assert mt.bar() == 4
+    if mt.foo() != 3:
+        raise AssertionError
+    if mt.bar() != 4:
+        raise AssertionError
 
 
 def test_multiple_inheritance_mix2():
@@ -45,8 +49,10 @@ def test_multiple_inheritance_mix2():
 
     mt = MITypePy(3, 4)
 
-    assert mt.foo() == 3
-    assert mt.bar() == 4
+    if mt.foo() != 3:
+        raise AssertionError
+    if mt.bar() != 4:
+        raise AssertionError
 
 
 def test_multiple_inheritance_virtbase():
@@ -57,6 +63,9 @@ def test_multiple_inheritance_virtbase():
             Base12a.__init__(self, i, j)
 
     mt = MITypePy(3, 4)
-    assert mt.bar() == 4
-    assert bar_base2a(mt) == 4
-    assert bar_base2a_sharedptr(mt) == 4
+    if mt.bar() != 4:
+        raise AssertionError
+    if bar_base2a(mt) != 4:
+        raise AssertionError
+    if bar_base2a_sharedptr(mt) != 4:
+        raise AssertionError

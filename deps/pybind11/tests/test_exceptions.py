@@ -6,19 +6,23 @@ def test_error_already_set(msg):
 
     with pytest.raises(RuntimeError) as excinfo:
         throw_already_set(False)
-    assert msg(excinfo.value) == "Unknown internal error occurred"
+    if msg(excinfo.value) != "Unknown internal error occurred":
+        raise AssertionError
 
     with pytest.raises(ValueError) as excinfo:
         throw_already_set(True)
-    assert msg(excinfo.value) == "foo"
+    if msg(excinfo.value) != "foo":
+        raise AssertionError
 
 
 def test_python_call_in_catch():
     from pybind11_tests import python_call_in_destructor
 
     d = {}
-    assert python_call_in_destructor(d) is True
-    assert d["good"] is True
+    if python_call_in_destructor(d) is not True:
+        raise AssertionError
+    if d["good"] is not True:
+        raise AssertionError
 
 
 def test_custom(msg):
@@ -29,46 +33,56 @@ def test_custom(msg):
     # Can we catch a MyException?"
     with pytest.raises(MyException) as excinfo:
         throws1()
-    assert msg(excinfo.value) == "this error should go to a custom type"
+    if msg(excinfo.value) != "this error should go to a custom type":
+        raise AssertionError
 
     # Can we translate to standard Python exceptions?
     with pytest.raises(RuntimeError) as excinfo:
         throws2()
-    assert msg(excinfo.value) == "this error should go to a standard Python exception"
+    if msg(excinfo.value) != "this error should go to a standard Python exception":
+        raise AssertionError
 
     # Can we handle unknown exceptions?
     with pytest.raises(RuntimeError) as excinfo:
         throws3()
-    assert msg(excinfo.value) == "Caught an unknown exception!"
+    if msg(excinfo.value) != "Caught an unknown exception!":
+        raise AssertionError
 
     # Can we delegate to another handler by rethrowing?
     with pytest.raises(MyException) as excinfo:
         throws4()
-    assert msg(excinfo.value) == "this error is rethrown"
+    if msg(excinfo.value) != "this error is rethrown":
+        raise AssertionError
 
     # "Can we fall-through to the default handler?"
     with pytest.raises(RuntimeError) as excinfo:
         throws_logic_error()
-    assert msg(excinfo.value) == "this error should fall through to the standard handler"
+    if msg(excinfo.value) != "this error should fall through to the standard handler":
+        raise AssertionError
 
     # Can we handle a helper-declared exception?
     with pytest.raises(MyException5) as excinfo:
         throws5()
-    assert msg(excinfo.value) == "this is a helper-defined translated exception"
+    if msg(excinfo.value) != "this is a helper-defined translated exception":
+        raise AssertionError
 
     # Exception subclassing:
     with pytest.raises(MyException5) as excinfo:
         throws5_1()
-    assert msg(excinfo.value) == "MyException5 subclass"
-    assert isinstance(excinfo.value, MyException5_1)
+    if msg(excinfo.value) != "MyException5 subclass":
+        raise AssertionError
+    if not isinstance(excinfo.value, MyException5_1):
+        raise AssertionError
 
     with pytest.raises(MyException5_1) as excinfo:
         throws5_1()
-    assert msg(excinfo.value) == "MyException5 subclass"
+    if msg(excinfo.value) != "MyException5 subclass":
+        raise AssertionError
 
     with pytest.raises(MyException5) as excinfo:
         try:
             throws5()
         except MyException5_1:
             raise RuntimeError("Exception error: caught child from parent")
-    assert msg(excinfo.value) == "this is a helper-defined translated exception"
+    if msg(excinfo.value) != "this is a helper-defined translated exception":
+        raise AssertionError

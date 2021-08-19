@@ -15,9 +15,12 @@ def test_roundtrip():
 
     data = pickle.dumps(p, 2)  # Must use pickle protocol >= 2
     p2 = pickle.loads(data)
-    assert p2.value() == p.value()
-    assert p2.extra1() == p.extra1()
-    assert p2.extra2() == p.extra2()
+    if p2.value() != p.value():
+        raise AssertionError
+    if p2.extra1() != p.extra1():
+        raise AssertionError
+    if p2.extra2() != p.extra2():
+        raise AssertionError
 
 
 @pytest.unsupported_on_pypy
@@ -30,6 +33,9 @@ def test_roundtrip_with_dict():
 
     data = pickle.dumps(p, pickle.HIGHEST_PROTOCOL)
     p2 = pickle.loads(data)
-    assert p2.value == p.value
-    assert p2.extra == p.extra
-    assert p2.dynamic == p.dynamic
+    if p2.value != p.value:
+        raise AssertionError
+    if p2.extra != p.extra:
+        raise AssertionError
+    if p2.dynamic != p.dynamic:
+        raise AssertionError

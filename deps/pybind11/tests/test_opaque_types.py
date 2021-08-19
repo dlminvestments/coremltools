@@ -7,20 +7,26 @@ def test_string_list():
     l = StringList()
     l.push_back("Element 1")
     l.push_back("Element 2")
-    assert print_opaque_list(l) == "Opaque list: [Element 1, Element 2]"
-    assert l.back() == "Element 2"
+    if print_opaque_list(l) != "Opaque list: [Element 1, Element 2]":
+        raise AssertionError
+    if l.back() != "Element 2":
+        raise AssertionError
 
     for i, k in enumerate(l, start=1):
-        assert k == "Element {}".format(i)
+        if k != "Element {}".format(i):
+            raise AssertionError
     l.pop_back()
-    assert print_opaque_list(l) == "Opaque list: [Element 1]"
+    if print_opaque_list(l) != "Opaque list: [Element 1]":
+        raise AssertionError
 
     cvp = ClassWithSTLVecProperty()
-    assert print_opaque_list(cvp.stringList) == "Opaque list: []"
+    if print_opaque_list(cvp.stringList) != "Opaque list: []":
+        raise AssertionError
 
     cvp.stringList = l
     cvp.stringList.push_back("Element 3")
-    assert print_opaque_list(cvp.stringList) == "Opaque list: [Element 1, Element 3]"
+    if print_opaque_list(cvp.stringList) != "Opaque list: [Element 1, Element 3]":
+        raise AssertionError
 
 
 def test_pointers(msg):
@@ -29,22 +35,30 @@ def test_pointers(msg):
                                 return_unique_ptr, ConstructorStats)
 
     living_before = ConstructorStats.get(ExampleMandA).alive()
-    assert get_void_ptr_value(return_void_ptr()) == 0x1234
-    assert get_void_ptr_value(ExampleMandA())  # Should also work for other C++ types
-    assert ConstructorStats.get(ExampleMandA).alive() == living_before
+    if get_void_ptr_value(return_void_ptr()) != 0x1234:
+        raise AssertionError
+    if not get_void_ptr_value(ExampleMandA()):
+        raise AssertionError
+    if ConstructorStats.get(ExampleMandA).alive() != living_before:
+        raise AssertionError
 
     with pytest.raises(TypeError) as excinfo:
         get_void_ptr_value([1, 2, 3])  # This should not work
-    assert msg(excinfo.value) == """
+    if msg(excinfo.value) != """
         get_void_ptr_value(): incompatible function arguments. The following argument types are supported:
             1. (arg0: capsule) -> int
 
         Invoked with: [1, 2, 3]
-    """  # noqa: E501 line too long
+    """:
+        raise AssertionError
 
-    assert return_null_str() is None
-    assert get_null_str_value(return_null_str()) is not None
+    if return_null_str() is not None:
+        raise AssertionError
+    if get_null_str_value(return_null_str()) is None:
+        raise AssertionError
 
     ptr = return_unique_ptr()
-    assert "StringList" in repr(ptr)
-    assert print_opaque_list(ptr) == "Opaque list: [some value]"
+    if "StringList" not in repr(ptr):
+        raise AssertionError
+    if print_opaque_list(ptr) != "Opaque list: [some value]":
+        raise AssertionError

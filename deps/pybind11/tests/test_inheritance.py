@@ -5,47 +5,66 @@ def test_inheritance(msg):
     from pybind11_tests import Pet, Dog, Rabbit, Hamster, dog_bark, pet_name_species
 
     roger = Rabbit('Rabbit')
-    assert roger.name() + " is a " + roger.species() == "Rabbit is a parrot"
-    assert pet_name_species(roger) == "Rabbit is a parrot"
+    if roger.name() + " is a " + roger.species() != "Rabbit is a parrot":
+        raise AssertionError
+    if pet_name_species(roger) != "Rabbit is a parrot":
+        raise AssertionError
 
     polly = Pet('Polly', 'parrot')
-    assert polly.name() + " is a " + polly.species() == "Polly is a parrot"
-    assert pet_name_species(polly) == "Polly is a parrot"
+    if polly.name() + " is a " + polly.species() != "Polly is a parrot":
+        raise AssertionError
+    if pet_name_species(polly) != "Polly is a parrot":
+        raise AssertionError
 
     molly = Dog('Molly')
-    assert molly.name() + " is a " + molly.species() == "Molly is a dog"
-    assert pet_name_species(molly) == "Molly is a dog"
+    if molly.name() + " is a " + molly.species() != "Molly is a dog":
+        raise AssertionError
+    if pet_name_species(molly) != "Molly is a dog":
+        raise AssertionError
 
     fred = Hamster('Fred')
-    assert fred.name() + " is a " + fred.species() == "Fred is a rodent"
+    if fred.name() + " is a " + fred.species() != "Fred is a rodent":
+        raise AssertionError
 
-    assert dog_bark(molly) == "Woof!"
+    if dog_bark(molly) != "Woof!":
+        raise AssertionError
 
     with pytest.raises(TypeError) as excinfo:
         dog_bark(polly)
-    assert msg(excinfo.value) == """
+    if msg(excinfo.value) != """
         dog_bark(): incompatible function arguments. The following argument types are supported:
             1. (arg0: m.Dog) -> str
 
         Invoked with: <m.Pet object at 0>
-    """
+    """:
+        raise AssertionError
 
 
 def test_automatic_upcasting():
     from pybind11_tests import return_class_1, return_class_2, return_class_n, return_none
 
-    assert type(return_class_1()).__name__ == "DerivedClass1"
-    assert type(return_class_2()).__name__ == "DerivedClass2"
-    assert type(return_none()).__name__ == "NoneType"
+    if type(return_class_1()).__name__ != "DerivedClass1":
+        raise AssertionError
+    if type(return_class_2()).__name__ != "DerivedClass2":
+        raise AssertionError
+    if type(return_none()).__name__ != "NoneType":
+        raise AssertionError
     # Repeat these a few times in a random order to ensure no invalid caching
     # is applied
-    assert type(return_class_n(1)).__name__ == "DerivedClass1"
-    assert type(return_class_n(2)).__name__ == "DerivedClass2"
-    assert type(return_class_n(0)).__name__ == "BaseClass"
-    assert type(return_class_n(2)).__name__ == "DerivedClass2"
-    assert type(return_class_n(2)).__name__ == "DerivedClass2"
-    assert type(return_class_n(0)).__name__ == "BaseClass"
-    assert type(return_class_n(1)).__name__ == "DerivedClass1"
+    if type(return_class_n(1)).__name__ != "DerivedClass1":
+        raise AssertionError
+    if type(return_class_n(2)).__name__ != "DerivedClass2":
+        raise AssertionError
+    if type(return_class_n(0)).__name__ != "BaseClass":
+        raise AssertionError
+    if type(return_class_n(2)).__name__ != "DerivedClass2":
+        raise AssertionError
+    if type(return_class_n(2)).__name__ != "DerivedClass2":
+        raise AssertionError
+    if type(return_class_n(0)).__name__ != "BaseClass":
+        raise AssertionError
+    if type(return_class_n(1)).__name__ != "DerivedClass1":
+        raise AssertionError
 
 
 def test_isinstance():
@@ -53,7 +72,8 @@ def test_isinstance():
 
     objects = [tuple(), dict(), Pet("Polly", "parrot")] + [Dog("Molly")] * 4
     expected = (True, True, True, True, True, False, False)
-    assert test_isinstance(objects) == expected
+    if test_isinstance(objects) != expected:
+        raise AssertionError
 
 
 def test_holder():
@@ -62,13 +82,15 @@ def test_holder():
     with pytest.raises(RuntimeError) as excinfo:
         test_mismatched_holder_type_1()
 
-    assert str(excinfo.value) == ("generic_type: type \"MismatchDerived1\" does not have "
+    if str(excinfo.value) != ("generic_type: type \"MismatchDerived1\" does not have "
                                   "a non-default holder type while its base "
-                                  "\"MismatchBase1\" does")
+                                  "\"MismatchBase1\" does"):
+        raise AssertionError
 
     with pytest.raises(RuntimeError) as excinfo:
         test_mismatched_holder_type_2()
 
-    assert str(excinfo.value) == ("generic_type: type \"MismatchDerived2\" has a "
+    if str(excinfo.value) != ("generic_type: type \"MismatchDerived2\" has a "
                                   "non-default holder type while its base "
-                                  "\"MismatchBase2\" does not")
+                                  "\"MismatchBase2\" does not"):
+        raise AssertionError
