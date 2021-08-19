@@ -120,10 +120,9 @@ class GeneratorTest(unittest.TestCase):
         'default_int32': True,
     }
 
-    has_default_by_name = dict(
-        [(f.name, f.has_default_value)
+    has_default_by_name = {f.name: f.has_default_value
          for f in desc.fields
-         if f.name in expected_has_default_by_name])
+         if f.name in expected_has_default_by_name}
     self.assertEqual(expected_has_default_by_name, has_default_by_name)
 
   def testContainingTypeBehaviorForExtensions(self):
