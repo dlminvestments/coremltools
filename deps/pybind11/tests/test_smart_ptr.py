@@ -8,13 +8,15 @@ def test_smart_ptr(capture):
                                 print_object_1, print_object_2, print_object_3, print_object_4)
 
     for i, o in enumerate([make_object_1(), make_object_2(), MyObject1(3)], start=1):
-        assert o.getRefCount() == 1
+        if o.getRefCount() != 1:
+            raise AssertionError
         with capture:
             print_object_1(o)
             print_object_2(o)
             print_object_3(o)
             print_object_4(o)
-        assert capture == "MyObject1[{i}]\n".format(i=i) * 4
+        if capture != "MyObject1[{i}]\n".format(i=i) * 4:
+            raise AssertionError
 
     from pybind11_tests import (make_myobject1_1, make_myobject1_2,
                                 print_myobject1_1, print_myobject1_2,
@@ -32,17 +34,24 @@ def test_smart_ptr(capture):
             print_myobject1_2(o)
             print_myobject1_3(o)
             print_myobject1_4(o)
-        assert capture == "MyObject1[{i}]\n".format(i=i) * (4 if isinstance(o, int) else 8)
+        if capture != "MyObject1[{i}]\n".format(i=i) * (4 if isinstance(o, int) else 8):
+            raise AssertionError
 
     cstats = ConstructorStats.get(MyObject1)
-    assert cstats.alive() == 0
+    if cstats.alive() != 0:
+        raise AssertionError
     expected_values = ['MyObject1[{}]'.format(i) for i in range(1, 7)] + ['MyObject1[7]'] * 4
-    assert cstats.values() == expected_values
-    assert cstats.default_constructions == 0
-    assert cstats.copy_constructions == 0
+    if cstats.values() != expected_values:
+        raise AssertionError
+    if cstats.default_constructions != 0:
+        raise AssertionError
+    if cstats.copy_constructions != 0:
+        raise AssertionError
     # assert cstats.move_constructions >= 0 # Doesn't invoke any
-    assert cstats.copy_assignments == 0
-    assert cstats.move_assignments == 0
+    if cstats.copy_assignments != 0:
+        raise AssertionError
+    if cstats.move_assignments != 0:
+        raise AssertionError
 
     # Object2
     from pybind11_tests import (MyObject2, make_myobject2_1, make_myobject2_2,
@@ -57,18 +66,26 @@ def test_smart_ptr(capture):
             print_myobject2_2(o)
             print_myobject2_3(o)
             print_myobject2_4(o)
-        assert capture == "MyObject2[{i}]\n".format(i=i) * 4
+        if capture != "MyObject2[{i}]\n".format(i=i) * 4:
+            raise AssertionError
 
     cstats = ConstructorStats.get(MyObject2)
-    assert cstats.alive() == 1
+    if cstats.alive() != 1:
+        raise AssertionError
     o = None
-    assert cstats.alive() == 0
-    assert cstats.values() == ['MyObject2[8]', 'MyObject2[6]', 'MyObject2[7]']
-    assert cstats.default_constructions == 0
-    assert cstats.copy_constructions == 0
+    if cstats.alive() != 0:
+        raise AssertionError
+    if cstats.values() != ['MyObject2[8]', 'MyObject2[6]', 'MyObject2[7]']:
+        raise AssertionError
+    if cstats.default_constructions != 0:
+        raise AssertionError
+    if cstats.copy_constructions != 0:
+        raise AssertionError
     # assert cstats.move_constructions >= 0 # Doesn't invoke any
-    assert cstats.copy_assignments == 0
-    assert cstats.move_assignments == 0
+    if cstats.copy_assignments != 0:
+        raise AssertionError
+    if cstats.move_assignments != 0:
+        raise AssertionError
 
     # Object3
     from pybind11_tests import (MyObject3, print_myobject3_1, print_myobject3_2,
@@ -81,55 +98,79 @@ def test_smart_ptr(capture):
             print_myobject3_2(o)
             print_myobject3_3(o)
             print_myobject3_4(o)
-        assert capture == "MyObject3[{i}]\n".format(i=i) * 4
+        if capture != "MyObject3[{i}]\n".format(i=i) * 4:
+            raise AssertionError
 
     cstats = ConstructorStats.get(MyObject3)
-    assert cstats.alive() == 1
+    if cstats.alive() != 1:
+        raise AssertionError
     o = None
-    assert cstats.alive() == 0
-    assert cstats.values() == ['MyObject3[9]', 'MyObject3[8]', 'MyObject3[9]']
-    assert cstats.default_constructions == 0
-    assert cstats.copy_constructions == 0
+    if cstats.alive() != 0:
+        raise AssertionError
+    if cstats.values() != ['MyObject3[9]', 'MyObject3[8]', 'MyObject3[9]']:
+        raise AssertionError
+    if cstats.default_constructions != 0:
+        raise AssertionError
+    if cstats.copy_constructions != 0:
+        raise AssertionError
     # assert cstats.move_constructions >= 0 # Doesn't invoke any
-    assert cstats.copy_assignments == 0
-    assert cstats.move_assignments == 0
+    if cstats.copy_assignments != 0:
+        raise AssertionError
+    if cstats.move_assignments != 0:
+        raise AssertionError
 
     # Object and ref
     from pybind11_tests import Object, cstats_ref
 
     cstats = ConstructorStats.get(Object)
-    assert cstats.alive() == 0
-    assert cstats.values() == []
-    assert cstats.default_constructions == 10
-    assert cstats.copy_constructions == 0
+    if cstats.alive() != 0:
+        raise AssertionError
+    if cstats.values() != []:
+        raise AssertionError
+    if cstats.default_constructions != 10:
+        raise AssertionError
+    if cstats.copy_constructions != 0:
+        raise AssertionError
     # assert cstats.move_constructions >= 0 # Doesn't invoke any
-    assert cstats.copy_assignments == 0
-    assert cstats.move_assignments == 0
+    if cstats.copy_assignments != 0:
+        raise AssertionError
+    if cstats.move_assignments != 0:
+        raise AssertionError
 
     cstats = cstats_ref()
-    assert cstats.alive() == 0
-    assert cstats.values() == ['from pointer'] * 10
-    assert cstats.default_constructions == 30
-    assert cstats.copy_constructions == 12
+    if cstats.alive() != 0:
+        raise AssertionError
+    if cstats.values() != ['from pointer'] * 10:
+        raise AssertionError
+    if cstats.default_constructions != 30:
+        raise AssertionError
+    if cstats.copy_constructions != 12:
+        raise AssertionError
     # assert cstats.move_constructions >= 0 # Doesn't invoke any
-    assert cstats.copy_assignments == 30
-    assert cstats.move_assignments == 0
+    if cstats.copy_assignments != 30:
+        raise AssertionError
+    if cstats.move_assignments != 0:
+        raise AssertionError
 
 
 def test_smart_ptr_refcounting():
     from pybind11_tests import test_object1_refcounting
-    assert test_object1_refcounting()
+    if not test_object1_refcounting():
+        raise AssertionError
 
 
 def test_unique_nodelete():
     from pybind11_tests import MyObject4
     o = MyObject4(23)
-    assert o.value == 23
+    if o.value != 23:
+        raise AssertionError
     cstats = ConstructorStats.get(MyObject4)
-    assert cstats.alive() == 1
+    if cstats.alive() != 1:
+        raise AssertionError
     del o
     cstats = ConstructorStats.get(MyObject4)
-    assert cstats.alive() == 1  # Leak, but that's intentional
+    if cstats.alive() != 1:
+        raise AssertionError
 
 
 def test_shared_ptr_and_references():
@@ -137,32 +178,47 @@ def test_shared_ptr_and_references():
 
     s = SharedPtrRef()
     stats = ConstructorStats.get(A)
-    assert stats.alive() == 2
+    if stats.alive() != 2:
+        raise AssertionError
 
     ref = s.ref  # init_holder_helper(holder_ptr=false, owned=false)
-    assert stats.alive() == 2
-    assert s.set_ref(ref)
+    if stats.alive() != 2:
+        raise AssertionError
+    if not s.set_ref(ref):
+        raise AssertionError
     with pytest.raises(RuntimeError) as excinfo:
-        assert s.set_holder(ref)
-    assert "Unable to cast from non-held to held instance" in str(excinfo.value)
+        if not s.set_holder(ref):
+            raise AssertionError
+    if "Unable to cast from non-held to held instance" not in str(excinfo.value):
+        raise AssertionError
 
     copy = s.copy  # init_holder_helper(holder_ptr=false, owned=true)
-    assert stats.alive() == 3
-    assert s.set_ref(copy)
-    assert s.set_holder(copy)
+    if stats.alive() != 3:
+        raise AssertionError
+    if not s.set_ref(copy):
+        raise AssertionError
+    if not s.set_holder(copy):
+        raise AssertionError
 
     holder_ref = s.holder_ref  # init_holder_helper(holder_ptr=true, owned=false)
-    assert stats.alive() == 3
-    assert s.set_ref(holder_ref)
-    assert s.set_holder(holder_ref)
+    if stats.alive() != 3:
+        raise AssertionError
+    if not s.set_ref(holder_ref):
+        raise AssertionError
+    if not s.set_holder(holder_ref):
+        raise AssertionError
 
     holder_copy = s.holder_copy  # init_holder_helper(holder_ptr=true, owned=true)
-    assert stats.alive() == 3
-    assert s.set_ref(holder_copy)
-    assert s.set_holder(holder_copy)
+    if stats.alive() != 3:
+        raise AssertionError
+    if not s.set_ref(holder_copy):
+        raise AssertionError
+    if not s.set_holder(holder_copy):
+        raise AssertionError
 
     del ref, copy, holder_ref, holder_copy, s
-    assert stats.alive() == 0
+    if stats.alive() != 0:
+        raise AssertionError
 
 
 def test_shared_ptr_from_this_and_references():
@@ -170,37 +226,55 @@ def test_shared_ptr_from_this_and_references():
 
     s = SharedFromThisRef()
     stats = ConstructorStats.get(B)
-    assert stats.alive() == 2
+    if stats.alive() != 2:
+        raise AssertionError
 
     ref = s.ref  # init_holder_helper(holder_ptr=false, owned=false, bad_wp=false)
-    assert stats.alive() == 2
-    assert s.set_ref(ref)
-    assert s.set_holder(ref)  # std::enable_shared_from_this can create a holder from a reference
+    if stats.alive() != 2:
+        raise AssertionError
+    if not s.set_ref(ref):
+        raise AssertionError
+    if not s.set_holder(ref):
+        raise AssertionError
 
     bad_wp = s.bad_wp  # init_holder_helper(holder_ptr=false, owned=false, bad_wp=true)
-    assert stats.alive() == 2
-    assert s.set_ref(bad_wp)
+    if stats.alive() != 2:
+        raise AssertionError
+    if not s.set_ref(bad_wp):
+        raise AssertionError
     with pytest.raises(RuntimeError) as excinfo:
-        assert s.set_holder(bad_wp)
-    assert "Unable to cast from non-held to held instance" in str(excinfo.value)
+        if not s.set_holder(bad_wp):
+            raise AssertionError
+    if "Unable to cast from non-held to held instance" not in str(excinfo.value):
+        raise AssertionError
 
     copy = s.copy  # init_holder_helper(holder_ptr=false, owned=true, bad_wp=false)
-    assert stats.alive() == 3
-    assert s.set_ref(copy)
-    assert s.set_holder(copy)
+    if stats.alive() != 3:
+        raise AssertionError
+    if not s.set_ref(copy):
+        raise AssertionError
+    if not s.set_holder(copy):
+        raise AssertionError
 
     holder_ref = s.holder_ref  # init_holder_helper(holder_ptr=true, owned=false, bad_wp=false)
-    assert stats.alive() == 3
-    assert s.set_ref(holder_ref)
-    assert s.set_holder(holder_ref)
+    if stats.alive() != 3:
+        raise AssertionError
+    if not s.set_ref(holder_ref):
+        raise AssertionError
+    if not s.set_holder(holder_ref):
+        raise AssertionError
 
     holder_copy = s.holder_copy  # init_holder_helper(holder_ptr=true, owned=true, bad_wp=false)
-    assert stats.alive() == 3
-    assert s.set_ref(holder_copy)
-    assert s.set_holder(holder_copy)
+    if stats.alive() != 3:
+        raise AssertionError
+    if not s.set_ref(holder_copy):
+        raise AssertionError
+    if not s.set_holder(holder_copy):
+        raise AssertionError
 
     del ref, bad_wp, copy, holder_ref, holder_copy, s
-    assert stats.alive() == 0
+    if stats.alive() != 0:
+        raise AssertionError
 
 
 def test_move_only_holder():
@@ -208,6 +282,8 @@ def test_move_only_holder():
 
     a = TypeWithMoveOnlyHolder.make()
     stats = ConstructorStats.get(TypeWithMoveOnlyHolder)
-    assert stats.alive() == 1
+    if stats.alive() != 1:
+        raise AssertionError
     del a
-    assert stats.alive() == 0
+    if stats.alive() != 0:
+        raise AssertionError

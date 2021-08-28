@@ -6,14 +6,21 @@ def test_evals(capture):
                                 test_eval_file, test_eval_failure, test_eval_file_failure)
 
     with capture:
-        assert test_eval_statements()
-    assert capture == "Hello World!"
+        if not test_eval_statements():
+            raise AssertionError
+    if capture != "Hello World!":
+        raise AssertionError
 
-    assert test_eval()
-    assert test_eval_single_statement()
+    if not test_eval():
+        raise AssertionError
+    if not test_eval_single_statement():
+        raise AssertionError
 
     filename = os.path.join(os.path.dirname(__file__), "test_eval_call.py")
-    assert test_eval_file(filename)
+    if not test_eval_file(filename):
+        raise AssertionError
 
-    assert test_eval_failure()
-    assert test_eval_file_failure()
+    if not test_eval_failure():
+        raise AssertionError
+    if not test_eval_file_failure():
+        raise AssertionError
