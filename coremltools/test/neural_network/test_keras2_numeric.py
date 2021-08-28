@@ -82,15 +82,21 @@ def _keras_transpose(x, is_sequence=False):
 
 def _get_coreml_model(
     model,
-    input_names=["data"],
-    output_names=["output"],
-    input_name_shape_dict={},
+    input_names=None,
+    output_names=None,
+    input_name_shape_dict=None,
     model_precision=_MLMODEL_FULL_PRECISION,
     use_float_arraytype=False,
 ):
     """
     Get the coreml model from the Keras model.
     """
+    if input_names is None:
+        input_names = ["data"]
+    if output_names is None:
+        output_names = ["output"]
+    if input_name_shape_dict is None:
+        input_name_shape_dict = {}
     # Convert the model
     from coremltools.converters import keras as keras_converter
 
@@ -187,7 +193,7 @@ class KerasNumericCorrectnessTest(unittest.TestCase):
     def _test_model(
         self,
         model,
-        input_name_shape_dict={},
+        input_name_shape_dict=None,
         num_samples=1,
         mode="random",
         delta=1e-2,
@@ -196,6 +202,8 @@ class KerasNumericCorrectnessTest(unittest.TestCase):
         one_dim_seq_flags=None,
         model_precision=_MLMODEL_FULL_PRECISION,
     ):
+        if input_name_shape_dict is None:
+            input_name_shape_dict = {}
 
         # transpose_keras_result: if true, compare the transposed Keras result
         # one_dim_seq_flags: a list of same length as the number of inputs in

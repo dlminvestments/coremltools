@@ -39,7 +39,9 @@ class GradientBoostingRegressorBostonHousingScikitNumericTest(unittest.TestCase)
         self.feature_names = scikit_data.feature_names
         self.output_name = "target"
 
-    def _check_metrics(self, metrics, params={}):
+    def _check_metrics(self, metrics, params=None):
+        if params is None:
+            params = {}
         self.assertAlmostEquals(
             metrics["rmse"],
             0,
@@ -114,10 +116,14 @@ class XgboostBoosterBostonHousingNumericTest(unittest.TestCase):
         self.feature_names = scikit_data.feature_names
         self.output_name = "target"
 
-    def _check_metrics(self, metrics, allowed_error={}, params={}):
+    def _check_metrics(self, metrics, allowed_error=None, params=None):
         """
         Check the metrics
         """
+        if allowed_error is None:
+            allowed_error = {}
+        if params is None:
+            params = {}
         self.assertAlmostEquals(
             metrics["rmse"],
             allowed_error.get("rmse", 0),
@@ -131,10 +137,14 @@ class XgboostBoosterBostonHousingNumericTest(unittest.TestCase):
             msg="Failed case %s. Results %s" % (params, metrics),
         )
 
-    def _train_convert_evaluate_assert(self, bt_params={}, allowed_error={}, **params):
+    def _train_convert_evaluate_assert(self, bt_params=None, allowed_error=None, **params):
         """
         Set up the unit test by loading the dataset and training a model.
         """
+        if bt_params is None:
+            bt_params = {}
+        if allowed_error is None:
+            allowed_error = {}
         # Train a model
         xgb_model = xgboost.train(bt_params, self.dtrain, **params)
 
@@ -221,7 +231,11 @@ class XGboostRegressorBostonHousingNumericTest(unittest.TestCase):
         self.feature_names = scikit_data.feature_names
         self.output_name = "target"
 
-    def _check_metrics(self, metrics, params={}, allowed_error={}):
+    def _check_metrics(self, metrics, params=None, allowed_error=None):
+        if params is None:
+            params = {}
+        if allowed_error is None:
+            allowed_error = {}
         self.assertAlmostEquals(
             metrics["rmse"],
             allowed_error.get("rmse", 0),
@@ -235,10 +249,14 @@ class XGboostRegressorBostonHousingNumericTest(unittest.TestCase):
             msg="Failed case %s. Results %s" % (params, metrics),
         )
 
-    def _train_convert_evaluate_assert(self, bt_params={}, allowed_error={}, **params):
+    def _train_convert_evaluate_assert(self, bt_params=None, allowed_error=None, **params):
         """
         Set up the unit test by loading the dataset and training a model.
         """
+        if bt_params is None:
+            bt_params = {}
+        if allowed_error is None:
+            allowed_error = {}
         # Train a model
         xgb_model = xgboost.XGBRegressor(**params)
         xgb_model.fit(self.X, self.target)

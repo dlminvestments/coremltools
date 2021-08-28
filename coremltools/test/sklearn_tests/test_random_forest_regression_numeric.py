@@ -39,10 +39,12 @@ class RandomForestRegressorBostonHousingScikitNumericTest(unittest.TestCase):
         self.feature_names = scikit_data.feature_names
         self.output_name = "target"
 
-    def _check_metrics(self, metrics, params={}):
+    def _check_metrics(self, metrics, params=None):
         """
         Check the metrics
         """
+        if params is None:
+            params = {}
         self.assertAlmostEquals(
             metrics["rmse"],
             0.0,

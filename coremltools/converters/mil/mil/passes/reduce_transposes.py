@@ -196,7 +196,7 @@ def _get_input_vars(op, only_nonconst_vars=False):
     return input_vars
 
 
-def register_axis_update_op(cls=None, similar_ops=[]):
+def register_axis_update_op(cls=None, similar_ops=None):
     """
     :param similar_ops: these ops share the same "update" and
     "can_transpose_pass" methods as the base class.
@@ -204,6 +204,8 @@ def register_axis_update_op(cls=None, similar_ops=[]):
     op "reduce_mean" can be shared with other ops such as
     "reduce_prod", "reduce_sum" etc
     """
+    if similar_ops is None:
+        similar_ops = []
 
     def class_wrapper(op_update_cls):
         cls_name = op_update_cls.__name__

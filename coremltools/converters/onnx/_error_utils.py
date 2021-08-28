@@ -15,9 +15,13 @@ class ErrorHandling(object):
     def __init__(
         self,
         add_custom_layers=False,  # type: bool
-        custom_conversion_functions=dict(),  # type: Dict[Text, Any]
-        custom_layer_nodes=[],  # type : List[Node]
+        custom_conversion_functions=None,  # type: Dict[Text, Any]
+        custom_layer_nodes=None,  # type : List[Node]
     ):
+        if custom_conversion_functions is None:
+            custom_conversion_functions = dict()
+        if custom_layer_nodes is None:
+            custom_layer_nodes = []
         # type: (...) -> None
         self.add_custom_layers = add_custom_layers
         self.custom_conversion_functions = custom_conversion_functions

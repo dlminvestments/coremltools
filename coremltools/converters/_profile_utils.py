@@ -29,7 +29,9 @@ def _pr_color(skk, color="94m", end="\n"):
     print("\033[{} {}\033[00m".format(color, skk), end=end)
 
 
-def _profiler(frame, event, arg, indent=[0]):
+def _profiler(frame, event, arg, indent=None):
+    if indent is None:
+        indent = [0]
     if frame.f_globals.get("__name__", None) is None:
         return
 

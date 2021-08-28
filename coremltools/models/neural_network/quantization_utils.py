@@ -107,10 +107,12 @@ class AdvancedQuantizedLayerSelector(QuantizedLayerSelector):
 
     def __init__(
         self,
-        skip_layer_types=[],
+        skip_layer_types=None,
         minimum_conv_kernel_channels=4,
         minimum_conv_weight_count=4096,
     ):
+        if skip_layer_types is None:
+            skip_layer_types = []
 
         super(AdvancedQuantizedLayerSelector, self).__init__()
         self.skip_layer_types = skip_layer_types

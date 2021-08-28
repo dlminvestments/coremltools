@@ -46,8 +46,10 @@ def _onnx_create_model(
     nodes,  # type: Sequence[NodeProto]
     inputs,  # type: Sequence[Tuple[Text,Tuple[int, ...]]]
     outputs,  # type: Sequence[Tuple[Text,Tuple[int, ...], int]]
-    initializer=[],  # type: Sequence[TensorProto]
+    initializer=None,  # type: Sequence[TensorProto]
 ):
+    if initializer is None:
+        initializer = []
     # type: (...) -> ModelProto
     initializer_inputs = [
         helper.make_tensor_value_info(t.name, TensorProto.FLOAT, t.dims)
@@ -76,9 +78,11 @@ def _onnx_create_single_node_model(
     op_type,  # type: Text
     input_shapes,  # type: Sequence[Tuple[int, ...]]
     output_shapes,  # type: Sequence[Tuple[int, ...]]
-    initializer=[],  # type: Sequence[TensorProto]
+    initializer=None,  # type: Sequence[TensorProto]
     **kwargs  # type: Any
 ):
+    if initializer is None:
+        initializer = []
     # type: (...) -> ModelProto
     inputs = [("input{}".format(i,), input_shapes[i]) for i in range(len(input_shapes))]
     outputs = [
@@ -122,9 +126,11 @@ def _coreml_forward_model(
 def _coreml_forward_onnx_model(
     model,  # type: ModelProto
     input_dict,  # type: Dict[Text, np._ArrayLike[Any]]
-    onnx_coreml_input_shape_map={},  # type: Dict[Text, List[int,...]]
+    onnx_coreml_input_shape_map=None,  # type: Dict[Text, List[int,...]]
     minimum_ios_deployment_target="12",
 ):
+    if onnx_coreml_input_shape_map is None:
+        onnx_coreml_input_shape_map = {}
     # type: (...) -> np.ndarray[Any]
     coreml_model = convert(
         model,
@@ -207,10 +213,14 @@ def _test_onnx_model(
     model,  # type: ModelProto
     test_name="",  # type: Text
     decimal=5,  # type: int
-    onnx_coreml_input_shape_map={},  # type: Dict[Text, List[int,...]]
-    coreml_input_shape={},  # type: Dict[Text, List[int,...]]
+    onnx_coreml_input_shape_map=None,  # type: Dict[Text, List[int,...]]
+    coreml_input_shape=None,  # type: Dict[Text, List[int,...]]
     minimum_ios_deployment_target="12",
 ):
+    if onnx_coreml_input_shape_map is None:
+        onnx_coreml_input_shape_map = {}
+    if coreml_input_shape is None:
+        coreml_input_shape = {}
     # type: (...) -> None
     if not test_name:
         test_name = sys._getframe(1).f_code.co_name
@@ -243,14 +253,20 @@ def _test_single_node(
     op_type,  # type: Text
     input_shapes,  # type: Sequence[Tuple[int, ...]]
     output_shapes,  # type: Sequence[Tuple[int, ...]]
-    initializer=[],  # type: Sequence[TensorProto]
+    initializer=None,  # type: Sequence[TensorProto]
     decimal=5,  # type: int
     test_name="",  # type: Text
-    onnx_coreml_input_shape_map={},  # type: Dict[Text, List[int,...]]
-    coreml_input_shape={},  # type: Dict[Text, List[int,...]]
+    onnx_coreml_input_shape_map=None,  # type: Dict[Text, List[int,...]]
+    coreml_input_shape=None,  # type: Dict[Text, List[int,...]]
     minimum_ios_deployment_target="12",
     **kwargs  # type: Any
 ):
+    if initializer is None:
+        initializer = []
+    if onnx_coreml_input_shape_map is None:
+        onnx_coreml_input_shape_map = {}
+    if coreml_input_shape is None:
+        coreml_input_shape = {}
     # type: (...) -> None
     model = _onnx_create_single_node_model(
         op_type, input_shapes, output_shapes, initializer, **kwargs

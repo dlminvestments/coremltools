@@ -14,7 +14,7 @@ from ...models import (
 
 def convert(
     model,
-    image_input_names=[],
+    image_input_names=None,
     is_bgr=False,
     red_bias=0.0,
     blue_bias=0.0,
@@ -190,6 +190,8 @@ def convert(
     Input name string ("my_image_input") must also match the name of the input (or "bottom", as inputs are known in Caffe) of the first layer in the .prototxt.
 
     """
+    if image_input_names is None:
+        image_input_names = []
     from ...models import MLModel
     from ...models.utils import _convert_neural_network_weights_to_fp16
 
@@ -227,7 +229,7 @@ def convert(
 def _export(
     filename,
     model,
-    image_input_names=[],
+    image_input_names=None,
     is_bgr=False,
     red_bias=0.0,
     blue_bias=0.0,
@@ -237,6 +239,8 @@ def _export(
     class_labels=None,
     predicted_feature_name=None,
 ):
+    if image_input_names is None:
+        image_input_names = []
     from ... import libcaffeconverter
 
     if isinstance(model, _six.string_types):
