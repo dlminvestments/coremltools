@@ -7,7 +7,11 @@
 # changes.
 
 # Base Dockerfile for gRPC dev images
+snyk-fix-e0bd334c3f372fec762973ff4bfd17d6
+FROM debian:bullseye-slim
+=======
 FROM debian:bullseye-20211011-slim
+master
 
 # Apt source for old Python versions.
 RUN echo 'deb http://ppa.launchpad.net/fkrull/deadsnakes/ubuntu trusty main' > /etc/apt/sources.list.d/deadsnakes.list && \
