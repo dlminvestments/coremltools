@@ -10,7 +10,7 @@
 snyk-fix-e0bd334c3f372fec762973ff4bfd17d6
 FROM debian:bullseye-slim
 =======
-FROM debian:bullseye-20211011-slim
+FROM debian:11-slim
 master
 
 # Apt source for old Python versions.
