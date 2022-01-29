@@ -10,7 +10,7 @@
     "snyk": "^1.431.4"
   },
   "devDependencies": {
-    "glob": "~6.0.4",
+    "glob": "~7.2.0",
     "google-closure-compiler": "~20190528.1.0",
     "google-closure-library": "~20200315.0.0",
     "gulp": "~4.0.0",
