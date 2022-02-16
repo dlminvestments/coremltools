@@ -10,12 +10,17 @@
     "snyk": "^1.431.4"
   },
   "devDependencies": {
+snyk-upgrade-a94c79dbf9293c6b35625d9f9f0f8cc1
+    "glob": "~7.2.0",
+    "google-closure-compiler": "~20190528.1.0",
+=======
     "glob": "~6.0.4",
 snyk-upgrade-9ad6cb9fe12348e4c7ed358a706cf3f1
     "google-closure-compiler": "~20190528.1.0",
     "google-closure-library": "~20211201.0.0",
 =======
     "google-closure-compiler": "~20220104.0.0",
+master
     "google-closure-library": "~20200315.0.0",
 master
     "gulp": "~4.0.0",
