@@ -897,7 +897,8 @@ module BasicTest
     end
 
     def test_to_h
-      m = TestMessage.new(optional_bool: true, optional_double: -10.100001, optional_string: 'foo', repeated_string: %w[bar1 bar2])
+      m = TestMessage.new(optional_bool: true, optional_double: -10.100001, optional_string: 'foo',
+                          repeated_string: %w[bar1 bar2])
       expected_result = {
         optional_bool: true,
         optional_bytes: '',
